@@ -70,7 +70,7 @@ public class CustomListviewImageAdapter extends ArrayAdapter<ArrayList<Hinh>> {
         CustomRecyclerviewAdapter customRecyclerviewAdapter = new CustomRecyclerviewAdapter(context, mang.get(position), false, position);
         viewHolder.recyclerView.setAdapter(customRecyclerviewAdapter);
         viewHolder.recyclerView.setHasFixedSize(true);
-        GridLayoutManager mGridLayoutManager = new GridLayoutManager(context, 7);
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(context, 4);
 
         viewHolder.recyclerView.setLayoutManager(mGridLayoutManager);
 

@@ -77,6 +77,7 @@ public class ImageActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         //Sự kiện crop ảnh
         btn_Crop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +85,7 @@ public class ImageActivity extends AppCompatActivity {
                 cropImage();
             }
         });
+
         //Xử lý sự kiện Share ảnh
         btn_Share.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +101,6 @@ public class ImageActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //choosenImage.duongdan
             }
         });
 
@@ -107,32 +108,7 @@ public class ImageActivity extends AppCompatActivity {
         btn_Resize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int tmp = viewPager.getCurrentItem();
-                final Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
-                final Dialog dialog1;
-                dialog1 = new Dialog(ImageActivity.this);
-                dialog1.setTitle("Nhập kích thước: ");
-                dialog1.setContentView(R.layout.resize_dialog);
-                dialog1.show();
-                final EditText Width, Height;
-                Button btnOK, btnCancel;
-                Width = dialog1.findViewById(R.id.editText_Width);
-                Height = dialog1.findViewById(R.id.editText_Height);
-                btnOK = dialog1.findViewById(R.id.btnOk);
-                btnCancel = dialog1.findViewById(R.id.btnCancel);
-                btnOK.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        resizeImage();
-                    }
-                });
-
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog1.dismiss();
-                    }
-                });
+                resizeImage();
             }
         });
 
@@ -142,7 +118,6 @@ public class ImageActivity extends AppCompatActivity {
         //*     II: ảnh của Album                         *
         //*************************************************
         btn_Delete.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
 
@@ -171,7 +146,6 @@ public class ImageActivity extends AppCompatActivity {
         });
 
     }
-
 
     private void editBitmap(Bitmap bitmap, String filePath) {
         try {
@@ -403,27 +377,25 @@ public class ImageActivity extends AppCompatActivity {
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int width = Integer.parseInt(Width.getText().toString());
-                int height = Integer.parseInt(Height.getText().toString());
-                File imgFile = new File(choosenImage.duongdan);
-                        /*ImageView temp = null;
-                        Bitmap bitmap=null;
-                        Glide.with(getBaseContext()).load(imgFile).override(width,height).into(temp);*/
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                Bitmap resBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, false);
-                File f = new File(Environment.getExternalStorageDirectory() + File.separator + "resize_" + UUID.randomUUID().toString() + ".jpeg");
                 try {
+                    int width = Integer.parseInt(Width.getText().toString());
+                    int height = Integer.parseInt(Height.getText().toString());
+
+                    File imgFile = new File(choosenImage.duongdan);
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    Bitmap resBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, false);
+                    File f = new File(Environment.getExternalStorageDirectory() + File.separator + "resize_" + UUID.randomUUID().toString() + ".jpeg");
+
                     f.createNewFile();
                     FileOutputStream out = new FileOutputStream(f);
                     f.setReadable(true, false);
                     f.setWritable(true, false);
-                            /*Matrix matrix = new Matrix();
-                            matrix.postRotate(270);
-                            Bitmap rotatedBitmap = Bitmap.createBitmap(resBitmap, 0, 0, resBitmap.getWidth(), resBitmap.getHeight(), matrix, true);*/
+
                     resBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
                     out.flush();
                     out.close();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
                         Intent mediaScanIntent = new Intent(
                                 Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                         Uri contentUri = Uri.fromFile(f);
@@ -439,10 +411,9 @@ public class ImageActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 dialog1.dismiss();
-
-
             }
         });
+
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
