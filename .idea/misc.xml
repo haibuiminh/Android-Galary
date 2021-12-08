@@ -5,14 +5,18 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_arrow_back_black_24dp.xml" value="0.1" />
+        <entry key="app/src/main/res/font/roboto_medium.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_album.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_edit_image.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_image.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_image_slideshow.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_recycler_image.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/add_text_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/album_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/anh_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/anhdialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/color_picker_item_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/compress_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/custom_item_listview_album.xml" value="0.1" />
         <entry key="app/src/main/res/layout/custom_item_listview_img.xml" value="0.1" />
@@ -21,8 +25,15 @@
         <entry key="app/src/main/res/layout/data_placeholder_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/delete_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/dialog_rename_album.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_bottom_custom_effect_dialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_bottom_properties_dialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_bottom_sticker_emoji_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/photo_editor_view.xml" value="0.1" />
         <entry key="app/src/main/res/layout/resize_dialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/row_editing_tools.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/row_emoji.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/row_filter_view.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/row_sticker.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_image.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_popup_item_listview.xml" value="0.1" />
