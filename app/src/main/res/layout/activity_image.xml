@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ImageActivity"
+    android:background="#123"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#145ba3"
+        app:title="Image"
+        app:titleTextColor="#f9fbfd"
+        android:id="@+id/toolbarofimgactivity">
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.example.hi.album.ViewPagerFixer
+        android:id="@+id/viewpagerofimgactivity"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.25"
+        android:background="#DCDCDC">
+
+        <Button
+            android:id="@+id/delete_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@android:drawable/ic_menu_delete"
+            android:text="Xóa" />
+
+        <Button
+            android:id="@+id/share_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@android:drawable/ic_menu_share"
+            android:text="Share" />
+
+        <Button
+            android:id="@+id/crop_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@android:drawable/ic_menu_crop"
+            android:text="Crop" />
+
+        <Button
+            android:id="@+id/Resize_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@android:drawable/ic_menu_delete"
+            android:text="RESIZE" />
+    </LinearLayout>
+
+</LinearLayout>
