@@ -1,6 +1,7 @@
 package com.example.androidgalary;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -47,6 +48,7 @@ public class ImageActivity extends AppCompatActivity {
     String diachi;
     boolean loai;
     static public boolean co = false;
+    public static Hinh currentImage = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +95,13 @@ public class ImageActivity extends AppCompatActivity {
                 int tmp = viewPager.getCurrentItem();
                 Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
                 try {
-                    final File photoFile = new File(choosenImage.duongdan);
+                    File photoFile = new File(choosenImage.duongdan);
+                    Uri imageUri = FileProvider.getUriForFile(ImageActivity.this,
+                            BuildConfig.APPLICATION_ID + ".provider",
+                            photoFile);
                     final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                     intent.setType("image/*");
-                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(photoFile));
+                    intent.putExtra(Intent.EXTRA_STREAM, imageUri);
                     startActivity(Intent.createChooser(intent, "Share via"));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -145,6 +150,14 @@ public class ImageActivity extends AppCompatActivity {
             }
         });
 
+        btn_Edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentImage = AnhFragment.mangHinh.get(viewPager.getCurrentItem());
+
+            }
+        });
+
     }
 
     private void editBitmap(Bitmap bitmap, String filePath) {
@@ -158,8 +171,6 @@ public class ImageActivity extends AppCompatActivity {
             fOut.close();*/
             CropImage.activity(Uri.fromFile(file))
                     .start(this);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -407,7 +418,7 @@ public class ImageActivity extends AppCompatActivity {
                                 Uri.parse("file://"
                                         + Environment.getExternalStorageDirectory())));
                     }
-                } catch (IOException e) {
+                } catch (NumberFormatException | IOException e) {
                     e.printStackTrace();
                 }
                 dialog1.dismiss();
