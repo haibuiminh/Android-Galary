@@ -51,10 +51,12 @@ public class CustomRecyclerviewAdapter extends RecyclerView.Adapter<CustomRecycl
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .override(250, 250)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .priority(Priority.HIGH);
 
-        Glide.with(context).load(data.get(position).getDuongdan()).apply(options).thumbnail(0.6f)
+        Glide.with(context).load(data.get(position).getDuongdan())
+                .apply(options).thumbnail(0.6f)
                 .into(holder.imageView);;
 
         holder.checkBox.setChecked(data.get(position).check);

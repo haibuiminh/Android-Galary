@@ -51,9 +51,7 @@ public class ImagePagerAdapter extends PagerAdapter {
         img = (PhotoView) view.findViewById(R.id.imgofimgactivity);
         File file = new File(mang.get(position).getDuongdan());
         RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .priority(Priority.HIGH);
 
         Glide.with(context).load(file).apply(options).thumbnail(0.6f)

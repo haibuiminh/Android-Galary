@@ -75,7 +75,7 @@ public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .priority(Priority.HIGH);
 
         Glide.with(context).load(mang.get(position).getDuongdan())

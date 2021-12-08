@@ -106,9 +106,8 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
         customListviewImageAdapter = new CustomListviewImageAdapter(context, mangHinhDate, R.layout.custom_item_listview_img);
         listView.setAdapter(customListviewImageAdapter);
         listView.setDivider(null);
+        listView.setFastScrollEnabled(true);
         MainActivity.funcExecuteTime.put("onResume AnhFragment", System.currentTimeMillis() - start);
-
-        //
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

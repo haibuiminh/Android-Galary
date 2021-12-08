@@ -12,18 +12,21 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#ec0d7d">
+            android:background="#f1f1f1"
+            android:layout_marginBottom="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginEnd="3dp" >
             <ImageView
                 android:id="@+id/imgrv"
-                android:layout_width="70dp"
-                android:layout_height="60dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="fill"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_launcher"
                 />
             <LinearLayout
-                android:layout_width="70dp"
-                android:layout_height="60dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:background="#dde1482d"
                 android:id="@+id/LNofcardview"
                 android:visibility="invisible">

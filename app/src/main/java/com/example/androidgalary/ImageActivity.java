@@ -72,160 +72,7 @@ public class ImageActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 int i = item.getItemId();
                 if (i == R.id.compress) {
-                    final Dialog dialog1 = new Dialog(ImageActivity.this);
-                    dialog1.setTitle("Nhập phần trăm muốn nén: ");
-                    dialog1.setContentView(R.layout.compress_dialog);
-                    dialog1.show();
-                    final SeekBar seekBar = (SeekBar) dialog1.findViewById(R.id.seekBar);
-                    final TextView textView = (TextView) dialog1.findViewById(R.id.textView_per);
-                    final EditText editText = (EditText) dialog1.findViewById(R.id.editText_per);
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            try {
-                                //Update Seekbar value after entering a number
-                                if (s.toString().equals("")) {
-                                    seekBar.setProgress(0);
-                                } else seekBar.setProgress(Integer.parseInt(s.toString()));
-                            } catch (Exception ex) {
-
-                            }
-
-                        }
-                    });
-                    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            textView.setText("" + progress + "%");
-                            editText.setText("" + seekBar.getProgress());
-                            editText.setSelection(editText.getText().length());
-
-
-                        }
-
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                        }
-
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-                            int value = seekBar.getProgress();
-
-
-                        }
-                    });
-                    Button btn_OK, btn_Cancel;
-                    btn_OK = (Button) dialog1.findViewById(R.id.btn_OK);
-                    btn_OK.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (loai == false) {
-                                int tmp = viewPager.getCurrentItem();
-                                Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
-                                File imgFile = new File(choosenImage.duongdan);
-
-                                try {
-
-                                    int Quality = 0;
-                                    if (editText.getText().toString().equals("")) {
-                                        Quality = 5;
-                                    } else {
-                                        Quality = Integer.parseInt(editText.getText().toString()) / 10;
-                                    }
-                                /*BitmapFactory.Options options = new BitmapFactory.Options();
-                                options.inSampleSize = Quality;
-                                Bitmap myBm= BitmapFactory.decodeFile(imgFile.getAbsolutePath(),options);*/
-                                    Bitmap mySample = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                                    Bitmap myBm = Bitmap.createScaledBitmap(mySample, mySample.getWidth() / Quality, mySample.getHeight() / Quality, true);
-                                    File f = new File(Environment.getExternalStorageDirectory() + File.separator + "compress_" + UUID.randomUUID().toString() + ".jpeg");
-                                    f.createNewFile();
-                                    FileOutputStream out = new FileOutputStream(f);
-                                    f.setReadable(true, false);
-                                    f.setWritable(true, false);
-                                    myBm.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                                    out.flush();
-                                    out.close();
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                        Intent mediaScanIntent = new Intent(
-                                                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                                        Uri contentUri = Uri.fromFile(f);
-                                        mediaScanIntent.setData(contentUri);
-                                        getBaseContext().sendBroadcast(mediaScanIntent);
-                                    } else {
-                                        sendBroadcast(new Intent(
-                                                Intent.ACTION_MEDIA_MOUNTED,
-                                                Uri.parse("file://"
-                                                        + Environment.getExternalStorageDirectory())));
-                                    }
-                                    dialog1.dismiss();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                int tmp = viewPager.getCurrentItem();
-                                Hinh choosenImage = MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(tmp);
-                                File imgFile = new File(choosenImage.duongdan);
-
-                                try {
-
-                                    int Quality = 0;
-                                    if (editText.getText().toString().equals("")) {
-                                        Quality = 5;
-                                    } else {
-                                        Quality = Integer.parseInt(editText.getText().toString()) / 10;
-                                    }
-                                /*BitmapFactory.Options options = new BitmapFactory.Options();
-                                options.inSampleSize = Quality;
-                                Bitmap myBm= BitmapFactory.decodeFile(imgFile.getAbsolutePath(),options);*/
-                                    Bitmap mySample = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                                    Bitmap myBm = Bitmap.createScaledBitmap(mySample, mySample.getWidth() / Quality, mySample.getHeight() / Quality, true);
-                                    File f = new File(Environment.getExternalStorageDirectory() + File.separator + "compress_" + UUID.randomUUID().toString() + ".jpeg");
-                                    f.createNewFile();
-                                    FileOutputStream out = new FileOutputStream(f);
-                                    f.setReadable(true, false);
-                                    f.setWritable(true, false);
-                                    myBm.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                                    out.flush();
-                                    out.close();
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                        Intent mediaScanIntent = new Intent(
-                                                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                                        Uri contentUri = Uri.fromFile(f);
-                                        mediaScanIntent.setData(contentUri);
-                                        getBaseContext().sendBroadcast(mediaScanIntent);
-                                    } else {
-                                        sendBroadcast(new Intent(
-                                                Intent.ACTION_MEDIA_MOUNTED,
-                                                Uri.parse("file://"
-                                                        + Environment.getExternalStorageDirectory())));
-                                    }
-                                    dialog1.dismiss();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
-                    btn_Cancel = (Button) dialog1.findViewById(R.id.btn_Cancel);
-                    btn_Cancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog1.dismiss();
-                        }
-                    });
-
-
+                    compressImage();
                 }
                 return false;
             }
@@ -717,5 +564,160 @@ public class ImageActivity extends AppCompatActivity {
         File imgFile = new File(choosenImage.duongdan);
         Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
         editBitmap(myBitmap, choosenImage.duongdan);
+    }
+
+    private void compressImage() {
+        final Dialog dialog1 = new Dialog(ImageActivity.this);
+        dialog1.setTitle("Nhập phần trăm muốn nén: ");
+        dialog1.setContentView(R.layout.compress_dialog);
+        dialog1.show();
+        final SeekBar seekBar = (SeekBar) dialog1.findViewById(R.id.seekBar);
+        final TextView textView = (TextView) dialog1.findViewById(R.id.textView_per);
+        final EditText editText = (EditText) dialog1.findViewById(R.id.editText_per);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    //Update Seekbar value after entering a number
+                    if (s.toString().equals("")) {
+                        seekBar.setProgress(0);
+                    } else seekBar.setProgress(Integer.parseInt(s.toString()));
+                } catch (Exception ex) {
+
+                }
+
+            }
+        });
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textView.setText("" + progress + "%");
+                editText.setText("" + seekBar.getProgress());
+                editText.setSelection(editText.getText().length());
+
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                int value = seekBar.getProgress();
+
+
+            }
+        });
+        Button btn_OK, btn_Cancel;
+        btn_OK = (Button) dialog1.findViewById(R.id.btn_OK);
+        btn_OK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (loai == false) {
+                    int tmp = viewPager.getCurrentItem();
+                    Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
+                    File imgFile = new File(choosenImage.duongdan);
+
+                    try {
+
+                        int Quality = 0;
+                        if (editText.getText().toString().equals("")) {
+                            Quality = 5;
+                        } else {
+                            Quality = Integer.parseInt(editText.getText().toString()) / 10;
+                        }
+                                /*BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inSampleSize = Quality;
+                                Bitmap myBm= BitmapFactory.decodeFile(imgFile.getAbsolutePath(),options);*/
+                        Bitmap mySample = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        Bitmap myBm = Bitmap.createScaledBitmap(mySample, mySample.getWidth() / Quality, mySample.getHeight() / Quality, true);
+                        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "compress_" + UUID.randomUUID().toString() + ".jpeg");
+                        f.createNewFile();
+                        FileOutputStream out = new FileOutputStream(f);
+                        f.setReadable(true, false);
+                        f.setWritable(true, false);
+                        myBm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                        out.flush();
+                        out.close();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            Intent mediaScanIntent = new Intent(
+                                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                            Uri contentUri = Uri.fromFile(f);
+                            mediaScanIntent.setData(contentUri);
+                            getBaseContext().sendBroadcast(mediaScanIntent);
+                        } else {
+                            sendBroadcast(new Intent(
+                                    Intent.ACTION_MEDIA_MOUNTED,
+                                    Uri.parse("file://"
+                                            + Environment.getExternalStorageDirectory())));
+                        }
+                        dialog1.dismiss();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    int tmp = viewPager.getCurrentItem();
+                    Hinh choosenImage = MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(tmp);
+                    File imgFile = new File(choosenImage.duongdan);
+
+                    try {
+
+                        int Quality = 0;
+                        if (editText.getText().toString().equals("")) {
+                            Quality = 5;
+                        } else {
+                            Quality = Integer.parseInt(editText.getText().toString()) / 10;
+                        }
+                                /*BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inSampleSize = Quality;
+                                Bitmap myBm= BitmapFactory.decodeFile(imgFile.getAbsolutePath(),options);*/
+                        Bitmap mySample = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        Bitmap myBm = Bitmap.createScaledBitmap(mySample, mySample.getWidth() / Quality, mySample.getHeight() / Quality, true);
+                        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "compress_" + UUID.randomUUID().toString() + ".jpeg");
+                        f.createNewFile();
+                        FileOutputStream out = new FileOutputStream(f);
+                        f.setReadable(true, false);
+                        f.setWritable(true, false);
+                        myBm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                        out.flush();
+                        out.close();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            Intent mediaScanIntent = new Intent(
+                                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                            Uri contentUri = Uri.fromFile(f);
+                            mediaScanIntent.setData(contentUri);
+                            getBaseContext().sendBroadcast(mediaScanIntent);
+                        } else {
+                            sendBroadcast(new Intent(
+                                    Intent.ACTION_MEDIA_MOUNTED,
+                                    Uri.parse("file://"
+                                            + Environment.getExternalStorageDirectory())));
+                        }
+                        dialog1.dismiss();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        btn_Cancel = (Button) dialog1.findViewById(R.id.btn_Cancel);
+        btn_Cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.dismiss();
+            }
+        });
     }
 }

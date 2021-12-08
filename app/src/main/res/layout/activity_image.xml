@@ -18,11 +18,12 @@
         android:id="@+id/toolbarofimgactivity">
     </androidx.appcompat.widget.Toolbar>
 
-    <com.example.hi.album.ViewPagerFixer
+    <com.example.androidgalary.ViewPagerFixer
         android:id="@+id/viewpagerofimgactivity"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8" />
+        android:layout_weight="8"
+        tools:ignore="MissingClass" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +37,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@android:drawable/ic_menu_delete"
-            android:text="Xóa" />
+            android:text="Xóa"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/share_btn"
@@ -44,7 +46,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@android:drawable/ic_menu_share"
-            android:text="Share" />
+            android:text="Share"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/crop_btn"
@@ -52,7 +55,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@android:drawable/ic_menu_crop"
-            android:text="Crop" />
+            android:text="Crop"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/edit_btn"
@@ -60,7 +64,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@android:drawable/ic_menu_edit"
-            android:text="EDIT" />
+            android:text="EDIT"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/Resize_btn"
@@ -68,7 +73,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@android:drawable/ic_menu_delete"
-            android:text="RESIZE" />
+            android:text="RESIZE"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>
