@@ -33,13 +33,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.UUID;
-import id.zelory.compressor.Compressor;
-
 
 public class ImageActivity extends AppCompatActivity {
     Toolbar toolbar;
     ViewPagerFixer viewPager;
-    Button btn;
+    Button btn_Delete;
     Button btn_Share;
     Button btn_Crop;
     Button btn_Resize;
@@ -65,9 +63,7 @@ public class ImageActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 finish();
-
             }
         });
         viewPager.setCurrentItem(position);
@@ -238,23 +234,7 @@ public class ImageActivity extends AppCompatActivity {
         btn_Crop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (loai == false) {
-                    int tmp = viewPager.getCurrentItem();
-                    Log.d("tmp", tmp + "");
-                    Log.d("tmp", AnhFragment.mangHinh.get(tmp).tenhinh + "");
-                    Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
-                    File imgFile = new File(choosenImage.duongdan);
-                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                    editBitmap(myBitmap, choosenImage.duongdan);
-                } else {
-                    int tmp = viewPager.getCurrentItem();
-                    Log.d("tmp", tmp + "");
-                    Log.d("tmp", AnhFragment.mangHinh.get(tmp).tenhinh + "");
-                    Hinh choosenImage = MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(tmp);
-                    File imgFile = new File(choosenImage.duongdan);
-                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                    editBitmap(myBitmap, choosenImage.duongdan);
-                }
+                cropImage();
             }
         });
         //Xử lý sự kiện Share ảnh
@@ -296,46 +276,10 @@ public class ImageActivity extends AppCompatActivity {
                 btnOK.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int width = Integer.parseInt(Width.getText().toString());
-                        int height = Integer.parseInt(Height.getText().toString());
-                        File imgFile = new File(choosenImage.duongdan);
-                        /*ImageView temp = null;
-                        Bitmap bitmap=null;
-                        Glide.with(getBaseContext()).load(imgFile).override(width,height).into(temp);*/
-                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        Bitmap resBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, false);
-                        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "resize_" + UUID.randomUUID().toString() + ".jpeg");
-                        try {
-                            f.createNewFile();
-                            FileOutputStream out = new FileOutputStream(f);
-                            f.setReadable(true, false);
-                            f.setWritable(true, false);
-                            /*Matrix matrix = new Matrix();
-                            matrix.postRotate(270);
-                            Bitmap rotatedBitmap = Bitmap.createBitmap(resBitmap, 0, 0, resBitmap.getWidth(), resBitmap.getHeight(), matrix, true);*/
-                            resBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                            out.flush();
-                            out.close();
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                Intent mediaScanIntent = new Intent(
-                                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                                Uri contentUri = Uri.fromFile(f);
-                                mediaScanIntent.setData(contentUri);
-                                getBaseContext().sendBroadcast(mediaScanIntent);
-                            } else {
-                                sendBroadcast(new Intent(
-                                        Intent.ACTION_MEDIA_MOUNTED,
-                                        Uri.parse("file://"
-                                                + Environment.getExternalStorageDirectory())));
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        dialog1.dismiss();
-
-
+                        resizeImage();
                     }
                 });
+
                 btnCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -350,7 +294,7 @@ public class ImageActivity extends AppCompatActivity {
         //*     I:  ảnh của Anhfragment                   *
         //*     II: ảnh của Album                         *
         //*************************************************
-        btn.setOnClickListener(new View.OnClickListener() {
+        btn_Delete.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -381,112 +325,7 @@ public class ImageActivity extends AppCompatActivity {
 
     }
 
-    private void deleteImage(){
-        // luu lai vi tri cua hinh
-        int tmp = viewPager.getCurrentItem();
-        //Toast.makeText(ImageActivity.this, ""+viewPager.getCurrentItem(), //Toast.LENGTH_SHORT).show();
-        if (loai == false) {
-            //xử lý I
 
-            //Xóa collectedimgs và add đối tượng cần xóa
-            MainActivity.collectedimgs.clear();
-            MainActivity.collectedimgs.add(AnhFragment.mangHinh.get(tmp));
-
-            // Tìm và xóa ảnh
-
-
-            for (int j = 0; j < MainActivity.collectedimgs.size(); j++) {
-                File file = new File(MainActivity.collectedimgs.get(j).getDuongdan());
-                boolean flag = file.delete();
-                //Toast.makeText(ImageActivity.this,"Do dai cua mang"+MainActivity.collectedimgs.size(),//Toast.LENGTH_SHORT).show();
-            }
-
-            //***Cập nhập mảng chứa album***//
-            refreshfAlbum(MainActivity.collectedimgs);
-            //*** Xóa album rộng => Xóa Mảng rỗng trong MainActivity.mang ***//
-            for (int i = 0; i < MainActivity.mang.size(); i++) {
-                if (MainActivity.mang.get(i).size() == 0) {
-                    MainActivity.mang.remove(i);
-                    MainActivity.MangTen.remove(i);
-                }
-            }
-            for (int i1 = 0; i1 < MainActivity.collectedimgs.size(); i1++) {
-                for (int j = 0; j < AnhFragment.mangHinh.size(); j++) {
-                    if (AnhFragment.mangHinh.get(j).getDuongdan().equals(MainActivity.collectedimgs.get(i1).duongdan)) {
-                        AnhFragment.mangHinh.remove(j);
-                    }
-                }
-            }
-            ghivaobonhotrongtenalbum();
-            ghivaobonhotrong();
-            //su ly sau khi xoa
-
-            ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(AnhFragment.mangHinh, ImageActivity.this, getSupportFragmentManager());
-            viewPager.setAdapter(imagePagerAdapter);
-
-            //*** Tìm vị trị thích hợp để setCurrent cho ViewPager***//
-            if (tmp == AnhFragment.mangHinh.size())
-                viewPager.setCurrentItem(tmp - 1);
-            else
-                viewPager.setCurrentItem(tmp);
-
-        } else {
-            //xử lý II
-
-            MainActivity.collectedimgs.clear();
-            MainActivity.collectedimgs.add(MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(viewPager.getCurrentItem()));
-
-            //***Cập nhật mảng chứa các album***//
-            if (MainActivity.collectedimgs.size() == 0) {
-                //Toast.makeText(getApplicationContext(), "Chua chon anh", //Toast.LENGTH_SHORT).show();
-            } else {
-                //***Các ảnh cần xóa nằm trong collectedimgs***//                                         *
-                for (int i = 0; i < MainActivity.collectedimgs.size(); i++) {
-                    for (int j1 = 0; j1 < MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size(); j1++) {
-                        if (MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(j1).getDuongdan().equals(MainActivity.collectedimgs.get(i).getDuongdan())) {
-                            MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).remove(j1);
-                        }
-                    }
-
-
-                }
-            }
-
-
-            //su ly sau khi xoa
-            if (MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size() == 0) {
-                //*** Xóa album rộng => Xóa Mảng rỗng trong MainActivity.mang ***//
-                for (int i = 0; i < MainActivity.mang.size(); i++) {
-                    if (MainActivity.mang.get(i).size() == 0) {
-                        MainActivity.mang.remove(i);
-                        MainActivity.MangTen.remove(i);
-                    }
-                }
-                ghivaobonhotrongtenalbum();
-                ghivaobonhotrong();
-                co = true;
-                finish();
-            } else {
-                //*** Xóa album rộng => Xóa Mảng rỗng trong MainActivity.mang ***//
-                for (int i = 0; i < MainActivity.mang.size(); i++) {
-                    if (MainActivity.mang.get(i).size() == 0) {
-                        MainActivity.mang.remove(i);
-                        MainActivity.MangTen.remove(i);
-                    }
-                }
-                ghivaobonhotrongtenalbum();
-                ghivaobonhotrong();
-                ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(AnhFragment.mangHinh, ImageActivity.this, getSupportFragmentManager());
-                viewPager.setAdapter(imagePagerAdapter);
-                //*** Tìm vị trị thích hợp để setCurrent cho ViewPager***//
-                if (tmp == MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size() - 1)
-                    viewPager.setCurrentItem(tmp - 1);
-                else
-                    viewPager.setCurrentItem(tmp);
-            }
-        }
-
-    }
     private void editBitmap(Bitmap bitmap, String filePath) {
         try {
             File file = new File(filePath);
@@ -550,11 +389,11 @@ public class ImageActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbarofimgactivity);
 
-        btn = findViewById(R.id.delete_btn);
-        btn_Share = (Button) findViewById(R.id.share_btn);
-        btn_Crop = (Button) findViewById(R.id.crop_btn);
-        btn_Resize = (Button) findViewById(R.id.Resize_btn);
-        btn_Edit = (Button) findViewById(R.id.edit_btn);
+        btn_Delete = findViewById(R.id.delete_btn);
+        btn_Share = findViewById(R.id.share_btn);
+        btn_Crop = findViewById(R.id.crop_btn);
+        btn_Resize = findViewById(R.id.Resize_btn);
+        btn_Edit = findViewById(R.id.edit_btn);
 //        //Tạo nút back trên toolbar
 //        setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -698,5 +537,185 @@ public class ImageActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private void resizeImage() {
+        int tmp = viewPager.getCurrentItem();
+        final Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
+        final Dialog dialog1;
+        dialog1 = new Dialog(ImageActivity.this);
+        dialog1.setTitle("Nhập kích thước: ");
+        dialog1.setContentView(R.layout.resize_dialog);
+        dialog1.show();
+        final EditText Width, Height;
+        Button btnOK, btnCancel;
+        Width = dialog1.findViewById(R.id.editText_Width);
+        Height = dialog1.findViewById(R.id.editText_Height);
+        btnOK = dialog1.findViewById(R.id.btnOk);
+        btnCancel = dialog1.findViewById(R.id.btnCancel);
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int width = Integer.parseInt(Width.getText().toString());
+                int height = Integer.parseInt(Height.getText().toString());
+                File imgFile = new File(choosenImage.duongdan);
+                        /*ImageView temp = null;
+                        Bitmap bitmap=null;
+                        Glide.with(getBaseContext()).load(imgFile).override(width,height).into(temp);*/
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                Bitmap resBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, false);
+                File f = new File(Environment.getExternalStorageDirectory() + File.separator + "resize_" + UUID.randomUUID().toString() + ".jpeg");
+                try {
+                    f.createNewFile();
+                    FileOutputStream out = new FileOutputStream(f);
+                    f.setReadable(true, false);
+                    f.setWritable(true, false);
+                            /*Matrix matrix = new Matrix();
+                            matrix.postRotate(270);
+                            Bitmap rotatedBitmap = Bitmap.createBitmap(resBitmap, 0, 0, resBitmap.getWidth(), resBitmap.getHeight(), matrix, true);*/
+                    resBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    out.flush();
+                    out.close();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        Intent mediaScanIntent = new Intent(
+                                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                        Uri contentUri = Uri.fromFile(f);
+                        mediaScanIntent.setData(contentUri);
+                        getBaseContext().sendBroadcast(mediaScanIntent);
+                    } else {
+                        sendBroadcast(new Intent(
+                                Intent.ACTION_MEDIA_MOUNTED,
+                                Uri.parse("file://"
+                                        + Environment.getExternalStorageDirectory())));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                dialog1.dismiss();
+
+
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.dismiss();
+            }
+        });
+    }
+
+    private void deleteImage() {
+        // luu lai vi tri cua hinh
+        int tmp = viewPager.getCurrentItem();
+        //Toast.makeText(ImageActivity.this, ""+viewPager.getCurrentItem(), //Toast.LENGTH_SHORT).show();
+        if (loai == false) {
+            //xử lý I
+
+            //Xóa collectedimgs và add đối tượng cần xóa
+            MainActivity.collectedimgs.clear();
+            MainActivity.collectedimgs.add(AnhFragment.mangHinh.get(tmp));
+
+            // Tìm và xóa ảnh
+
+
+            for (int j = 0; j < MainActivity.collectedimgs.size(); j++) {
+                File file = new File(MainActivity.collectedimgs.get(j).getDuongdan());
+                boolean flag = file.delete();
+                //Toast.makeText(ImageActivity.this,"Do dai cua mang"+MainActivity.collectedimgs.size(),//Toast.LENGTH_SHORT).show();
+            }
+
+            //***Cập nhập mảng chứa album***//
+            refreshfAlbum(MainActivity.collectedimgs);
+            //*** Xóa album rộng => Xóa Mảng rỗng trong MainActivity.mang ***//
+            for (int i = 0; i < MainActivity.mang.size(); i++) {
+                if (MainActivity.mang.get(i).size() == 0) {
+                    MainActivity.mang.remove(i);
+                    MainActivity.MangTen.remove(i);
+                }
+            }
+            for (int i1 = 0; i1 < MainActivity.collectedimgs.size(); i1++) {
+                for (int j = 0; j < AnhFragment.mangHinh.size(); j++) {
+                    if (AnhFragment.mangHinh.get(j).getDuongdan().equals(MainActivity.collectedimgs.get(i1).duongdan)) {
+                        AnhFragment.mangHinh.remove(j);
+                    }
+                }
+            }
+            ghivaobonhotrongtenalbum();
+            ghivaobonhotrong();
+            //su ly sau khi xoa
+
+            ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(AnhFragment.mangHinh, ImageActivity.this, getSupportFragmentManager());
+            viewPager.setAdapter(imagePagerAdapter);
+
+            //*** Tìm vị trị thích hợp để setCurrent cho ViewPager***//
+            if (tmp == AnhFragment.mangHinh.size())
+                viewPager.setCurrentItem(tmp - 1);
+            else
+                viewPager.setCurrentItem(tmp);
+
+        } else {
+            //xử lý II
+
+            MainActivity.collectedimgs.clear();
+            MainActivity.collectedimgs.add(MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(viewPager.getCurrentItem()));
+
+            //***Cập nhật mảng chứa các album***//
+            if (MainActivity.collectedimgs.size() == 0) {
+                //Toast.makeText(getApplicationContext(), "Chua chon anh", //Toast.LENGTH_SHORT).show();
+            } else {
+                //***Các ảnh cần xóa nằm trong collectedimgs***//                                         *
+                for (int i = 0; i < MainActivity.collectedimgs.size(); i++) {
+                    for (int j1 = 0; j1 < MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size(); j1++) {
+                        if (MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(j1).getDuongdan().equals(MainActivity.collectedimgs.get(i).getDuongdan())) {
+                            MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).remove(j1);
+                        }
+                    }
+
+
+                }
+            }
+
+
+            //su ly sau khi xoa
+            if (MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size() == 0) {
+                //*** Xóa album rộng => Xóa Mảng rỗng trong MainActivity.mang ***//
+                for (int i = 0; i < MainActivity.mang.size(); i++) {
+                    if (MainActivity.mang.get(i).size() == 0) {
+                        MainActivity.mang.remove(i);
+                        MainActivity.MangTen.remove(i);
+                    }
+                }
+                ghivaobonhotrongtenalbum();
+                ghivaobonhotrong();
+                co = true;
+                finish();
+            } else {
+                //*** Xóa album rộng => Xóa Mảng rỗng trong MainActivity.mang ***//
+                for (int i = 0; i < MainActivity.mang.size(); i++) {
+                    if (MainActivity.mang.get(i).size() == 0) {
+                        MainActivity.mang.remove(i);
+                        MainActivity.MangTen.remove(i);
+                    }
+                }
+                ghivaobonhotrongtenalbum();
+                ghivaobonhotrong();
+                ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum), ImageActivity.this, getSupportFragmentManager());
+                viewPager.setAdapter(imagePagerAdapter);
+                //*** Tìm vị trị thích hợp để setCurrent cho ViewPager***//
+                if (tmp == MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size() - 1)
+                    viewPager.setCurrentItem(tmp - 1);
+                else
+                    viewPager.setCurrentItem(tmp);
+            }
+        }
+
+    }
+
+    private void cropImage() {
+        int tmp = viewPager.getCurrentItem();
+        Hinh choosenImage = (loai) ? MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(tmp) : AnhFragment.mangHinh.get(tmp);
+        File imgFile = new File(choosenImage.duongdan);
+        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+        editBitmap(myBitmap, choosenImage.duongdan);
     }
 }
