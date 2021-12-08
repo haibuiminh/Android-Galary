@@ -14,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,12 +48,18 @@ public class CustomRecyclerviewAdapter extends RecyclerView.Adapter<CustomRecycl
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         long start = System.currentTimeMillis();
-        File file = new File(data.get(position).getDuongdan());
-        Glide.with(context).load(file)
-                .into(holder.imageView);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH);
+
+        Glide.with(context).load(data.get(position).getDuongdan()).apply(options).thumbnail(0.6f)
+                .into(holder.imageView);;
+
         holder.checkBox.setChecked(data.get(position).check);
 
-        if (MainActivity.status == true) {
+        if (MainActivity.status) {
             holder.linearLayout.setVisibility(View.VISIBLE);
         } else {
             holder.linearLayout.setVisibility(View.INVISIBLE);
@@ -69,7 +78,7 @@ public class CustomRecyclerviewAdapter extends RecyclerView.Adapter<CustomRecycl
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.checkBox.isChecked() == true) {
+                if (holder.checkBox.isChecked()) {
                     MainActivity.collectedimgs.add(
                         new Hinh(
                             data.get(position).getDuongdan(),

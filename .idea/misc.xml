@@ -19,7 +19,9 @@
         <entry key="app/src/main/res/layout/custom_item_recyclerview.xml" value="0.1" />
         <entry key="app/src/main/res/layout/custom_item_viewpager.xml" value="0.1" />
         <entry key="app/src/main/res/layout/data_placeholder_layout.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/delete_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/dialog_rename_album.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/photo_editor_view.xml" value="0.1" />
         <entry key="app/src/main/res/layout/resize_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_image.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.1" />
