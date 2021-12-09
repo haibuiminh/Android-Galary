@@ -1,34 +1,28 @@
-package com.example.androidgalary.imageeditor;
+package com.example.androidgalary.ImageEditor;
 
 import static androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_180;
 import static androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_270;
 import static androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,7 +31,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidgalary.ImageActivity;
 import com.example.androidgalary.R;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 

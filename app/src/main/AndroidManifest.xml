@@ -42,7 +42,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".imageeditor.EditImageActivity" />
+        <activity android:name=".ImageEditor.EditImageActivity" />
 
         <meta-data
             android:name="android.support.VERSION"

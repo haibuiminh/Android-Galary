@@ -1,4 +1,4 @@
-package com.example.androidgalary.imageeditor;
+package com.example.androidgalary.ImageEditor;
 
 import ja.burhanrashid52.photoeditor.PhotoFilter;
 

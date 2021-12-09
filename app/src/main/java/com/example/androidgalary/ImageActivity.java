@@ -26,7 +26,7 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.androidgalary.imageeditor.EditImageActivity;
+import com.example.androidgalary.ImageEditor.EditImageActivity;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.BufferedInputStream;
@@ -42,11 +42,11 @@ import java.util.UUID;
 public class ImageActivity extends AppCompatActivity {
     Toolbar toolbar;
     ViewPagerFixer viewPager;
-    Button btn_Delete;
-    Button btn_Share;
-    Button btn_Crop;
-    Button btn_Resize;
-    Button btn_Edit;
+    Button btnDelete;
+    Button btnShare;
+    Button btnCrop;
+    Button btnResize;
+    Button btnEdit;
 
     static public int position = 0;
     String diachi;
@@ -65,12 +65,7 @@ public class ImageActivity extends AppCompatActivity {
         loai = intent.getBooleanExtra("loai", false);
 
         Anhxa();
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
         viewPager.setCurrentItem(position);
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -87,7 +82,7 @@ public class ImageActivity extends AppCompatActivity {
         });
 
         //Sự kiện crop ảnh
-        btn_Crop.setOnClickListener(new View.OnClickListener() {
+        btnCrop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cropImage();
@@ -95,7 +90,7 @@ public class ImageActivity extends AppCompatActivity {
         });
 
         //Xử lý sự kiện Share ảnh
-        btn_Share.setOnClickListener(new View.OnClickListener() {
+        btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int tmp = viewPager.getCurrentItem();
@@ -116,7 +111,7 @@ public class ImageActivity extends AppCompatActivity {
         });
 
         //Sự kiện resize ảnh
-        btn_Resize.setOnClickListener(new View.OnClickListener() {
+        btnResize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 resizeImage();
@@ -128,7 +123,7 @@ public class ImageActivity extends AppCompatActivity {
         //*     I:  ảnh của Anhfragment                   *
         //*     II: ảnh của Album                         *
         //*************************************************
-        btn_Delete.setOnClickListener(new View.OnClickListener() {
+        btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -157,7 +152,7 @@ public class ImageActivity extends AppCompatActivity {
         });
         final Intent editIntent = new Intent(getApplicationContext(), EditImageActivity.class);
 
-        btn_Edit.setOnClickListener(new View.OnClickListener() {
+        btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentImage = AnhFragment.mangHinh.get(viewPager.getCurrentItem());
@@ -261,16 +256,13 @@ public class ImageActivity extends AppCompatActivity {
     private void Anhxa() {
         toolbar = findViewById(R.id.toolbarofimgactivity);
 
-        btn_Delete = findViewById(R.id.delete_btn);
-        btn_Share = findViewById(R.id.share_btn);
-        btn_Crop = findViewById(R.id.crop_btn);
-        btn_Resize = findViewById(R.id.Resize_btn);
-        btn_Edit = findViewById(R.id.edit_btn);
+        btnDelete = findViewById(R.id.delete_btn);
+        btnShare = findViewById(R.id.share_btn);
+        btnCrop = findViewById(R.id.crop_btn);
+        btnResize = findViewById(R.id.Resize_btn);
+        btnEdit = findViewById(R.id.edit_btn);
 
         //Tạo nút back trên toolbar
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.inflateMenu(R.menu.menu_image);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -316,15 +308,14 @@ public class ImageActivity extends AppCompatActivity {
     public void refreshfAlbum(ArrayList<Hinh> collectedimgs) {
         //***Các ảnh cần xóa nằm trong collectedimgs***//                                         *
         for (int i = 0; i < collectedimgs.size(); i++) {
-            for (int j = 0; j < MainActivity.mang.size(); j++)
+            for (int j = 0; j < MainActivity.mang.size(); j++) {
                 for (int j1 = 0; j1 < MainActivity.mang.get(j).size(); j1++) {
                     if (MainActivity.mang.get(j).get(j1).getDuongdan().equals(collectedimgs.get(i).getDuongdan())) {
                         MainActivity.mang.get(j).remove(j1);
                     }
                 }
-        }
-
-
+            }
+        }   
     }
 
     //*** Hàm dùng để ghi lại danh sách album vào bộ nhớ***//

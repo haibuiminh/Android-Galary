@@ -1,4 +1,4 @@
-package com.example.androidgalary.imageeditor;
+package com.example.androidgalary.ImageEditor;
 
 import android.view.LayoutInflater;
 import android.view.View;
