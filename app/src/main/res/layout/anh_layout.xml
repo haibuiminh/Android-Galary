@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    android:layout_height="match_parent"
+<androidx.cardview.widget.CardView android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:verticalScrollbarPosition="right"
         android:orientation="vertical"
         xmlns:android="http://schemas.android.com/apk/res/android">
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/lvimg"
-            android:scrollbarSize="10dp">
-        </ListView>
+            app:fastScrollEnabled="true"
+            app:fastScrollHorizontalThumbDrawable="@drawable/fast_scroll_thumb"
+            app:fastScrollHorizontalTrackDrawable="@drawable/fast_scroll_track"
+            app:fastScrollVerticalThumbDrawable="@drawable/fast_scroll_thumb"
+            app:fastScrollVerticalTrackDrawable="@drawable/fast_scroll_track"
+            android:scrollbarSize="10dp"
+            >
+        </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
 

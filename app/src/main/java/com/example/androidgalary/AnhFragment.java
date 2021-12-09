@@ -15,6 +15,8 @@ import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -34,8 +36,7 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
     static Map<Integer, ArrayList<Hinh>> mapImage = new TreeMap<>(Collections.<Integer>reverseOrder());
     boolean hasNewChanged = false;
 
-    //listview chua nhieu recycleview
-    ListView listView;
+    RecyclerView listView;
     CustomListviewImageAdapter customListviewImageAdapter;
 
     View view;
@@ -78,13 +79,15 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
             }
             cursor.moveToPrevious();
         }
+        cursor.close();
 
         mangHinhDate.clear();
         mangHinhDate.addAll(mapImage.values());
+
         customListviewImageAdapter = new CustomListviewImageAdapter(context, mangHinhDate, R.layout.custom_item_listview_img);
         listView.setAdapter(customListviewImageAdapter);
-        listView.setDivider(null);
-        listView.setFastScrollEnabled(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
+        listView.setLayoutManager(linearLayoutManager);
 
         MainActivity.funcExecuteTime.put("onResume AnhFragment", System.currentTimeMillis() - start);
     }
