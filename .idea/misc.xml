@@ -5,12 +5,15 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_arrow_back_black_24dp.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_close.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_redo.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_undo.xml" value="0.1" />
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_album.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_album.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_edit_image.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_image.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_image_slideshow.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_recycler_image.xml" value="0.1" />
         <entry key="app/src/main/res/layout/add_text_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/album_layout.xml" value="0.1" />
@@ -19,7 +22,7 @@
         <entry key="app/src/main/res/layout/color_picker_item_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/compress_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/custom_item_listview_album.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/custom_item_listview_img.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/custom_item_listview_img.xml" value="0.2129458723323653" />
         <entry key="app/src/main/res/layout/custom_item_recyclerview.xml" value="0.1" />
         <entry key="app/src/main/res/layout/custom_item_viewpager.xml" value="0.1" />
         <entry key="app/src/main/res/layout/data_placeholder_layout.xml" value="0.1" />

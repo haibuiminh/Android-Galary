@@ -115,12 +115,10 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
         context = getActivity();
 
         view = inflater.inflate(R.layout.anh_layout, container, false);
-        listView = (ListView) view.findViewById(R.id.lvimg);
-
+        listView = view.findViewById(R.id.lvimg);
 
         return view;
     }
-
 
     @Override
     public void onMsgFromMainToFragment(String strValue) {

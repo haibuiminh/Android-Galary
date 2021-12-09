@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootView"
@@ -19,6 +21,7 @@
         android:id="@+id/photoEditorView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -32,7 +35,7 @@
         android:background="#99000000"
         android:padding="8dp"
         android:src="@drawable/ic_undo"
-        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
+        app:layout_constraintBottom_toTopOf="@+id/photoEditorView"
         app:layout_constraintEnd_toStartOf="@+id/imgRedo" />
 
     <ImageView
@@ -42,51 +45,22 @@
         android:background="#99000000"
         android:padding="8dp"
         android:src="@drawable/ic_redo"
-        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageView
-        android:id="@+id/imgGallery"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:background="#99000000"
-        android:padding="8dp"
-        android:src="@drawable/ic_gallery"
-        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/imgCamera"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:background="#99000000"
-        android:padding="8dp"
-        android:src="@drawable/ic_camera"
-        app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintStart_toEndOf="@id/imgGallery" />
-
-    <ImageView
-        android:id="@+id/imgClose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="8dp"
-        android:src="@drawable/ic_close"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline" />
+        android:layout_marginLeft="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/photoEditorView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvConstraintTools"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:background="@color/tool_bg"
         android:orientation="horizontal"
-        android:paddingBottom="4dp"
         android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:listitem="@layout/row_editing_tools" />
@@ -107,24 +81,44 @@
         android:id="@+id/txtCurrentTool"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:singleLine="true"
         android:text="@string/app_name"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/photoEditorView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="10dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintBottom_toTopOf="@+id/photoEditorView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/imgSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:src="@drawable/ic_save"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/photoEditorView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
