@@ -33,6 +33,7 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
     static ArrayList<ArrayList<Hinh>> mangHinhDate = new ArrayList<>();
     static Map<Integer, ArrayList<Hinh>> mapImage = new TreeMap<>(Collections.<Integer>reverseOrder());
 
+    static LinearLayoutManager linearLayoutManager = null;
     static public RecyclerView listView;
     CustomListviewImageAdapter customListviewImageAdapter;
 
@@ -41,6 +42,7 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         context = getActivity();
 
+        linearLayoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
         view = inflater.inflate(R.layout.anh_layout, container, false);
         listView = view.findViewById(R.id.lvimg);
 
@@ -90,9 +92,7 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
 
         customListviewImageAdapter = new CustomListviewImageAdapter(context, mangHinhDate, R.layout.custom_item_listview_img);
         listView.setAdapter(customListviewImageAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
         listView.setLayoutManager(linearLayoutManager);
-        listView.scrollToPosition(ImageActivity.position);
     }
 
     @Override
