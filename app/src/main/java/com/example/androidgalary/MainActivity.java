@@ -1,11 +1,5 @@
 package com.example.androidgalary;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.viewpager.widget.ViewPager;
-
 import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -22,9 +18,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.BufferedInputStream;
@@ -32,11 +34,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
+    public static final int CAMERA_REQUEST_CODE = 42;
+    public static final int CAMERA_PERMISSION_REQUEST_CODE = 43;
     public static Map<String, Long> funcExecuteTime = new HashMap<>();
 
     //***Sử dụng khi bắt sự kiện trong Context Menu***//
@@ -131,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                         toolbar.getMenu().getItem(3).setVisible(false);
                         toolbar.getMenu().getItem(4).setVisible(false);
                         toolbar.getMenu().getItem(5).setVisible(false);
+                        toolbar.getMenu().getItem(6).setVisible(true);
                     }
                 } else {
                     if (statusalbum == true) {
@@ -148,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                             toolbar.getMenu().getItem(3).setVisible(false);
                             toolbar.getMenu().getItem(4).setVisible(false);
                             toolbar.getMenu().getItem(5).setVisible(false);
+                            toolbar.getMenu().getItem(6).setVisible(true);
                         }
                     }
                 }
@@ -286,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                                 toolbar.getMenu().getItem(3).setVisible(false);
                                 toolbar.getMenu().getItem(4).setVisible(false);
                                 toolbar.getMenu().getItem(5).setVisible(false);
+                                toolbar.getMenu().getItem(6).setVisible(true);
                             }
 
 
@@ -470,6 +479,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
 
+                }else if (i == R.id.Camera){
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                        invokeCamera();
+                    }else{
+                        String[] permissionRequest = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permissionRequest, CAMERA_PERMISSION_REQUEST_CODE);
+                    }
                 }
 
                 return true;
@@ -477,6 +494,23 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         });
 
 
+    }
+    private void invokeCamera(){
+        Uri uri =  FileProvider.getUriForFile(MainActivity.this, "com.mydomain.fileprovider", createImageFile());
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
+        intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        startActivityForResult(intent, CAMERA_REQUEST_CODE);
+    }
+
+    private File createImageFile() {
+        File picturesDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String timestamp = sdf.format(new Date());
+
+        File imageFile = new File(picturesDirectory, "picture" + timestamp+".jpg" );
+        return imageFile;
     }
 
     @Override
