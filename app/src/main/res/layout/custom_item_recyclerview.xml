@@ -1,14 +1,13 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp"
+    app:cardBackgroundColor="#cfd6de">
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
-        android:layout_marginRight="3dp"
-        android:layout_marginEnd="3dp" >
+        android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/imgrv"
             android:layout_width="100dp"
@@ -17,19 +16,23 @@
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_launcher"
             />
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="#ddffb3a6"
+            android:background="#ddc49296"
             android:id="@+id/LNofcardview"
             android:visibility="invisible">
 
             <CheckBox
                 android:id="@+id/Check"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"/>
-        </LinearLayout>
+                android:checked="false"
+                android:layout_width="69dp"
+                android:layout_height="69dp"
+                android:height="69dp"
+                android:width="69dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
-
 </androidx.cardview.widget.CardView>

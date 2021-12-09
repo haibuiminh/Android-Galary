@@ -16,30 +16,22 @@
             android:background="#145ba3"
             app:title="GALLERY APP"
             app:titleTextColor="#f9fbfd"
-            android:id="@+id/toolbar">
-
-        </androidx.appcompat.widget.Toolbar>
-
+            android:id="@+id/toolbar" />
 
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:id="@+id/tab"
-            app:tabTextColor="#000000"
-            app:tabIndicatorHeight="10dp"
-            app:tabIndicatorColor="#f5f7f9"
-            app:tabSelectedTextColor="#161616"
-            >
-
-        </com.google.android.material.tabs.TabLayout>
+            android:background="#f7f7f9"
+            app:tabIndicatorColor="#145ba3"
+            app:tabIndicatorHeight="3dp"
+            app:tabSelectedTextColor="#145ba3"
+            app:tabTextColor="#403d3d" />
     </LinearLayout>
 
     <androidx.viewpager.widget.ViewPager
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/viewpager">
-
-    </androidx.viewpager.widget.ViewPager>
-
+        android:id="@+id/viewpager" />
 </LinearLayout>

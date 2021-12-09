@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -59,12 +60,19 @@ public class CustomRecyclerviewAdapter extends RecyclerView.Adapter<CustomRecycl
                 .apply(options).thumbnail(0.6f)
                 .into(holder.imageView);;
 
-        holder.checkBox.setChecked(data.get(position).check);
+        //***lưu ý trang thái được click của các ảnh trong trường hợp chuyển qua imageactivity rồi quay lại***//
+        for(int i=0;i<MainActivity.collectedimgs.size();i++)
+        {
+            if(MainActivity.collectedimgs.get(i).duongdan.equals(data.get(position).duongdan))
+            {
+                holder.checkBox.setChecked(true);
+            }
+        }
 
         if (MainActivity.status) {
-            holder.linearLayout.setVisibility(View.VISIBLE);
+            holder.constraintLayout.setVisibility(View.VISIBLE);
         } else {
-            holder.linearLayout.setVisibility(View.INVISIBLE);
+            holder.constraintLayout.setVisibility(View.INVISIBLE);
         }
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,13 +126,13 @@ public class CustomRecyclerviewAdapter extends RecyclerView.Adapter<CustomRecycl
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        LinearLayout linearLayout;
+        ConstraintLayout constraintLayout;
         CheckBox checkBox;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.imgrv);
-            linearLayout = itemView.findViewById(R.id.LNofcardview);
+            constraintLayout = itemView.findViewById(R.id.LNofcardview);
             checkBox = itemView.findViewById(R.id.Check);
         }
     }

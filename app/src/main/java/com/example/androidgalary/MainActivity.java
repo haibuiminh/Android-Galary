@@ -780,7 +780,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //***Xóa thông tin album***//
                         AlbumFragment.Mang.remove(info.position);
-                        AlbumFragment.lvadapter.notifyDataSetChanged();
+                        AlbumFragment.gvadapter.notifyDataSetChanged();
 
                         //***Cập nhật mang, MangTen và bộ nhớ***//
                         mang.remove(mang.size() - 1 - info.position);

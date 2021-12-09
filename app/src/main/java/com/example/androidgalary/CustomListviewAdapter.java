@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -44,7 +45,7 @@ public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
     {
         TextView ten,soluong;
         ImageView imageView;
-        LinearLayout linearLayout;
+        ConstraintLayout constraintLayout;
         CheckBox checkBox;
     }
 
@@ -62,7 +63,7 @@ public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
             viewHolder.ten = (TextView) convertView.findViewById(R.id.tenalbum);
             viewHolder.soluong = (TextView) convertView.findViewById(R.id.soluong);
             viewHolder.imageView = (ImageView) convertView.findViewById(R.id.imgalbum);
-            viewHolder.linearLayout = (LinearLayout)convertView.findViewById(R.id.LNofitemalbum);
+            viewHolder.constraintLayout = (ConstraintLayout) convertView.findViewById(R.id.LNofitemalbum);
             viewHolder.checkBox = (CheckBox)convertView.findViewById(R.id.Checkalbum);
             convertView.setTag(viewHolder);
         } else {
@@ -82,9 +83,9 @@ public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
                 .apply(options).thumbnail(0.6f).into(viewHolder.imageView);
 
         if (MainActivity.statusalbum == true) {
-            viewHolder.linearLayout.setVisibility(View.VISIBLE);
+            viewHolder.constraintLayout.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.linearLayout.setVisibility(View.INVISIBLE);
+            viewHolder.constraintLayout.setVisibility(View.INVISIBLE);
         }
 
         viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {

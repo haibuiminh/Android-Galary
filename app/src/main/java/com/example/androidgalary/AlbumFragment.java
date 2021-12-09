@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -19,8 +20,8 @@ import java.util.Collections;
 
 //***Fragment dùng để show danh sách album***//
 public class AlbumFragment extends Fragment implements FragmentCallbacks{
-    ListView listView;
-    static public CustomListviewAdapter lvadapter;
+    GridView gridView;
+    static public CustomListviewAdapter gvadapter;
 
     //***Mang chứa class thông tin của album***//
     static public ArrayList<ThongtinAlbum> Mang;
@@ -55,17 +56,16 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks{
         Collections.reverse(Mang);
 
         //***xuat listview album***//
-        lvadapter=new CustomListviewAdapter(getActivity(),Mang,R.layout.custom_item_listview_album);
-        listView.setAdapter(lvadapter);
+        gvadapter = new CustomListviewAdapter(getActivity(), Mang, R.layout.custom_item_listview_album);
+        gridView.setAdapter(gvadapter);
 
         //***Bắt sự kiện click item của list view để xuất Album đó trong AlbumActivity***//
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(MainActivity.SeleteAlbum==false) {
                     //***Lấy vị trí album được focus***//
                     postionofFocusingAlbum = MainActivity.mang.size() - 1 - position;
-                    //Toast.makeText(getActivity(), "" + postionofFocusingAlbum, //Toast.LENGTH_SHORT).show();
 
                     //***Gọi Intent sang AlbumActivity***//
                     Intent intent = new Intent(getContext(), AlbumActivity.class);
@@ -84,14 +84,11 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks{
                                 break;
                             }
                         }
-                        if(flag==false)
-                        {
+                        if (flag == false) {
                             MainActivity.mang.get(MainActivity.mang.size() - 1 - position).add(MainActivity.collectedimgs.get(i));
-
                         }
                     }
                     MainActivity.collectedimgs.clear();
-                    //Toast.makeText(getContext(), "Thành Công!", //Toast.LENGTH_SHORT).show();
                     MainActivity.SeleteAlbum = false;
                     ghivaobonhotrong();
                     MainActivity.viewPager.setAdapter(MainActivity.pagerAdapter);
@@ -101,25 +98,24 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks{
         });
 
         //***Đăng kí sử dụng ContextMenu cho đối tượng listview***//
-        registerForContextMenu(listView);
+        registerForContextMenu(gridView);
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        Log.e("TAG 1","AlbumFragment");
         //***Dán R.layout.album_layout vào View để dán vào Fragment***//
         View view=inflater.inflate(R.layout.album_layout,container,false);
 
         //***Ánh xạ***//
-        listView=(ListView) view.findViewById(R.id.lvalbum);
+        gridView = (GridView) view.findViewById(R.id.gvalbum);
         return view;
     }
 
     @Override
     public void onMsgFromMainToFragment(String strValue) {
 
-
     }
+
     //***Hàm cập nhật album trong mang, MangTen và bộ nhớ***//
     public void refreshfAlbum(ArrayList<Hinh> collectedimgs) {
         for(int i=0;i<collectedimgs.size();i++)
