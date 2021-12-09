@@ -7,11 +7,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -34,9 +32,8 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
 
     static ArrayList<ArrayList<Hinh>> mangHinhDate = new ArrayList<>();
     static Map<Integer, ArrayList<Hinh>> mapImage = new TreeMap<>(Collections.<Integer>reverseOrder());
-    boolean hasNewChanged = false;
 
-    RecyclerView listView;
+    static public RecyclerView listView;
     CustomListviewImageAdapter customListviewImageAdapter;
 
     View view;
@@ -51,8 +48,8 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
 
         //***Khởi tạo các mảng***//
         Map<Integer, ArrayList<Hinh>> mapImage = new TreeMap<>(Collections.<Integer>reverseOrder());
@@ -61,7 +58,6 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
 
         Cursor cursor = contentResolver.query(Image_URI, null, null, null, null);
         cursor.moveToLast();
-
         while (!cursor.isBeforeFirst()) {
             @SuppressLint("Range") final String duongdanhinhanh = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
             @SuppressLint("Range") String tenhinh = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
@@ -70,17 +66,19 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
             Date lastModDate = new Date(TempFiles.lastModified());
             SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
             Integer dateText = Integer.valueOf(df2.format(lastModDate));
-
             if (TempFiles.exists()) {
                 Hinh currentImage = new Hinh(duongdanhinhanh, tenhinh, dateText);
                 mangHinh.add(currentImage);
                 if (mapImage.containsKey(dateText)) {
-                    mapImage.get(dateText).add(currentImage);
+                    {
+                        mapImage.get(dateText).add(currentImage);
+                    }
                 } else {
                     ArrayList<Hinh> temp = new ArrayList<>();
                     temp.add(currentImage);
                     mapImage.put(dateText, temp);
                 }
+
             }
             cursor.moveToPrevious();
         }
@@ -94,6 +92,7 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
         listView.setAdapter(customListviewImageAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
         listView.setLayoutManager(linearLayoutManager);
+        listView.scrollToPosition(ImageActivity.position);
     }
 
     @Override

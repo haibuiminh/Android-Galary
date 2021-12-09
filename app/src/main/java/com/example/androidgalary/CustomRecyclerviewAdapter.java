@@ -115,6 +115,31 @@ public class CustomRecyclerviewAdapter extends RecyclerView.Adapter<CustomRecycl
                 }
             }
         });
+
+        holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (!loai) {
+                    if (((MainActivity) context).status == false) {
+                        ((MainActivity) context).status = true;
+                        ImageActivity.position = pos;
+                        MainActivity.viewPager.setAdapter(MainActivity.pagerAdapter);
+
+                        //***Show những lựa chọn cần thiết sau khi Select***//
+                        ((MainActivity) context).toolbar.getMenu().getItem(0).setVisible(false);
+                        ((MainActivity) context).toolbar.getMenu().getItem(1).setVisible(true);
+                        ((MainActivity) context).toolbar.getMenu().getItem(2).setVisible(true);
+                        ((MainActivity) context).toolbar.getMenu().getItem(3).setVisible(true);
+                        ((MainActivity) context).toolbar.getMenu().getItem(4).setVisible(true);
+                        ((MainActivity) context).toolbar.getMenu().getItem(5).setVisible(true);
+                    }
+                } else {
+
+                }
+                return false;
+            }
+        });
+
     }
 
     @Override
