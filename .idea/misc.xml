@@ -5,6 +5,8 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_arrow_back_black_24dp.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_brush.xml" value="0.1265625" />
+        <entry key="app/src/main/res/drawable/ic_camera.xml" value="0.1265625" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_redo.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_undo.xml" value="0.1" />
@@ -12,7 +14,7 @@
         <entry key="app/src/main/res/font/roboto_medium.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_album.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_edit_image.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_image.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_image.xml" value="0.19989348000853727" />
         <entry key="app/src/main/res/layout/activity_image_slideshow.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_recycler_image.xml" value="0.1" />

@@ -13,9 +13,9 @@
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#efebe9"
-            app:title="GALLERY APP"
-            app:titleTextColor="#424242"
+            android:background="#004080"
+            app:title="Galary"
+            app:titleTextColor="#ffffff"
             android:id="@+id/toolbar" />
 
         <com.google.android.material.tabs.TabLayout

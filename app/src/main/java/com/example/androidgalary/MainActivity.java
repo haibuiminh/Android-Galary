@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             }
         });
         //***Bắt sự kiện trượt các View***//
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -643,6 +643,10 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     public void ghivaobonhotrongtenalbum() {
         File duongdan = getCacheDir();
         File file = new File(duongdan, "nameofalbum.txt");
+        if (file.exists())
+            file.delete();
+
+        file = new File(duongdan, "nameofalbum.txt");
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             String buffer = new String();
@@ -653,7 +657,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                     buffer += MainActivity.MangTen.get(MainActivity.MangTen.size() - 1);
             }
 
-
+            Log.d("ALBUM","ALBUMNAME= MainActivity" + buffer);
             fileOutputStream.write(buffer.getBytes());
             fileOutputStream.close();
         } catch (Exception e) {

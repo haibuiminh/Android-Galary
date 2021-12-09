@@ -12,9 +12,9 @@
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#efebe9"
+        android:background="#004080"
         app:title="Image"
-        app:titleTextColor="#424242"
+        app:titleTextColor="#ffffff"
         android:id="@+id/toolbarofimgactivity">
     </androidx.appcompat.widget.Toolbar>
 
@@ -34,15 +34,17 @@
 
         <Button
             android:id="@+id/delete_btn"
+            android:paddingTop="15dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/comprees_ic"
+            android:drawableTop="@android:drawable/ic_menu_delete"
             android:text="Xóa"
             android:textSize="12sp" />
 
         <Button
             android:id="@+id/share_btn"
+            android:paddingTop="15dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -53,6 +55,7 @@
         <Button
             android:id="@+id/crop_btn"
             android:layout_width="0dp"
+            android:paddingTop="15dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@android:drawable/ic_menu_crop"
@@ -62,6 +65,7 @@
         <Button
             android:id="@+id/edit_btn"
             android:layout_width="0dp"
+            android:paddingTop="15dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@android:drawable/ic_menu_edit"
@@ -70,10 +74,11 @@
 
         <Button
             android:id="@+id/Resize_btn"
+            android:paddingTop="15dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@android:drawable/ic_menu_delete"
+            android:drawableTop="@drawable/comprees_ic"
             android:text="RESIZE"
             android:textSize="12sp" />
     </LinearLayout>
