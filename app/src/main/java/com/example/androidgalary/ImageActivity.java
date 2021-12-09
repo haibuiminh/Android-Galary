@@ -61,105 +61,104 @@ public class ImageActivity extends AppCompatActivity {
         diachi = intent.getStringExtra("vitri");
         loai = intent.getBooleanExtra("loai", false);
 
-
         Anhxa();
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
-//        viewPager.setCurrentItem(position);
-//
-//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                int i = item.getItemId();
-//                if (i == R.id.compress) {
-//                    compressImage();
-//                }
-//                return false;
-//            }
-//        });
-//
-//        //Sự kiện crop ảnh
-//        btn_Crop.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                cropImage();
-//            }
-//        });
-//
-//        //Xử lý sự kiện Share ảnh
-//        btn_Share.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int tmp = viewPager.getCurrentItem();
-//                Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
-//                try {
-//                    File photoFile = new File(choosenImage.duongdan);
-//                    Uri imageUri = FileProvider.getUriForFile(ImageActivity.this,
-//                            BuildConfig.APPLICATION_ID + ".provider",
-//                            photoFile);
-//                    final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-//                    intent.setType("image/*");
-//                    intent.putExtra(Intent.EXTRA_STREAM, imageUri);
-//                    startActivity(Intent.createChooser(intent, "Share via"));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//        //Sự kiện resize ảnh
-//        btn_Resize.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                resizeImage();
-//            }
-//        });
-//
-//        //*************************************************
-//        //* Xử lí sự kiện xóa ảnh trong hai trường hợp    *
-//        //*     I:  ảnh của Anhfragment                   *
-//        //*     II: ảnh của Album                         *
-//        //*************************************************
-//        btn_Delete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                final Dialog confirmDialog = new Dialog(ImageActivity.this);
-//                confirmDialog.setTitle("Xác nhận xóa ảnh");
-//                confirmDialog.setContentView(R.layout.delete_dialog);
-//                confirmDialog.show();
-//                Button btnOK = confirmDialog.findViewById(R.id.btnDeleteOk);
-//                Button btnCancel = confirmDialog.findViewById(R.id.btnDeleteCancel);
-//
-//                btnCancel.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        confirmDialog.dismiss();
-//                    }
-//                });
-//
-//                btnOK.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        deleteImage();
-//                        confirmDialog.dismiss();
-//                    }
-//                });
-//            }
-//        });
-//        final Intent editIntent = new Intent(getApplicationContext(), EditImageActivity.class);
-//
-//        btn_Edit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                currentImage = AnhFragment.mangHinh.get(viewPager.getCurrentItem());
-//                startActivity(editIntent);
-//            }
-//        });
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        viewPager.setCurrentItem(position);
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int i = item.getItemId();
+                if (i == R.id.compress) {
+                    compressImage();
+                }
+                return false;
+            }
+        });
+
+        //Sự kiện crop ảnh
+        btn_Crop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cropImage();
+            }
+        });
+
+        //Xử lý sự kiện Share ảnh
+        btn_Share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tmp = viewPager.getCurrentItem();
+                Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
+                try {
+                    File photoFile = new File(choosenImage.duongdan);
+                    Uri imageUri = FileProvider.getUriForFile(ImageActivity.this,
+                            BuildConfig.APPLICATION_ID + ".provider",
+                            photoFile);
+                    final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("image/*");
+                    intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                    startActivity(Intent.createChooser(intent, "Share via"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        //Sự kiện resize ảnh
+        btn_Resize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resizeImage();
+            }
+        });
+
+        //*************************************************
+        //* Xử lí sự kiện xóa ảnh trong hai trường hợp    *
+        //*     I:  ảnh của Anhfragment                   *
+        //*     II: ảnh của Album                         *
+        //*************************************************
+        btn_Delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Dialog confirmDialog = new Dialog(ImageActivity.this);
+                confirmDialog.setTitle("Xác nhận xóa ảnh");
+                confirmDialog.setContentView(R.layout.delete_dialog);
+                confirmDialog.show();
+                Button btnOK = confirmDialog.findViewById(R.id.btnDeleteOk);
+                Button btnCancel = confirmDialog.findViewById(R.id.btnDeleteCancel);
+
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        confirmDialog.dismiss();
+                    }
+                });
+
+                btnOK.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteImage();
+                        confirmDialog.dismiss();
+                    }
+                });
+            }
+        });
+        final Intent editIntent = new Intent(getApplicationContext(), EditImageActivity.class);
+
+        btn_Edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentImage = AnhFragment.mangHinh.get(viewPager.getCurrentItem());
+                startActivity(editIntent);
+            }
+        });
 
     }
 
@@ -256,7 +255,7 @@ public class ImageActivity extends AppCompatActivity {
                     break;
                 }
             }
-            ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(AnhFragment.mangHinh, this, getSupportFragmentManager());
+            ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(AnhFragment.mangHinh, this);
             viewPager.setAdapter(imagePagerAdapter);
         } else {
             //****************************************
@@ -268,13 +267,10 @@ public class ImageActivity extends AppCompatActivity {
                     break;
                 }
             }
-            ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum), this, getSupportFragmentManager());
+            ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum), this);
             viewPager.setAdapter(imagePagerAdapter);
             Log.d("123456", "" + AlbumFragment.postionofFocusingAlbum);
-
         }
-
-
     }
 
     //*** Hàm dùng để cập nhật mảng chứa các album sau khi xóa và ghi lại vào bộ nhớ***//
@@ -467,7 +463,7 @@ public class ImageActivity extends AppCompatActivity {
             ghivaobonhotrong();
             //su ly sau khi xoa
 
-            ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(AnhFragment.mangHinh, ImageActivity.this, getSupportFragmentManager());
+            ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(AnhFragment.mangHinh, ImageActivity.this);
             viewPager.setAdapter(imagePagerAdapter);
 
             //*** Tìm vị trị thích hợp để setCurrent cho ViewPager***//
@@ -522,7 +518,7 @@ public class ImageActivity extends AppCompatActivity {
                 }
                 ghivaobonhotrongtenalbum();
                 ghivaobonhotrong();
-                ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum), ImageActivity.this, getSupportFragmentManager());
+                ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum), ImageActivity.this);
                 viewPager.setAdapter(imagePagerAdapter);
                 //*** Tìm vị trị thích hợp để setCurrent cho ViewPager***//
                 if (tmp == MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size() - 1)

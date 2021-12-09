@@ -1,6 +1,7 @@
 package com.example.androidgalary;
 
-import android.app.Activity;
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +28,7 @@ public class ImagePagerAdapter extends PagerAdapter {
     LayoutInflater layoutInflater;
 
 
-    public ImagePagerAdapter(ArrayList<Hinh> mang, Context context, FragmentManager fm) {
-        super(fm);
+    public ImagePagerAdapter(ArrayList<Hinh> mang, Context context) {
         this.mang = mang;
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
