@@ -44,4 +44,17 @@ public class Hinh {
     public void setCheck(boolean check) {
         this.check = check;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Hinh target = (Hinh) obj;
+        return (this.tenhinh.equals(target.tenhinh) &&
+                this.duongdan.equals(target.duongdan) &&
+                this.addDate.equals(target.addDate));
+    }
 }

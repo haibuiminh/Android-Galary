@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:verticalScrollbarPosition="right"
@@ -9,12 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/lvimg"
-        android:scrollbarSize="20dp">
-
-
+        android:scrollbarSize="10dp">
     </ListView>
-
-
 </LinearLayout>
 
 
