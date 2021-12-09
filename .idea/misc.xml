@@ -31,6 +31,7 @@
         <entry key="app/src/main/res/layout/fragment_bottom_custom_effect_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_bottom_properties_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_bottom_sticker_emoji_dialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/listview_metadata.xml" value="0.10552536231884058" />
         <entry key="app/src/main/res/layout/photo_editor_view.xml" value="0.1" />
         <entry key="app/src/main/res/layout/resize_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/row_editing_tools.xml" value="0.1" />

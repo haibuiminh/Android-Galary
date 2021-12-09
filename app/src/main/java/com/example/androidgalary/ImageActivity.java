@@ -1,5 +1,6 @@
 package com.example.androidgalary;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -18,8 +19,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -76,6 +79,8 @@ public class ImageActivity extends AppCompatActivity {
                 int i = item.getItemId();
                 if (i == R.id.compress) {
                     compressImage();
+                } else if (i == R.id.metadata) {
+                    showMetadata();
                 }
                 return false;
             }
@@ -159,7 +164,31 @@ public class ImageActivity extends AppCompatActivity {
                 startActivity(editIntent);
             }
         });
+    }
 
+    private void showMetadata() {
+        try {
+            currentImage = AnhFragment.mangHinh.get(viewPager.getCurrentItem());
+            ListView listView = new ListView(this);
+
+            ExifUtility exif = new ExifUtility();
+            String[] items = exif.getExif(currentImage.exif).toArray(new String[0]);
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.listview_metadata, R.id.txtitem, items);
+            listView.setAdapter(adapter);
+
+            AlertDialog.Builder builder = new
+                    AlertDialog.Builder(ImageActivity.this);
+            builder.setCancelable(true);
+            builder.setPositiveButton("OK", null);
+            builder.setView(listView);
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        catch (Exception e){
+
+        }
     }
 
     private void editBitmap(Bitmap bitmap, String filePath) {

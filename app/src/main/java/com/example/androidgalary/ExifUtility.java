@@ -1,49 +1,73 @@
 package com.example.androidgalary;
 
+import static com.example.androidgalary.MainActivity.viewPager;
+
 import androidx.exifinterface.media.ExifInterface;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class ExifUtility {
-    private String getExif(ExifInterface exif) {
-        StringBuilder builder = new StringBuilder();
+    public List<String> getExif(ExifInterface exif) {
 
-        String latitudeRef, longitudeRef;
-        Float latitude, longitude;
-        latitudeRef = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
-        if (latitudeRef.equals("N")) {
-            latitude = convertFromDegreeMinuteSeconds(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE));
-        } else {
-            latitude = 0 - convertFromDegreeMinuteSeconds(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE));
+        List<String> exifList = new ArrayList<>();
+
+        File f = new File(AnhFragment.mangHinh.get(viewPager.getCurrentItem()).duongdan);
+
+        if (!getExifTag(exif, ExifInterface.TAG_DATETIME).isEmpty()){
+            exifList.add("Date: " + getExifTag(exif, ExifInterface.TAG_DATETIME));
         }
-        longitudeRef = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
-        if (longitudeRef.equals("E")) {
-            longitude = convertFromDegreeMinuteSeconds(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE));
-        } else {
-            longitude = 0 - convertFromDegreeMinuteSeconds(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE));
+        else {
+            DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
+            exifList.add("Date: " + dateTimeInstance.format(new Date(f.lastModified())));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_FILE_SOURCE).isEmpty()){
+            exifList.add("File Source: " + getExifTag(exif, ExifInterface.TAG_FILE_SOURCE));
+        }
+        exifList.add("File Size: " + f.length() / 1024 + "KB");
+
+        if (!getExifTag(exif, ExifInterface.TAG_IMAGE_WIDTH).isEmpty() && !getExifTag(exif, ExifInterface.TAG_IMAGE_LENGTH).isEmpty()){
+            exifList.add("Image Size: " + getExifTag(exif, ExifInterface.TAG_IMAGE_WIDTH) + "x" + getExifTag(exif, ExifInterface.TAG_IMAGE_LENGTH));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_MAKE).isEmpty()){
+            exifList.add("Make: " + getExifTag(exif, ExifInterface.TAG_MAKE));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_MODEL).isEmpty()){
+            exifList.add("Model: " + getExifTag(exif, ExifInterface.TAG_MODEL));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_WHITE_BALANCE).isEmpty()){
+            exifList.add("White Balance: " + getExifTag(exif, ExifInterface.TAG_WHITE_BALANCE));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_BRIGHTNESS_VALUE).isEmpty()){
+            exifList.add("Brightness: " + getExifTag(exif, ExifInterface.TAG_BRIGHTNESS_VALUE));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_CONTRAST).isEmpty()){
+            exifList.add("Contrast: " + getExifTag(exif, ExifInterface.TAG_CONTRAST));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_GAMMA).isEmpty()){
+            exifList.add("Gamma: " + getExifTag(exif, ExifInterface.TAG_GAMMA));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_SATURATION).isEmpty()){
+            exifList.add("Saturation: " + getExifTag(exif, ExifInterface.TAG_SATURATION));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_SHARPNESS).isEmpty()){
+            exifList.add("Sharpness: " + getExifTag(exif, ExifInterface.TAG_SHARPNESS));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_FOCAL_LENGTH).isEmpty()){
+            exifList.add("Focal Length: " + getExifTag(exif, ExifInterface.TAG_FOCAL_LENGTH));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_ISO_SPEED).isEmpty()){
+            exifList.add("ISO Speed: " + getExifTag(exif, ExifInterface.TAG_ISO_SPEED));
+        }
+        if (!getExifTag(exif, ExifInterface.TAG_SHUTTER_SPEED_VALUE).isEmpty()){
+            exifList.add("Shutter Speed: " + getExifTag(exif, ExifInterface.TAG_SHUTTER_SPEED_VALUE));
         }
 
-        builder.append("Exif : \n");
-        builder.append("Date & Time: ").append(getExifTag(exif, ExifInterface.TAG_DATETIME)).append("\n");
-        builder.append("File Source: " + getExifTag(exif, ExifInterface.TAG_FILE_SOURCE) + "\n");
-        builder.append("Image Length: " + getExifTag(exif, ExifInterface.TAG_IMAGE_LENGTH) + "\n");
-        builder.append("Image Width: " + getExifTag(exif, ExifInterface.TAG_IMAGE_WIDTH) + "\n");
-        builder.append("Camera Make: " + getExifTag(exif, ExifInterface.TAG_MAKE) + "\n");
-        builder.append("Camera Model: " + getExifTag(exif, ExifInterface.TAG_MODEL) + "\n");
-
-
-        builder.append("Color Space: " + getExifTag(exif, ExifInterface.TAG_COLOR_SPACE) + "\n");
-        builder.append("White Balance: " + getExifTag(exif, ExifInterface.TAG_WHITE_BALANCE) + "\n");
-        builder.append("Brightness: " + getExifTag(exif, ExifInterface.TAG_BRIGHTNESS_VALUE) + "\n");
-        builder.append("Contrast: " + getExifTag(exif, ExifInterface.TAG_CONTRAST) + "\n");
-        builder.append("Gamma: " + getExifTag(exif, ExifInterface.TAG_GAMMA) + "\n");
-        builder.append("SATURATION: " + getExifTag(exif, ExifInterface.TAG_SATURATION) + "\n");
-        builder.append("SHARPNESS: " + getExifTag(exif, ExifInterface.TAG_SHARPNESS) + "\n");
-
-        builder.append("Flash: " + getExifTag(exif, ExifInterface.TAG_FLASH) + "\n");
-        builder.append("Focal Length: " + getExifTag(exif, ExifInterface.TAG_FOCAL_LENGTH) + "\n");
-        builder.append("ISO_SPEED: " + getExifTag(exif, ExifInterface.TAG_ISO_SPEED) + "\n");
-        builder.append("SHUTTER_SPEED: " + getExifTag(exif, ExifInterface.TAG_SHUTTER_SPEED_VALUE) + "\n");
-
-        return builder.toString();
+        return exifList;
     }
 
     private static Float convertFromDegreeMinuteSeconds(String stringDMS) {
@@ -68,6 +92,6 @@ public class ExifUtility {
     private String getExifTag(ExifInterface exif, String tag) {
         String attribute = exif.getAttribute(tag);
 
-        return (null != attribute ? attribute : "");
+        return (null != attribute && !attribute.equals("0") ? attribute : "");
     }
 }

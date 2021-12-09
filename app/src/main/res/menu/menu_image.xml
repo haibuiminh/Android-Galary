@@ -3,8 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="Compress"
-        app:showAsAction="always"
-        android:visible="true"
-        android:id="@+id/compress"/>
+    <item
+        android:id="@+id/compress"
+        android:title="Compress"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/metadata"
+        android:title="View Detail"
+        app:showAsAction="always" />
 </menu>
