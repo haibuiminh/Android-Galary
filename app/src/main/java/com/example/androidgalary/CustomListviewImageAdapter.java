@@ -49,6 +49,7 @@ public class CustomListviewImageAdapter extends ArrayAdapter<ArrayList<Hinh>> {
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         long start = System.currentTimeMillis();
+
         LayoutInflater inf = ((MainActivity) context).getLayoutInflater();
         ViewHolder viewHolder;
         if (convertView == null) {
@@ -61,10 +62,6 @@ public class CustomListviewImageAdapter extends ArrayAdapter<ArrayList<Hinh>> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        //***Thêm hình từ mangHinh vào temp, số lượng tùy vào mang.get(position)***//
-        ArrayList<Hinh> temp;
-
-        //viewHolder.textView.setText(mang.get(position).get(0).getAddDate().toString());
         String date = mang.get(position).get(0).getAddDate().toString();
         viewHolder.textView.setText(String.format("%s-%s-%s", date.substring(0, 4), date.substring(4, 6), date.substring(6, 8)));
         CustomRecyclerviewAdapter customRecyclerviewAdapter = new CustomRecyclerviewAdapter(context, mang.get(position), false, position);

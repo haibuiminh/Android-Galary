@@ -1,5 +1,9 @@
 package com.example.androidgalary.imageeditor;
 
+import static androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_180;
+import static androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_270;
+import static androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -23,6 +27,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,8 +50,6 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         EmojiBSFragment.EmojiListener,
         StickerBSFragment.StickerListener, EditingToolsAdapter.OnItemSelected, FilterListener {
 
-    private static final int CAMERA_REQUEST = 52;
-    private static final int PICK_REQUEST = 53;
     private PhotoEditor mPhotoEditor;
     private PhotoEditorView mPhotoEditorView;
     private PropertiesBSFragment mPropertiesBSFragment;
@@ -84,21 +87,39 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         mRvFilters.setLayoutManager(llmFilters);
         mRvFilters.setAdapter(mFilterViewAdapter);
 
-
         Typeface mTextRobotoTf = ResourcesCompat.getFont(this, R.font.roboto_medium);
-        //Typeface mEmojiTypeFace = Typeface.createFromAsset(getAssets(), "emojione-android.ttf");
 
         mPhotoEditor = new PhotoEditor.Builder(this, mPhotoEditorView)
-                .setPinchTextScalable(true) // set flag to make text scalable when pinch
+                .setPinchTextScalable(true)
                 .setDefaultTextTypeface(mTextRobotoTf)
-                //.setDefaultEmojiTypeface(mEmojiTypeFace)
-                .build(); // build photo editor sdk
+                .build();
 
         mPhotoEditor.setOnPhotoEditorListener(this);
 
-        //Set Image Dynamically
-        mPhotoEditorView.getSource().setImageURI(Uri.parse(ImageActivity.currentImage.getDuongdan()));
-        //mPhotoEditorView.getSource().setImageResource(R.drawable.color_palette);
+        Uri imageUri = Uri.parse(ImageActivity.currentImage.getDuongdan());
+        int orientation = 0;
+        try {
+            ExifInterface exif = new ExifInterface(ImageActivity.currentImage.getDuongdan());
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mPhotoEditorView.getSource().setImageURI(imageUri);
+
+        switch (orientation) {
+            case ORIENTATION_ROTATE_90:
+                mPhotoEditorView.setRotation(90);
+                break;
+
+            case ORIENTATION_ROTATE_180:
+                mPhotoEditorView.setRotation(180);
+                break;
+
+            case ORIENTATION_ROTATE_270:
+                mPhotoEditorView.setRotation(270);
+                break;
+        }
+
     }
 
     private void initViews() {
