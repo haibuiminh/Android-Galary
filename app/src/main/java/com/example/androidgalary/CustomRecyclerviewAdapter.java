@@ -96,9 +96,9 @@ public class CustomRecyclerviewAdapter extends RecyclerView.Adapter<CustomRecycl
                             data.get(position).getAddDate()
                         )
                     );
-                    if (loai == false) {
+                    if (!loai) {
                         AnhFragment.mangHinhDate.get(pos).get(position).setCheck(true);
-                    } else if (loai) {
+                    } else {
                         MainActivity.mang.get(pos).get(position).setCheck(true);
                     }
                 } else {
@@ -107,16 +107,14 @@ public class CustomRecyclerviewAdapter extends RecyclerView.Adapter<CustomRecycl
                             MainActivity.collectedimgs.remove(i);
                         }
                     }
-                    if (loai == false)
+                    if (!loai)
                         AnhFragment.mangHinhDate.get(pos).get(position).setCheck(false);
-                    else if (loai) {
+                    else {
                         MainActivity.mang.get(pos).get(position).setCheck(false);
                     }
                 }
             }
         });
-
-        MainActivity.funcExecuteTime.put("onBindViewHolder CustomRecyclerviewAdapter", System.currentTimeMillis() - start);
     }
 
     @Override

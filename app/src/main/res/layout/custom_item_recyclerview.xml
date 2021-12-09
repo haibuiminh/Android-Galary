@@ -2,8 +2,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="5dp"
-    app:cardBackgroundColor="#cfd6de">
+    app:cardBackgroundColor="#ffffff"
+    app:cardCornerRadius="0dp">
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -13,23 +13,26 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:background="@drawable/image_border"
             android:scaleType="centerCrop"
+            android:cropToPadding="true"
             android:src="@mipmap/ic_launcher"
             />
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/LNofcardview"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="#ddc49296"
-            android:id="@+id/LNofcardview"
             android:visibility="invisible">
 
             <CheckBox
                 android:id="@+id/Check"
-                android:checked="false"
                 android:layout_width="69dp"
                 android:layout_height="69dp"
-                android:height="69dp"
                 android:width="69dp"
+                android:height="69dp"
+                android:checked="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />

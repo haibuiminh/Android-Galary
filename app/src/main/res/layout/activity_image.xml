@@ -12,9 +12,9 @@
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#145ba3"
+        android:background="#efebe9"
         app:title="Image"
-        app:titleTextColor="#f9fbfd"
+        app:titleTextColor="#424242"
         android:id="@+id/toolbarofimgactivity">
     </androidx.appcompat.widget.Toolbar>
 
@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="8"
+        android:background="#efebe9"
         tools:ignore="MissingClass" />
 
     <LinearLayout

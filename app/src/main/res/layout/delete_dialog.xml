@@ -6,14 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:layout_margin="15dp"
-        android:text="XÁC NHẬN XÓA ẢNH"
+        android:text="CONFIRM DELETE"
         android:textColor="@android:color/black"
         android:textSize="20dp"
         android:textStyle="bold"

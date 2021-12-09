@@ -7,7 +7,7 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="#efebe9"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <androidx.constraintlayout.widget.Guideline
@@ -21,6 +21,8 @@
         android:id="@+id/photoEditorView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="50dp"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -31,7 +33,6 @@
         android:id="@+id/imgUndo"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:background="#99000000"
         android:padding="8dp"
         android:src="@drawable/ic_undo"
         app:layout_constraintBottom_toTopOf="@+id/photoEditorView"
@@ -41,7 +42,6 @@
         android:id="@+id/imgRedo"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:background="#99000000"
         android:padding="8dp"
         android:src="@drawable/ic_redo"
         android:layout_marginLeft="50dp"
@@ -54,7 +54,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:background="@color/tool_bg"
+        android:background="#212121"
         android:orientation="horizontal"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
