@@ -1,16 +1,26 @@
 package com.example.androidgalary;
 
+import androidx.exifinterface.media.ExifInterface;
+
+import java.io.IOException;
+
 public class Hinh {
     String duongdan;
     String tenhinh;
     Integer addDate;
     boolean check;
+    ExifInterface exif = null;
 
     public Hinh(String duongdan, String tenhinh, Integer addDate) {
         this.duongdan = duongdan;
         this.tenhinh = tenhinh;
         this.addDate = addDate;
         this.check = false;
+        try{
+            exif = new ExifInterface(duongdan);
+        } catch (IOException e) {
+            exif = null;
+        }
     }
 
     public String getDuongdan() {

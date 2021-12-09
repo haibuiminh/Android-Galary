@@ -104,7 +104,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mPhotoEditorView.getSource().setImageURI(imageUri);
+        mPhotoEditorView.getSource().setImageURI( Uri.parse(ImageActivity.currentImage.getDuongdan()));
 
         switch (orientation) {
             case ORIENTATION_ROTATE_90:
@@ -119,7 +119,6 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 mPhotoEditorView.setRotation(270);
                 break;
         }
-
     }
 
     private void initViews() {

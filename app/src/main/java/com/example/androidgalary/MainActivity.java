@@ -560,7 +560,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
 
         //***Xin cấp quyền***//
-        //kiem tra xem version la truoc hay sau 27
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
@@ -680,11 +679,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                 if (splitalbum[i] != "") {
                     mang.add(new ArrayList<Hinh>());
                     String splitimg[] = splitalbum[i].split("#");
-                    Log.e("sizesplitimg", splitimg.length + "");
-                    for (int j = 0; j < splitimg.length; j = j + 3) {
 
+                    for (int j = 0; j < splitimg.length; j = j + 3) {
                         mang.get(mang.size() - 1).add(new Hinh(splitimg[j], splitimg[j + 1], Integer.parseInt(splitimg[j + 2])));
-                        Log.e("manghinh", splitimg[j].toString() + " " + splitimg[j + 1].toString() + " " + splitimg[j + 2].toString());
                     }
                 }
             }
