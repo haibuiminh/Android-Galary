@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -100,10 +101,10 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
         mPhotoEditor.setOnPhotoEditorListener(this);
 
-        Uri imageUri = Uri.parse(ImageActivity.currentImage.getDuongdan());
         int orientation = 0;
+        ExifInterface exif = null;
         try {
-            ExifInterface exif = new ExifInterface(ImageActivity.currentImage.getDuongdan());
+            exif = new ExifInterface(ImageActivity.currentImage.getDuongdan());
             orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         } catch (IOException e) {
             e.printStackTrace();
@@ -208,42 +209,82 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
             showLoading("Saving...");
 
             final String currentFilePath = ImageActivity.currentImage.getDuongdan();
-            int index = currentFilePath.lastIndexOf('.');
             final int slash = currentFilePath.lastIndexOf('/');
-            String newFilePath = currentFilePath.substring(0,index) + System.currentTimeMillis() + currentFilePath.substring(index);
-            File file = new File(newFilePath);
+            // int index = currentFilePath.lastIndexOf('.');
+            // String newFilePath = currentFilePath.substring(0, index) + System.currentTimeMillis() + currentFilePath.substring(index);
 
-            try {
-                file.createNewFile();
-
-                SaveSettings saveSettings = new SaveSettings.Builder()
+            SaveSettings saveSettings = new SaveSettings.Builder()
                     .setClearViewsEnabled(true)
                     .setTransparencyEnabled(true)
                     .build();
 
-                mPhotoEditor.saveAsBitmap(saveSettings, new OnSaveBitmap() {
-                    @Override
-                    public void onBitmapReady(Bitmap saveBitmap) {
-                        hideLoading();
-                        showSnackbar("Image Saved Successfully");
-                        String path = MediaStore.Images.Media.insertImage(getContentResolver(),
-                                saveBitmap, UUID.randomUUID() + currentFilePath.substring(slash+1),
-                                "Edit");
-                        mPhotoEditorView.getSource().setImageBitmap(saveBitmap);
+
+            mPhotoEditor.saveAsBitmap(saveSettings, new OnSaveBitmap() {
+                @Override
+                public void onBitmapReady(Bitmap saveBitmap) {
+                    hideLoading();
+                    showSnackbar("Image Saved Successfully");
+
+                    mPhotoEditorView.getSource().setImageBitmap(saveBitmap);
+
+                    int orientation = 0;
+                    ExifInterface exif = null;
+                    try {
+                        exif = new ExifInterface(ImageActivity.currentImage.getDuongdan());
+                        orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
-                    @Override
-                    public void onFailure(Exception e) {
-                        hideLoading();
-                        showSnackbar("Failed to save Image");
+                    switch (orientation) {
+
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            saveBitmap = rotateImage(saveBitmap, 90);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            saveBitmap = rotateImage(saveBitmap, 180);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            saveBitmap = rotateImage(saveBitmap, 270);
+                            break;
+
+                        case ExifInterface.ORIENTATION_NORMAL:
+
+                        default:
+                            break;
                     }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                hideLoading();
-                showSnackbar(e.getMessage());
-            }
+
+                    String path = MediaStore.Images.Media.insertImage(getContentResolver(),
+                            saveBitmap, UUID.randomUUID() + currentFilePath.substring(slash + 1),
+                            "Edit");
+
+
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    hideLoading();
+                    showSnackbar("Failed to save Image");
+                }
+            });
         }
+     }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+
+        return Bitmap.createBitmap(
+            source,
+            0,
+            0,
+            source.getWidth(),
+            source.getHeight(),
+            matrix,
+            true
+        );
     }
 
     @Override

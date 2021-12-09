@@ -167,10 +167,7 @@ public class ImageActivity extends AppCompatActivity {
             File file = new File(filePath);
             file.setReadable(true, false);
             file.setWritable(true, false);
-            /*FileOutputStream fOut = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-            fOut.flush();
-            fOut.close();*/
+
             CropImage.activity(Uri.fromFile(file))
                     .start(this);
         } catch (Exception e) {
@@ -228,6 +225,7 @@ public class ImageActivity extends AppCompatActivity {
         btn_Crop = findViewById(R.id.crop_btn);
         btn_Resize = findViewById(R.id.Resize_btn);
         btn_Edit = findViewById(R.id.edit_btn);
+
         //Tạo nút back trên toolbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -426,7 +424,6 @@ public class ImageActivity extends AppCompatActivity {
     private void deleteImage() {
         // luu lai vi tri cua hinh
         int tmp = viewPager.getCurrentItem();
-        //Toast.makeText(ImageActivity.this, ""+viewPager.getCurrentItem(), //Toast.LENGTH_SHORT).show();
         if (loai == false) {
             //xử lý I
 
@@ -435,12 +432,9 @@ public class ImageActivity extends AppCompatActivity {
             MainActivity.collectedimgs.add(AnhFragment.mangHinh.get(tmp));
 
             // Tìm và xóa ảnh
-
-
             for (int j = 0; j < MainActivity.collectedimgs.size(); j++) {
                 File file = new File(MainActivity.collectedimgs.get(j).getDuongdan());
                 boolean flag = file.delete();
-                //Toast.makeText(ImageActivity.this,"Do dai cua mang"+MainActivity.collectedimgs.size(),//Toast.LENGTH_SHORT).show();
             }
 
             //***Cập nhập mảng chứa album***//
@@ -479,9 +473,7 @@ public class ImageActivity extends AppCompatActivity {
             MainActivity.collectedimgs.add(MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(viewPager.getCurrentItem()));
 
             //***Cập nhật mảng chứa các album***//
-            if (MainActivity.collectedimgs.size() == 0) {
-                //Toast.makeText(getApplicationContext(), "Chua chon anh", //Toast.LENGTH_SHORT).show();
-            } else {
+            if (MainActivity.collectedimgs.size() != 0) {
                 //***Các ảnh cần xóa nằm trong collectedimgs***//                                         *
                 for (int i = 0; i < MainActivity.collectedimgs.size(); i++) {
                     for (int j1 = 0; j1 < MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size(); j1++) {
@@ -489,11 +481,8 @@ public class ImageActivity extends AppCompatActivity {
                             MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).remove(j1);
                         }
                     }
-
-
                 }
             }
-
 
             //su ly sau khi xoa
             if (MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size() == 0) {
@@ -527,7 +516,6 @@ public class ImageActivity extends AppCompatActivity {
                     viewPager.setCurrentItem(tmp);
             }
         }
-
     }
 
     private void cropImage() {
@@ -576,8 +564,6 @@ public class ImageActivity extends AppCompatActivity {
                 textView.setText("" + progress + "%");
                 editText.setText("" + seekBar.getProgress());
                 editText.setSelection(editText.getText().length());
-
-
             }
 
             @Override
@@ -588,12 +574,10 @@ public class ImageActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int value = seekBar.getProgress();
-
-
             }
         });
         Button btn_OK, btn_Cancel;
-        btn_OK = (Button) dialog1.findViewById(R.id.btn_OK);
+        btn_OK = dialog1.findViewById(R.id.btn_OK);
         btn_OK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -610,9 +594,7 @@ public class ImageActivity extends AppCompatActivity {
                         } else {
                             Quality = Integer.parseInt(editText.getText().toString()) / 10;
                         }
-                                /*BitmapFactory.Options options = new BitmapFactory.Options();
-                                options.inSampleSize = Quality;
-                                Bitmap myBm= BitmapFactory.decodeFile(imgFile.getAbsolutePath(),options);*/
+
                         Bitmap mySample = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         Bitmap myBm = Bitmap.createScaledBitmap(mySample, mySample.getWidth() / Quality, mySample.getHeight() / Quality, true);
                         File f = new File(Environment.getExternalStorageDirectory() + File.separator + "compress_" + UUID.randomUUID().toString() + ".jpeg");
@@ -631,9 +613,10 @@ public class ImageActivity extends AppCompatActivity {
                             getBaseContext().sendBroadcast(mediaScanIntent);
                         } else {
                             sendBroadcast(new Intent(
-                                    Intent.ACTION_MEDIA_MOUNTED,
-                                    Uri.parse("file://"
-                                            + Environment.getExternalStorageDirectory())));
+                                Intent.ACTION_MEDIA_MOUNTED,
+                                Uri.parse("file://"
+                                    + Environment.getExternalStorageDirectory())
+                            ));
                         }
                         dialog1.dismiss();
                     } catch (IOException e) {
@@ -645,16 +628,12 @@ public class ImageActivity extends AppCompatActivity {
                     File imgFile = new File(choosenImage.duongdan);
 
                     try {
-
                         int Quality = 0;
                         if (editText.getText().toString().equals("")) {
                             Quality = 5;
                         } else {
                             Quality = Integer.parseInt(editText.getText().toString()) / 10;
                         }
-                                /*BitmapFactory.Options options = new BitmapFactory.Options();
-                                options.inSampleSize = Quality;
-                                Bitmap myBm= BitmapFactory.decodeFile(imgFile.getAbsolutePath(),options);*/
                         Bitmap mySample = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         Bitmap myBm = Bitmap.createScaledBitmap(mySample, mySample.getWidth() / Quality, mySample.getHeight() / Quality, true);
                         File f = new File(Environment.getExternalStorageDirectory() + File.separator + "compress_" + UUID.randomUUID().toString() + ".jpeg");
@@ -684,7 +663,7 @@ public class ImageActivity extends AppCompatActivity {
                 }
             }
         });
-        btn_Cancel = (Button) dialog1.findViewById(R.id.btn_Cancel);
+        btn_Cancel = dialog1.findViewById(R.id.btn_Cancel);
         btn_Cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
