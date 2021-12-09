@@ -27,7 +27,7 @@ import java.util.TreeMap;
 //Activity dùng để show tất cả ảnh trong điện thoại theo ngày chụp
 public class AnhFragment extends Fragment implements FragmentCallbacks {
     Context context = null;
-    Uri Image_URI = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    static final Uri Image_URI = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
     static ArrayList<Hinh> mangHinh = new ArrayList<>();
 
     static ArrayList<ArrayList<Hinh>> mangHinhDate = new ArrayList<>();
@@ -48,6 +48,8 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
 
         hasNewChanged = false;
         //***Khởi tạo các mảng***//
+        Map<Integer, ArrayList<Hinh>> mapImage = new TreeMap<>(Collections.<Integer>reverseOrder());
+        mangHinh = new ArrayList<>();
         ContentResolver contentResolver = getActivity().getContentResolver();
 
         Cursor cursor = contentResolver.query(Image_URI, null, null, null, null);
@@ -67,12 +69,8 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
                 mangHinh.add(currentImage);
 
                 if (mapImage.containsKey(dateText)) {
-                    if (!mapImage.get(dateText).contains(currentImage)) {
-                        mapImage.get(dateText).add(currentImage);
-                        hasNewChanged = true;
-                    }
+                    mapImage.get(dateText).add(currentImage);
                 } else {
-                    hasNewChanged = true;
                     ArrayList<Hinh> temp = new ArrayList<>();
                     temp.add(currentImage);
                     mapImage.put(dateText, temp);
@@ -81,14 +79,12 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
             cursor.moveToPrevious();
         }
 
-        if (hasNewChanged) {
-            mangHinhDate.clear();
-            mangHinhDate.addAll(mapImage.values());
-            customListviewImageAdapter = new CustomListviewImageAdapter(context, mangHinhDate, R.layout.custom_item_listview_img);
-            listView.setAdapter(customListviewImageAdapter);
-            listView.setDivider(null);
-            listView.setFastScrollEnabled(true);
-        }
+        mangHinhDate.clear();
+        mangHinhDate.addAll(mapImage.values());
+        customListviewImageAdapter = new CustomListviewImageAdapter(context, mangHinhDate, R.layout.custom_item_listview_img);
+        listView.setAdapter(customListviewImageAdapter);
+        listView.setDivider(null);
+        listView.setFastScrollEnabled(true);
 
         MainActivity.funcExecuteTime.put("onResume AnhFragment", System.currentTimeMillis() - start);
     }

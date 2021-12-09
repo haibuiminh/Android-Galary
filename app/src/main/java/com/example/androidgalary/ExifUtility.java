@@ -3,11 +3,9 @@ package com.example.androidgalary;
 import androidx.exifinterface.media.ExifInterface;
 
 public class ExifUtility {
-
     private String getExif(ExifInterface exif) {
         StringBuilder builder = new StringBuilder();
 
-        //https://nominatim.openstreetmap.org/reverse?format=json&lat=<LATITUDE>&lon=<LONGITUDE>&zoom=18&addressdetails=0
         String latitudeRef, longitudeRef;
         Float latitude, longitude;
         latitudeRef = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
@@ -24,22 +22,26 @@ public class ExifUtility {
         }
 
         builder.append("Exif : \n");
-        builder.append("Date & Time: " + getExifTag(exif, ExifInterface.TAG_DATETIME) + "\n");
-        builder.append("Flash: " + getExifTag(exif, ExifInterface.TAG_FLASH) + "\n");
-        builder.append("Focal Length: " + getExifTag(exif, ExifInterface.TAG_FOCAL_LENGTH) + "\n");
-        builder.append("GPS Datestamp: " + getExifTag(exif, ExifInterface.TAG_GPS_DATESTAMP) + "\n");
-        builder.append("GPS Latitude: " + latitude + "\n");
-        builder.append("GPS Latitude Ref: " + getExifTag(exif, ExifInterface.TAG_GPS_LATITUDE_REF) + "\n");
-        builder.append("GPS Longitude: " + longitude + "\n");
-        builder.append("GPS Longitude Ref: " + getExifTag(exif, ExifInterface.TAG_GPS_LONGITUDE_REF) + "\n");
-        builder.append("GPS Processing Method: " + getExifTag(exif, ExifInterface.TAG_GPS_PROCESSING_METHOD) + "\n");
-        builder.append("GPS Timestamp: " + getExifTag(exif, ExifInterface.TAG_GPS_TIMESTAMP) + "\n");
+        builder.append("Date & Time: ").append(getExifTag(exif, ExifInterface.TAG_DATETIME)).append("\n");
+        builder.append("File Source: " + getExifTag(exif, ExifInterface.TAG_FILE_SOURCE) + "\n");
         builder.append("Image Length: " + getExifTag(exif, ExifInterface.TAG_IMAGE_LENGTH) + "\n");
         builder.append("Image Width: " + getExifTag(exif, ExifInterface.TAG_IMAGE_WIDTH) + "\n");
         builder.append("Camera Make: " + getExifTag(exif, ExifInterface.TAG_MAKE) + "\n");
         builder.append("Camera Model: " + getExifTag(exif, ExifInterface.TAG_MODEL) + "\n");
-        builder.append("Camera Orientation: " + getExifTag(exif, ExifInterface.TAG_ORIENTATION) + "\n");
-        builder.append("Camera White Balance: " + getExifTag(exif, ExifInterface.TAG_WHITE_BALANCE) + "\n");
+
+
+        builder.append("Color Space: " + getExifTag(exif, ExifInterface.TAG_COLOR_SPACE) + "\n");
+        builder.append("White Balance: " + getExifTag(exif, ExifInterface.TAG_WHITE_BALANCE) + "\n");
+        builder.append("Brightness: " + getExifTag(exif, ExifInterface.TAG_BRIGHTNESS_VALUE) + "\n");
+        builder.append("Contrast: " + getExifTag(exif, ExifInterface.TAG_CONTRAST) + "\n");
+        builder.append("Gamma: " + getExifTag(exif, ExifInterface.TAG_GAMMA) + "\n");
+        builder.append("SATURATION: " + getExifTag(exif, ExifInterface.TAG_SATURATION) + "\n");
+        builder.append("SHARPNESS: " + getExifTag(exif, ExifInterface.TAG_SHARPNESS) + "\n");
+
+        builder.append("Flash: " + getExifTag(exif, ExifInterface.TAG_FLASH) + "\n");
+        builder.append("Focal Length: " + getExifTag(exif, ExifInterface.TAG_FOCAL_LENGTH) + "\n");
+        builder.append("ISO_SPEED: " + getExifTag(exif, ExifInterface.TAG_ISO_SPEED) + "\n");
+        builder.append("SHUTTER_SPEED: " + getExifTag(exif, ExifInterface.TAG_SHUTTER_SPEED_VALUE) + "\n");
 
         return builder.toString();
     }

@@ -8,6 +8,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,8 +38,10 @@ import com.example.androidgalary.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
+import ja.burhanrashid52.photoeditor.OnSaveBitmap;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import ja.burhanrashid52.photoeditor.PhotoFilter;
@@ -104,7 +108,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mPhotoEditorView.getSource().setImageURI( Uri.parse(ImageActivity.currentImage.getDuongdan()));
+        mPhotoEditorView.getSource().setImageURI(Uri.parse(ImageActivity.currentImage.getDuongdan()));
 
         switch (orientation) {
             case ORIENTATION_ROTATE_90:
@@ -199,31 +203,37 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         }
     }
 
-    @SuppressLint("MissingPermission")
     private void saveImage() {
         if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showLoading("Saving...");
-            File file = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + ""
-                    + System.currentTimeMillis() + ".png");
+
+            final String currentFilePath = ImageActivity.currentImage.getDuongdan();
+            int index = currentFilePath.lastIndexOf('.');
+            final int slash = currentFilePath.lastIndexOf('/');
+            String newFilePath = currentFilePath.substring(0,index) + System.currentTimeMillis() + currentFilePath.substring(index);
+            File file = new File(newFilePath);
+
             try {
                 file.createNewFile();
 
                 SaveSettings saveSettings = new SaveSettings.Builder()
-                        .setClearViewsEnabled(true)
-                        .setTransparencyEnabled(true)
-                        .build();
+                    .setClearViewsEnabled(true)
+                    .setTransparencyEnabled(true)
+                    .build();
 
-                mPhotoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
+                mPhotoEditor.saveAsBitmap(saveSettings, new OnSaveBitmap() {
                     @Override
-                    public void onSuccess(@NonNull String imagePath) {
+                    public void onBitmapReady(Bitmap saveBitmap) {
                         hideLoading();
                         showSnackbar("Image Saved Successfully");
-                        mPhotoEditorView.getSource().setImageURI(Uri.fromFile(new File(imagePath)));
+                        String path = MediaStore.Images.Media.insertImage(getContentResolver(),
+                                saveBitmap, UUID.randomUUID() + currentFilePath.substring(slash+1),
+                                "Edit");
+                        mPhotoEditorView.getSource().setImageBitmap(saveBitmap);
                     }
 
                     @Override
-                    public void onFailure(@NonNull Exception exception) {
+                    public void onFailure(Exception e) {
                         hideLoading();
                         showSnackbar("Failed to save Image");
                     }
