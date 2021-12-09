@@ -463,7 +463,19 @@ public class ImageActivity extends AppCompatActivity {
             // Tìm và xóa ảnh
             for (int j = 0; j < MainActivity.collectedimgs.size(); j++) {
                 File file = new File(MainActivity.collectedimgs.get(j).getDuongdan());
-                boolean flag = file.delete();
+                file.delete();
+                if (file.exists()) {
+                    try {
+                        file.getCanonicalFile().delete();
+                        if (file.exists()) {
+                            getApplicationContext().deleteFile(file.getName());
+                        }
+                    } catch (IOException e) {
+
+                    }
+
+                }
+                getApplicationContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
             }
 
             //***Cập nhập mảng chứa album***//

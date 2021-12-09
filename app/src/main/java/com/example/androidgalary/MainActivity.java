@@ -11,6 +11,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -395,85 +397,82 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                         }
                     });
                     builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            //***Xử lý khi click delete AnhFragment***//
-                            if (viewPager.getCurrentItem() == 0) {
-                                //***Cập nhật Status để show ảnh không checkbox***//
-                                status = !status;
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //***Xử lý khi click delete AnhFragment***//
+                        if (viewPager.getCurrentItem() == 0) {
+                            //***Cập nhật Status để show ảnh không checkbox***//
+                            status = !status;
+                            //***Xét điều kiện khi Delete***//
+                            if (collectedimgs.size() == 0) {
+                                //***Không có ảnh nào thì Toast thông báo***//
+                                //Toast.makeText(MainActivity.this, "Chua chon anh", //Toast.LENGTH_SHORT).show();
+                            } else {
+                                //***Xóa tận gốc các ảnh trong collectedimgs thông qua đường dẫn***//
+                                for (int j = 0; j < collectedimgs.size(); j++) {
+                                    File file = new File(collectedimgs.get(j).getDuongdan());
 
-                                //***Xét điều kiện khi Delete***//
-                                if (collectedimgs.size() == 0) {
-                                    //***Không có ảnh nào thì Toast thông báo***//
-                                    //Toast.makeText(MainActivity.this, "Chua chon anh", //Toast.LENGTH_SHORT).show();
-                                } else {
-                                    //***Xóa tận gốc các ảnh trong collectedimgs thông qua đường dẫn***//
-                                    for (int j = 0; j < collectedimgs.size(); j++) {
-                                        File file = new File(collectedimgs.get(j).getDuongdan());
-                                        boolean flag = file.delete();
-                                    }
-                                    //***Cập nhật album trong mang, MangTen và bộ nhớ***//
-                                    refreshfAlbum(collectedimgs);
-                                }
-
-                                //***Show lại ViewPager***//
-                                viewPager.setAdapter(pagerAdapter);
-
-                                //***Show những lựa chọn cần thiết sau khi Delete***//
-                                toolbar.getMenu().getItem(0).setVisible(true);
-                                toolbar.getMenu().getItem(1).setVisible(false);
-                                toolbar.getMenu().getItem(2).setVisible(false);
-                                toolbar.getMenu().getItem(3).setVisible(false);
-                                toolbar.getMenu().getItem(4).setVisible(false);
-                                toolbar.getMenu().getItem(5).setVisible(false);
-                            }
-
-                            //***Xử lý khi click delete AbumFragment***//
-                            else {
-                                //***delete Album trong MangTen va mang***//
-                                for (int j = 0; j < collectedalbums.size(); j++) {
-                                    for (int i1 = 0; i1 < MangTen.size(); i1++) {
-                                        if (MangTen.get(i1).toString().equals(collectedalbums.get(j).getTen())) {
-                                            MangTen.remove(i1);
-                                            mang.remove(i1);
+                                    file.delete();
+                                    if (file.exists()) {
+                                        try {
+                                            file.getCanonicalFile().delete();
+                                            if (file.exists()) {
+                                                getApplicationContext().deleteFile(file.getName());
+                                            }
+                                        } catch (IOException e) {
                                         }
                                     }
+                                    getApplicationContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
                                 }
-//                                for(int i1=0;i1<collectedimgs.size();i1++)
-//                                {
-//                                    for(int j=0;j<AnhFragment.mangHinh.size();j++)
-//                                    {
-//                                        if(AnhFragment.mangHinh.get(j).getDuongdan().equals(collectedimgs.get(i1).duongdan))
-//                                        {
-//                                            AnhFragment.mangHinh.remove(j);
-//                                        }
-//                                    }
-//                                }
-                                //***Cập nhật vào bộ nhớ***//
-                                ghivaobonhotrongtenalbum();
-                                ghivaobonhotrong();
-
-                                //***Show lại ViewPager***//
-                                statusalbum = false;
-                                viewPager.setAdapter(pagerAdapter);
-                                viewPager.setCurrentItem(1);
-
-                                //***Show những lựa chọn cần thiết sau khi Delete***//
-                                toolbar.getMenu().getItem(0).setVisible(true);
-                                toolbar.getMenu().getItem(1).setVisible(false);
-                                toolbar.getMenu().getItem(2).setVisible(false);
-                                toolbar.getMenu().getItem(3).setVisible(false);
-                                toolbar.getMenu().getItem(4).setVisible(false);
-                                toolbar.getMenu().getItem(5).setVisible(false);
+                                //***Cập nhật album trong mang, MangTen và bộ nhớ***//
+                                refreshfAlbum(collectedimgs);
                             }
-                            dialogInterface.dismiss();
+                            //***Show lại ViewPager***//
+                            viewPager.setAdapter(pagerAdapter);
+                            //***Show những lựa chọn cần thiết sau khi Delete***//
+                            toolbar.getMenu().getItem(0).setVisible(true);
+                            toolbar.getMenu().getItem(1).setVisible(false);
+                            toolbar.getMenu().getItem(2).setVisible(false);
+                            toolbar.getMenu().getItem(3).setVisible(false);
+                            toolbar.getMenu().getItem(4).setVisible(false);
+                            toolbar.getMenu().getItem(5).setVisible(false);
                         }
-                    });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
 
-                }
+                        //***Xử lý khi click delete AbumFragment***//
+                        else {
+                            //***delete Album trong MangTen va mang***//
+                            for (int j = 0; j < collectedalbums.size(); j++) {
+                                for (int i1 = 0; i1 < MangTen.size(); i1++) {
+                                    if (MangTen.get(i1).toString().equals(collectedalbums.get(j).getTen())) {
+                                        MangTen.remove(i1);
+                                        mang.remove(i1);
+                                    }
+                                }
+                            }
+//
+                            //***Cập nhật vào bộ nhớ***//
+                            ghivaobonhotrongtenalbum();
+                            ghivaobonhotrong();
 
+                            //***Show lại ViewPager***//
+                            statusalbum = false;
+                            viewPager.setAdapter(pagerAdapter);
+                            viewPager.setCurrentItem(1);
+
+                            //***Show những lựa chọn cần thiết sau khi Delete***//
+                            toolbar.getMenu().getItem(0).setVisible(true);
+                            toolbar.getMenu().getItem(1).setVisible(false);
+                            toolbar.getMenu().getItem(2).setVisible(false);
+                            toolbar.getMenu().getItem(3).setVisible(false);
+                            toolbar.getMenu().getItem(4).setVisible(false);
+                            toolbar.getMenu().getItem(5).setVisible(false);
+                        }
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
                 return true;
             }
         });
