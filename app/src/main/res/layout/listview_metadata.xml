@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:textStyle="bold"
-        android:ellipsize="end"
-        android:singleLine="true" />
+        android:maxLines="4" />
 
 </LinearLayout>
