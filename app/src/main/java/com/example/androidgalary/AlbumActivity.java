@@ -1,41 +1,32 @@
 package com.example.androidgalary;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.appcompat.widget.Toolbar;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toolbar;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
-// ************Activity dùng để show ảnh của 1 album***************//
-
 public class AlbumActivity extends AppCompatActivity {
     Toolbar toolbar;
-
-    //*** lưu thứ tự album sẽ được show trong Mainactivity.mang***//
-    int pos;
-
+    int pos; //*** lưu thứ tự album sẽ được show trong Mainactivity.mang***//
     String ten;
-
-    //*** Hiện thị ảnh bằng recycler view***//
-    RecyclerView recyclerView;
+    RecyclerView recyclerView; //*** Hiện thị ảnh bằng recycler view***//
     CustomRecyclerviewAdapter customRecyclerviewAdapter;
-    //**************************************//
 
     @Override
     //*** Hàm giúp cập nhật thông tin khi chuyển Activity***//
     protected void onPostResume() {
-
         super.onPostResume();
         Log.d("TAG", "onPostResume: ");
         //*****************************************************************************************************//
@@ -43,15 +34,12 @@ public class AlbumActivity extends AppCompatActivity {
         //*  + False: MainActivity.mang(pos) còn tồn tại => show album                                        *//
         //*  + True: MainActivity.mang(pos) đã bị xóa => đóng AlbumActivity vì không cần show ảnh của Album đó*//
         //*****************************************************************************************************//
-
-        if(ImageActivity.co == false) {
+        if (!ImageActivity.co) {
             StaggeredGridLayoutManager mStaggeredVerticalLayoutManager = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
             customRecyclerviewAdapter = new CustomRecyclerviewAdapter(AlbumActivity.this, MainActivity.mang.get(pos), true,pos);
             recyclerView.setAdapter(customRecyclerviewAdapter);
             recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager);
-        }
-        else
-        {
+        } else {
             finish();
             ImageActivity.co = false;
         }
@@ -59,9 +47,9 @@ public class AlbumActivity extends AppCompatActivity {
     @Override
     //***Xử lí khi click back***//
     public void onBackPressed() {
-        if (MainActivity.status == true) {
+        if (MainActivity.status) {
             MainActivity.collectedimgs.clear();
-            MainActivity.status = false;
+            MainActivity.status=false;
             //***Show ảnh không checkbox***//
             StaggeredGridLayoutManager mStaggeredVerticalLayoutManager = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
             for (int i = 0; i < MainActivity.mang.get(pos).size(); i++) {
@@ -74,7 +62,6 @@ public class AlbumActivity extends AppCompatActivity {
             toolbar.getMenu().getItem(1).setVisible(false);
             toolbar.getMenu().getItem(2).setVisible(false);
             toolbar.getMenu().getItem(3).setVisible(false);
-
         }
         else
         {
@@ -164,7 +151,7 @@ public class AlbumActivity extends AppCompatActivity {
                 }
                 //***Sự kiện delete các ảnh đã chọn***//
                 else if (i == R.id.deleteAlbum) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(AlbumActivity.this);
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AlbumActivity.this);
                     builder.setTitle("Thông báo");
                     builder.setMessage("Bạn có muốn xóa không?");
                     builder.setCancelable(false);
@@ -315,25 +302,28 @@ public class AlbumActivity extends AppCompatActivity {
         ghivaobonhotrong();
         return flag;
     }
+
     public void ghivaobonhotrong()
     {
 
         try {
-            File duongdan = getCacheDir();
-            File taptin = new File(duongdan,"imgofalbum.txt");
+            File duongdan=getCacheDir();
+            File taptin=new File(duongdan,"imgofalbum.txt");
             Log.d("lienket",taptin+"");
-            FileOutputStream out = new FileOutputStream(taptin);
-            String buffer = new String();
-            for (int i = 0; i < MainActivity.mang.size(); i++) {
+            FileOutputStream out=new FileOutputStream(taptin);
+            String buffer=new String();
+            for(int i = 0; i< MainActivity.mang.size(); i++) {
                 for (int j = 0; j < MainActivity.mang.get(i).size(); j++) {
-                    if (j == MainActivity.mang.get(i).size() - 1) {
+                    if(j== MainActivity.mang.get(i).size()-1)
+                    {
                         buffer = buffer + MainActivity.mang.get(i).get(j).getDuongdan().toString()
                                 + "#"
                                 + MainActivity.mang.get(i).get(j).getTenHinh().toString()
                                 + "#"
                                 + MainActivity.mang.get(i).get(j).getAddDate().toString()
                         ;
-                    } else {
+                    }
+                    else {
                         buffer = buffer + MainActivity.mang.get(i).get(j).getDuongdan().toString()
                                 + "#"
                                 + MainActivity.mang.get(i).get(j).getTenHinh().toString()
@@ -341,8 +331,9 @@ public class AlbumActivity extends AppCompatActivity {
                                 + MainActivity.mang.get(i).get(j).getAddDate().toString()
                                 + "#";
                     }
+
                 }
-                buffer += "%";
+                buffer+="%";
             }
 
             Log.e("mang",buffer);
@@ -351,25 +342,30 @@ public class AlbumActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
     }
     public void ghivaobonhotrongtenalbum()
     {
-        File duongdan = getCacheDir();
+        File duongdan=getCacheDir();
         File file = new File(duongdan, "nameofalbum.txt");
         if (file.exists())
             file.delete();
 
         file = new File(duongdan, "nameofalbum.txt");
+
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
-            String buffer = new String();
-            for (int i = 0; i < MainActivity.MangTen.size(); i++)
+            String buffer=new String();
+            for(int i = 0; i< MainActivity.MangTen.size(); i++)
             {
-                if (i != MainActivity.MangTen.size() - 1)
-                    buffer += MainActivity.MangTen.get(i) + "#";
+                if(i!= MainActivity.MangTen.size()-1)
+                    buffer+= MainActivity.MangTen.get(i)+"#";
                 else
-                    buffer += MainActivity.MangTen.get(MainActivity.MangTen.size() - 1);
+                    buffer+= MainActivity.MangTen.get(MainActivity.MangTen.size()-1);
             }
+
             Log.d("ALBUM","ALBUMNAME= AlbumActivity" + buffer);
             fileOutputStream.write(buffer.getBytes());
             fileOutputStream.close();
