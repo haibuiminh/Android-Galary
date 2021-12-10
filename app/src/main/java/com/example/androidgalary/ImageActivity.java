@@ -181,9 +181,7 @@ public class ImageActivity extends AppCompatActivity {
             AlertDialog dialog = builder.create();
             dialog.show();
         }
-        catch (Exception e){
-
-        }
+        catch (Exception e){}
     }
 
     private void editBitmap(Bitmap bitmap, String filePath) {
@@ -191,7 +189,6 @@ public class ImageActivity extends AppCompatActivity {
             File file = new File(filePath);
             file.setReadable(true, false);
             file.setWritable(true, false);
-
 
             CropImage.activity(Uri.fromFile(file)).start(this);
         } catch (Exception e) {
