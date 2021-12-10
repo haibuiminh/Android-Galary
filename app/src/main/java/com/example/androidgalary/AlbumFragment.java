@@ -56,7 +56,7 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks{
         Collections.reverse(Mang);
 
         //***xuat listview album***//
-        gvadapter = new CustomListviewAdapter(getActivity(), Mang, R.layout.custom_item_listview_album);
+        gvadapter=new CustomListviewAdapter(getActivity(),Mang,R.layout.custom_item_listview_album);
         gridView.setAdapter(gvadapter);
 
         //***Bắt sự kiện click item của list view để xuất Album đó trong AlbumActivity***//
@@ -66,6 +66,7 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks{
                 if(MainActivity.SeleteAlbum==false) {
                     //***Lấy vị trí album được focus***//
                     postionofFocusingAlbum = MainActivity.mang.size() - 1 - position;
+                    //Toast.makeText(getActivity(), "" + postionofFocusingAlbum, //Toast.LENGTH_SHORT).show();
 
                     //***Gọi Intent sang AlbumActivity***//
                     Intent intent = new Intent(getContext(), AlbumActivity.class);
@@ -76,7 +77,7 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks{
                 else
                 {
                     for (int i = 0; i < MainActivity.collectedimgs.size(); i++) {
-                        boolean flag = false;
+                        boolean flag=false;
                         for(int j=0;j<MainActivity.mang.get(MainActivity.mang.size() - 1 - position).size();j++) {
                             if(MainActivity.mang.get(MainActivity.mang.size() - 1 - position).get(j).getDuongdan().equals(MainActivity.collectedimgs.get(i).getDuongdan()))
                             {
@@ -84,11 +85,14 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks{
                                 break;
                             }
                         }
-                        if (flag == false) {
+                        if(flag==false)
+                        {
                             MainActivity.mang.get(MainActivity.mang.size() - 1 - position).add(MainActivity.collectedimgs.get(i));
+
                         }
                     }
                     MainActivity.collectedimgs.clear();
+                    //Toast.makeText(getContext(), "Thành Công!", //Toast.LENGTH_SHORT).show();
                     MainActivity.SeleteAlbum = false;
                     ghivaobonhotrong();
                     MainActivity.viewPager.setAdapter(MainActivity.pagerAdapter);
@@ -103,19 +107,20 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks{
 
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        Log.e("TAG 1","AlbumFragment");
         //***Dán R.layout.album_layout vào View để dán vào Fragment***//
         View view=inflater.inflate(R.layout.album_layout,container,false);
 
         //***Ánh xạ***//
-        gridView = (GridView) view.findViewById(R.id.gvalbum);
+        gridView=(GridView) view.findViewById(R.id.gvalbum);
         return view;
     }
 
     @Override
     public void onMsgFromMainToFragment(String strValue) {
 
-    }
 
+    }
     //***Hàm cập nhật album trong mang, MangTen và bộ nhớ***//
     public void refreshfAlbum(ArrayList<Hinh> collectedimgs) {
         for(int i=0;i<collectedimgs.size();i++)
@@ -148,12 +153,12 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks{
             //FileOutputStream out=openFileOutput("abc.txt",MODE_PRIVATE);
 
             //bo nho trong, cache
-            File duongdan = getActivity().getCacheDir();
-            File taptin = new File(duongdan,"imgofalbum.txt");
+            File duongdan=getActivity().getCacheDir();
+            File taptin=new File(duongdan,"imgofalbum.txt");
             Log.d("lienket",taptin+"");
 
-            FileOutputStream out = new FileOutputStream(taptin);
-            String buffer = new String();
+            FileOutputStream out=new FileOutputStream(taptin);
+            String buffer=new String();
             for(int i=0;i<MainActivity.mang.size();i++) {
                 for (int j = 0; j < MainActivity.mang.get(i).size(); j++) {
                     if(j==MainActivity.mang.get(i).size()-1)
@@ -184,6 +189,8 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
 
     }
 }

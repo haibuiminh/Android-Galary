@@ -13,9 +13,7 @@
         android:background="#efebe9"
         app:title="Album"
         app:titleTextColor="#424242"
-        android:id="@+id/toolbaralbum"
-        >
-    </androidx.appcompat.widget.Toolbar>
+        android:id="@+id/toolbaralbum" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
