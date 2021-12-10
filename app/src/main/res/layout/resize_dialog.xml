@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -16,23 +16,22 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
             android:paddingTop="4dp"
             android:text="Width"
-            android:typeface="normal"
             android:textSize="14sp"
-            android:fontFamily="monospace" />
+            android:typeface="normal"
+            app:fontFamily="monospace" />
 
         <EditText
             android:id="@+id/editText_Width"
             android:layout_width="0dp"
-            android:ems="10"
-            android:inputType="textPersonName"
             android:layout_height="50dp"
             android:paddingLeft="5dp"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:ems="10"
+            android:inputType="textPersonName" />
 
         <TextView
             android:id="@+id/textView3"
@@ -40,11 +39,11 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:gravity="center_vertical|center_horizontal"
-            android:text="x"
-            android:typeface="normal"
             android:paddingTop="4dp"
+            android:text="x"
             android:textSize="18sp"
-            android:fontFamily="monospace" />
+            android:typeface="normal"
+            app:fontFamily="monospace" />
 
         <TextView
             android:id="@+id/textView4"
@@ -53,14 +52,17 @@
             android:paddingTop="4dp"
             android:gravity="center_vertical|center_horizontal"
             android:text="Height"
+            android:textSize="14sp"
             android:typeface="normal"
-            android:fontFamily="monospace" />
+            app:fontFamily="monospace" />
 
         <EditText
             android:id="@+id/editText_Height"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:layout_gravity="center_vertical"
             android:ems="10"
             android:inputType="textPersonName" />
     </LinearLayout>
@@ -83,6 +85,7 @@
             android:id="@+id/btnCancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:layout_weight="1"
             android:text="Cancel" />
     </LinearLayout>

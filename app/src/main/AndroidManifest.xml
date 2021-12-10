@@ -12,7 +12,7 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.mydomain.fileprovider"
+            android:authorities="com.example.androidgalary.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
 
@@ -22,6 +22,21 @@
                 android:resource="@xml/file_paths" >
             </meta-data>
         </provider>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ImageEditor.EditImageActivity" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".Image_Slideshow"
             android:exported="false" />
@@ -33,16 +48,6 @@
             android:name=".ImageActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ImageEditor.EditImageActivity" />
 
         <meta-data
             android:name="android.support.VERSION"
