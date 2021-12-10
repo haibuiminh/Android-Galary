@@ -22,8 +22,8 @@ public class EditingToolsAdapter extends RecyclerView.Adapter<EditingToolsAdapte
     STICKER
   }
 
-  private List<ToolModel> mToolList = new ArrayList<>();
-  private OnItemSelected mOnItemSelected;
+  private final List<ToolModel> mToolList = new ArrayList<>();
+  private final OnItemSelected mOnItemSelected;
 
   public EditingToolsAdapter(OnItemSelected onItemSelected) {
     mOnItemSelected = onItemSelected;
@@ -39,10 +39,10 @@ public class EditingToolsAdapter extends RecyclerView.Adapter<EditingToolsAdapte
     void onToolSelected(ToolType toolType);
   }
 
-  class ToolModel {
-    private String mToolName;
-    private int mToolIcon;
-    private ToolType mToolType;
+  static class ToolModel {
+    private final String mToolName;
+    private final int mToolIcon;
+    private final ToolType mToolType;
 
     ToolModel(String toolName, int toolIcon, ToolType toolType) {
       mToolName = toolName;
@@ -80,12 +80,7 @@ public class EditingToolsAdapter extends RecyclerView.Adapter<EditingToolsAdapte
       imgToolIcon = itemView.findViewById(R.id.imgToolIcon);
       txtTool = itemView.findViewById(R.id.txtTool);
       itemView.setOnClickListener(
-          new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              mOnItemSelected.onToolSelected(mToolList.get(getLayoutPosition()).mToolType);
-            }
-          });
+          v -> mOnItemSelected.onToolSelected(mToolList.get(getLayoutPosition()).mToolType));
     }
   }
 }

@@ -8,7 +8,7 @@ public class Hinh {
   String tenhinh;
   Integer addDate;
   boolean check;
-  ExifInterface exif = null;
+  ExifInterface exif;
 
   public Hinh(String duongdan, String tenhinh, Integer addDate) {
     this.duongdan = duongdan;
@@ -26,28 +26,12 @@ public class Hinh {
     return duongdan;
   }
 
-  public void setDuongdan(String duongdan) {
-    this.duongdan = duongdan;
-  }
-
   public String getTenHinh() {
     return tenhinh;
   }
 
-  public void setTenHinh(String tenhinh) {
-    this.tenhinh = tenhinh;
-  }
-
   public Integer getAddDate() {
     return addDate;
-  }
-
-  public void setAddDate(Integer addDate) {
-    this.addDate = addDate;
-  }
-
-  public boolean isCheck() {
-    return check;
   }
 
   public void setCheck(boolean check) {

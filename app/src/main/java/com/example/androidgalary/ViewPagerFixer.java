@@ -23,7 +23,7 @@ public class ViewPagerFixer extends ViewPager {
     } catch (IllegalArgumentException e) {
 
     } catch (ArrayIndexOutOfBoundsException e) {
-
+      e.printStackTrace();
     }
     return false;
   }

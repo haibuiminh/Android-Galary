@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
@@ -96,21 +94,7 @@ public class AlbumActivity extends AppCompatActivity {
     // Dán R.menu.menu_album vào Toolbar
     toolbar.inflateMenu(R.menu.menu_album);
     toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-    toolbar.setNavigationOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            onBackPressed();
-          }
-        });
-    // Bắt sự kiện click vào nút back trên toolbar
-    //        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-    //            @Override
-    //            public void onClick(View v) {
-    //                finish();
-    //            }
-    //        });
-    // ******************************************************************//
+    toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
     // ***Cài đặt RecyclerView***//
     StaggeredGridLayoutManager mStaggeredVerticalLayoutManager =
@@ -127,168 +111,161 @@ public class AlbumActivity extends AppCompatActivity {
 
     // ***bat su kien cho menu của Toolbar***//
     toolbar.setOnMenuItemClickListener(
-        new Toolbar.OnMenuItemClickListener() {
-          @Override
-          public boolean onMenuItemClick(MenuItem item) {
-            int i = item.getItemId();
-            // ***Sự kiện chọn ảnh trong album***//
-            if (i == R.id.selectAlbum) {
-              // ***Cập nhật MainActivity.status để hiện ra checkbox trong từng ảnh để
-              // người dùng click***//
-              MainActivity.status = true;
+        item -> {
+          int i = item.getItemId();
+          // ***Sự kiện chọn ảnh trong album***//
+          if (i == R.id.selectAlbum) {
+            // ***Cập nhật MainActivity.status để hiện ra checkbox trong từng ảnh để
+            // người dùng click***//
+            MainActivity.status = true;
 
-              // ***Xóa những ảnh đã được chọn trước đó => Đảm bảo không bị xóa
-              // nhầm***//
-              MainActivity.collectedimgs.clear();
+            // ***Xóa những ảnh đã được chọn trước đó => Đảm bảo không bị xóa
+            // nhầm***//
+            MainActivity.collectedimgs.clear();
 
-              // ***Show lại ảnh của album, lúc này sẽ xuất hiện check box
-              StaggeredGridLayoutManager mStaggeredVerticalLayoutManager =
-                  new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
-              customRecyclerviewAdapter =
-                  new CustomRecyclerviewAdapter(
-                      AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
-              recyclerView.setAdapter(customRecyclerviewAdapter);
-              recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager);
+            // ***Show lại ảnh của album, lúc này sẽ xuất hiện check box
+            StaggeredGridLayoutManager mStaggeredVerticalLayoutManager1 =
+                new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
+            customRecyclerviewAdapter =
+                new CustomRecyclerviewAdapter(
+                    AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+            recyclerView.setAdapter(customRecyclerviewAdapter);
+            recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager1);
 
-              // ***Cập nhật menu Toolbar để show ra những lựa chọn cần thiết khi
-              // Select xong***//
-              toolbar.getMenu().getItem(0).setVisible(false);
-              toolbar.getMenu().getItem(1).setVisible(true);
-              toolbar.getMenu().getItem(2).setVisible(true);
-              toolbar.getMenu().getItem(3).setVisible(true);
+            // ***Cập nhật menu Toolbar để show ra những lựa chọn cần thiết khi
+            // Select xong***//
+            toolbar.getMenu().getItem(0).setVisible(false);
+            toolbar.getMenu().getItem(1).setVisible(true);
+            toolbar.getMenu().getItem(2).setVisible(true);
+            toolbar.getMenu().getItem(3).setVisible(true);
 
-            }
-            // ***Sự kiện delete các ảnh đã chọn***//
-            else if (i == R.id.deleteAlbum) {
-              android.app.AlertDialog.Builder builder =
-                  new android.app.AlertDialog.Builder(AlbumActivity.this);
-              builder.setTitle("Thông báo");
-              builder.setMessage("Bạn có muốn xóa không?");
-              builder.setCancelable(false);
-              builder.setPositiveButton(
-                  "Cancel",
-                  new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                      dialogInterface.dismiss();
-                    }
-                  });
-              builder.setNegativeButton(
-                  "Ok",
-                  new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                      // ***Gắn cờ để xem size của
-                      // Album**********************************//
-                      // *  True: size=0 và bị remove=> không tồn tại trong
-                      // Activity.mang*//
-                      // *  False: size>0            => còn tồn tại trong
-                      // Activity.mang  *//
-                      // *****************************************************************//
-                      boolean flag = false;
-
-                      // ***Xét điều kiện trước khi xóa***//
-                      // ***Nếu không có ảnh thì Toast thông báo***//
-                      if (MainActivity.collectedimgs.size() == 0) {
-                        // Toast.makeText(getApplicationContext(), "Chua
-                        // chon anh", //Toast.LENGTH_SHORT).show();
-                      } else {
-                        // ***Cập nhật lại MainActivity.mang và lưu trạng
-                        // thái size của Album***//
-                        flag = refreshfAlbum(MainActivity.collectedimgs, pos);
-                      }
-                      // ***Cập nhật MainActivity.status để show ảnh không còn
-                      // checkbox***//
-                      MainActivity.status = false;
-
-                      // ***Album không còn tồn tại=> đóng Activity
-                      if (flag == true) {
-                        toolbar.getMenu().getItem(0).setVisible(true);
-                        toolbar.getMenu().getItem(1).setVisible(false);
-                        toolbar.getMenu().getItem(2).setVisible(true);
-                        toolbar.getMenu().getItem(3).setVisible(false);
-                        finish();
-                      }
-                      // ***Album còn tồn tại => show lại ảnh còn lại sau khi
-                      // xóa***//
-                      else {
-                        // ***Show ảnh không checkbox***//
-                        StaggeredGridLayoutManager mStaggeredVerticalLayoutManager =
-                            new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
-                        customRecyclerviewAdapter =
-                            new CustomRecyclerviewAdapter(
-                                AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
-                        recyclerView.setAdapter(customRecyclerviewAdapter);
-                        recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager);
-
-                        // ***Show những lựa chọn cần thiết khi xóa
-                        // xong***//
-                        toolbar.getMenu().getItem(0).setVisible(true);
-                        toolbar.getMenu().getItem(1).setVisible(false);
-                        toolbar.getMenu().getItem(2).setVisible(true);
-                        toolbar.getMenu().getItem(3).setVisible(false);
-                      }
-                      dialogInterface.dismiss();
-                    }
-                  });
-              AlertDialog alertDialog = builder.create();
-              alertDialog.show();
-
-              // ***Sự kiện back trên menu Toolbar***//
-              // ***Sử dụng khi không muốn chọn ảnh***//
-            } else if (i == R.id.backAlbum) {
-
-              MainActivity.collectedimgs.clear();
-              MainActivity.status = false;
-              // ***Show ảnh không checkbox***//
-              StaggeredGridLayoutManager mStaggeredVerticalLayoutManager =
-                  new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
-              for (int i1 = 0; i1 < MainActivity.mang.get(pos).size(); i1++) {
-                MainActivity.mang.get(pos).get(i1).setCheck(false);
-              }
-              customRecyclerviewAdapter =
-                  new CustomRecyclerviewAdapter(
-                      AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
-              recyclerView.setAdapter(customRecyclerviewAdapter);
-              recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager);
-              toolbar.getMenu().getItem(0).setVisible(true);
-              toolbar.getMenu().getItem(1).setVisible(false);
-              toolbar.getMenu().getItem(2).setVisible(true);
-              toolbar.getMenu().getItem(3).setVisible(false);
-
-            } else if (i == R.id.createSlideshowAlbum) {
-              Intent intent = new Intent(getBaseContext(), Image_Slideshow.class);
-              toolbar.getMenu().getItem(0).setVisible(true);
-              toolbar.getMenu().getItem(1).setVisible(false);
-              toolbar.getMenu().getItem(3).setVisible(false);
-              ArrayList<String> data = new ArrayList<String>();
-              if (MainActivity.collectedimgs.size() != 0) {
-                for (Hinh c : MainActivity.collectedimgs) {
-                  data.add(c.duongdan);
-                }
-              } else {
-                for (Hinh c : MainActivity.mang.get(pos)) {
-                  data.add(c.duongdan);
-                }
-              }
-              intent.putExtra("data", data);
-              startActivity(intent);
-              MainActivity.status = false;
-              // MainActivity.collectedimgs.clear();
-              // ***Show ảnh không checkbox***//
-              StaggeredGridLayoutManager mStaggeredVerticalLayoutManager =
-                  new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
-              customRecyclerviewAdapter =
-                  new CustomRecyclerviewAdapter(
-                      AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
-              recyclerView.setAdapter(customRecyclerviewAdapter);
-              recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager);
-            }
-            return true;
           }
+          // ***Sự kiện delete các ảnh đã chọn***//
+          else if (i == R.id.deleteAlbum) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(AlbumActivity.this);
+            builder.setTitle("Thông báo");
+            builder.setMessage("Bạn có muốn xóa không?");
+            builder.setCancelable(false);
+            builder.setPositiveButton(
+                "Cancel",
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                  }
+                });
+            builder.setNegativeButton(
+                "Ok",
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    // ***Gắn cờ để xem size của
+                    // Album**********************************//
+                    // *  True: size=0 và bị remove=> không tồn tại trong
+                    // Activity.mang*//
+                    // *  False: size>0            => còn tồn tại trong
+                    // Activity.mang  *//
+                    // *****************************************************************//
+                    boolean flag = false;
+
+                    // ***Xét điều kiện trước khi xóa***//
+                    // ***Nếu không có ảnh thì Toast thông báo***//
+                    if (MainActivity.collectedimgs.size() == 0) {
+                      // Toast.makeText(getApplicationContext(), "Chua
+                      // chon anh", //Toast.LENGTH_SHORT).show();
+                    } else {
+                      // ***Cập nhật lại MainActivity.mang và lưu trạng
+                      // thái size của Album***//
+                      flag = refreshfAlbum(MainActivity.collectedimgs, pos);
+                    }
+                    // ***Cập nhật MainActivity.status để show ảnh không còn
+                    // checkbox***//
+                    MainActivity.status = false;
+
+                    // ***Album không còn tồn tại=> đóng Activity
+                    if (flag == true) {
+                      toolbar.getMenu().getItem(0).setVisible(true);
+                      toolbar.getMenu().getItem(1).setVisible(false);
+                      toolbar.getMenu().getItem(2).setVisible(true);
+                      toolbar.getMenu().getItem(3).setVisible(false);
+                      finish();
+                    }
+                    // ***Album còn tồn tại => show lại ảnh còn lại sau khi xóa***//
+                    else {
+                      // *** Show ảnh không checkbox ***//
+                      StaggeredGridLayoutManager mStaggeredVerticalLayoutManager1 =
+                          new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
+                      customRecyclerviewAdapter =
+                          new CustomRecyclerviewAdapter(
+                              AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+                      recyclerView.setAdapter(customRecyclerviewAdapter);
+                      recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager1);
+
+                      // ***Show những lựa chọn cần thiết khi xóa xong***//
+                      toolbar.getMenu().getItem(0).setVisible(true);
+                      toolbar.getMenu().getItem(1).setVisible(false);
+                      toolbar.getMenu().getItem(2).setVisible(true);
+                      toolbar.getMenu().getItem(3).setVisible(false);
+                    }
+                    dialogInterface.dismiss();
+                  }
+                });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
+            // *** Sự kiện back trên menu Toolbar***//
+            // *** Sử dụng khi không muốn chọn ảnh***//
+          } else if (i == R.id.backAlbum) {
+            MainActivity.collectedimgs.clear();
+            MainActivity.status = false;
+            // ***Show ảnh không checkbox***//
+            StaggeredGridLayoutManager mStaggeredVerticalLayoutManager1 =
+                new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
+            for (int i1 = 0; i1 < MainActivity.mang.get(pos).size(); i1++) {
+              MainActivity.mang.get(pos).get(i1).setCheck(false);
+            }
+            customRecyclerviewAdapter =
+                new CustomRecyclerviewAdapter(
+                    AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+            recyclerView.setAdapter(customRecyclerviewAdapter);
+            recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager1);
+            toolbar.getMenu().getItem(0).setVisible(true);
+            toolbar.getMenu().getItem(1).setVisible(false);
+            toolbar.getMenu().getItem(2).setVisible(true);
+            toolbar.getMenu().getItem(3).setVisible(false);
+
+          } else if (i == R.id.createSlideshowAlbum) {
+            Intent intent1 = new Intent(getBaseContext(), Image_Slideshow.class);
+            toolbar.getMenu().getItem(0).setVisible(true);
+            toolbar.getMenu().getItem(1).setVisible(false);
+            toolbar.getMenu().getItem(3).setVisible(false);
+            ArrayList<String> data = new ArrayList<String>();
+            if (MainActivity.collectedimgs.size() != 0) {
+              for (Hinh c : MainActivity.collectedimgs) {
+                data.add(c.duongdan);
+              }
+            } else {
+              for (Hinh c : MainActivity.mang.get(pos)) {
+                data.add(c.duongdan);
+              }
+            }
+            intent1.putExtra("data", data);
+            startActivity(intent1);
+            MainActivity.status = false;
+
+            // ***Show ảnh không checkbox***//
+            StaggeredGridLayoutManager mStaggeredVerticalLayoutManager1 =
+                new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
+            customRecyclerviewAdapter =
+                new CustomRecyclerviewAdapter(
+                    AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+            recyclerView.setAdapter(customRecyclerviewAdapter);
+            recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager1);
+          }
+          return true;
         });
-    // ******************************************************************************************//
   }
+
   // ***Hàm cập nhật MainActivity.mang, ghi lại vào bộ nhớ,remove những Album có size=0***//
   public boolean refreshfAlbum(ArrayList<Hinh> collectedimgs, int pos) {
     // ***Gắn cờ để xem size của Album**********************************//
@@ -327,7 +304,6 @@ public class AlbumActivity extends AppCompatActivity {
   }
 
   public void ghivaobonhotrong() {
-
     try {
       File duongdan = getCacheDir();
       File taptin = new File(duongdan, "imgofalbum.txt");
@@ -358,7 +334,6 @@ public class AlbumActivity extends AppCompatActivity {
         buffer += "%";
       }
 
-      Log.e("mang", buffer);
       out.write(buffer.getBytes());
       out.close();
     } catch (Exception e) {
@@ -381,7 +356,6 @@ public class AlbumActivity extends AppCompatActivity {
         else buffer += MainActivity.MangTen.get(MainActivity.MangTen.size() - 1);
       }
 
-      Log.d("ALBUM", "ALBUMNAME= AlbumActivity" + buffer);
       fileOutputStream.write(buffer.getBytes());
       fileOutputStream.close();
     } catch (Exception e) {

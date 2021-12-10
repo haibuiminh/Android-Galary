@@ -35,7 +35,6 @@ public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
     return mang.size();
   }
 
-  // ***ViewHolder***//
   public class ViewHolder {
     TextView ten, soluong;
     ImageView imageView;
@@ -54,11 +53,11 @@ public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
       viewHolder = new ViewHolder();
       convertView = layoutInflater.inflate(layoutResource, null);
 
-      viewHolder.ten = (TextView) convertView.findViewById(R.id.tenalbum);
-      viewHolder.soluong = (TextView) convertView.findViewById(R.id.soluong);
-      viewHolder.imageView = (ImageView) convertView.findViewById(R.id.imgalbum);
-      viewHolder.constraintLayout = (ConstraintLayout) convertView.findViewById(R.id.LNofitemalbum);
-      viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.Checkalbum);
+      viewHolder.ten = convertView.findViewById(R.id.tenalbum);
+      viewHolder.soluong = convertView.findViewById(R.id.soluong);
+      viewHolder.imageView = convertView.findViewById(R.id.imgalbum);
+      viewHolder.constraintLayout = convertView.findViewById(R.id.LNofitemalbum);
+      viewHolder.checkBox = convertView.findViewById(R.id.Checkalbum);
       convertView.setTag(viewHolder);
     } else {
       viewHolder = (ViewHolder) convertView.getTag();
@@ -87,23 +86,20 @@ public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
     }
 
     viewHolder.checkBox.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            if (viewHolder.checkBox.isChecked() == true) {
-              MainActivity.collectedalbums.add(
-                  new ThongtinAlbum(
-                      mang.get(position).getTen(),
-                      mang.get(position).getDuongdan(),
-                      mang.get(position).getSoluong()));
-            } else {
-              for (int i = 0; i < MainActivity.collectedalbums.size(); i++) {
-                if (MainActivity.collectedalbums
-                    .get(i)
-                    .getTen()
-                    .equals(mang.get(position).getTen())) {
-                  MainActivity.collectedalbums.remove(i);
-                }
+        v -> {
+          if (viewHolder.checkBox.isChecked() == true) {
+            MainActivity.collectedalbums.add(
+                new ThongtinAlbum(
+                    mang.get(position).getTen(),
+                    mang.get(position).getDuongdan(),
+                    mang.get(position).getSoluong()));
+          } else {
+            for (int i = 0; i < MainActivity.collectedalbums.size(); i++) {
+              if (MainActivity.collectedalbums
+                  .get(i)
+                  .getTen()
+                  .equals(mang.get(position).getTen())) {
+                MainActivity.collectedalbums.remove(i);
               }
             }
           }

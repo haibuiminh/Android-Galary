@@ -1,5 +1,6 @@
 package com.example.androidgalary;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,8 +13,6 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -66,58 +65,40 @@ public class ImageActivity extends AppCompatActivity {
     viewPager.setCurrentItem(position);
 
     toolbar.setOnMenuItemClickListener(
-        new Toolbar.OnMenuItemClickListener() {
-          @Override
-          public boolean onMenuItemClick(MenuItem item) {
-            int i = item.getItemId();
-            if (i == R.id.compress) {
-              compressImage();
-            } else if (i == R.id.metadata) {
-              showMetadata();
-            }
-            return false;
+        item -> {
+          int i = item.getItemId();
+          if (i == R.id.compress) {
+            compressImage();
+          } else if (i == R.id.metadata) {
+            showMetadata();
           }
+          return false;
         });
 
     // Sự kiện crop ảnh
-    btnCrop.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            cropImage();
-          }
-        });
+    btnCrop.setOnClickListener(v -> cropImage());
 
     // Xử lý sự kiện Share ảnh
     btnShare.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            int tmp = viewPager.getCurrentItem();
-            Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
-            try {
-              File photoFile = new File(choosenImage.duongdan);
-              Uri imageUri =
-                  FileProvider.getUriForFile(
-                      ImageActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", photoFile);
-              final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-              intent.setType("image/*");
-              intent.putExtra(Intent.EXTRA_STREAM, imageUri);
-              startActivity(Intent.createChooser(intent, "Share via"));
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
+        v -> {
+          int tmp = viewPager.getCurrentItem();
+          Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
+          try {
+            File photoFile = new File(choosenImage.duongdan);
+            Uri imageUri =
+                FileProvider.getUriForFile(
+                    ImageActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", photoFile);
+            final Intent intent1 = new Intent(Intent.ACTION_SEND);
+            intent1.setType("image/*");
+            intent1.putExtra(Intent.EXTRA_STREAM, imageUri);
+            startActivity(Intent.createChooser(intent1, "Share via"));
+          } catch (Exception e) {
+            e.printStackTrace();
           }
         });
 
     // Sự kiện resize ảnh
-    btnResize.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            resizeImage();
-          }
-        });
+    btnResize.setOnClickListener(v -> resizeImage());
 
     // *************************************************
     // * Xử lí sự kiện xóa ảnh trong hai trường hợp    *
@@ -125,44 +106,28 @@ public class ImageActivity extends AppCompatActivity {
     // *     II: ảnh của Album                         *
     // *************************************************
     btnDelete.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
+        v -> {
+          final Dialog confirmDialog = new Dialog(ImageActivity.this);
+          confirmDialog.setTitle("Xác nhận xóa ảnh");
+          confirmDialog.setContentView(R.layout.delete_dialog);
+          confirmDialog.show();
+          Button btnOK = confirmDialog.findViewById(R.id.btnDeleteOk);
+          Button btnCancel = confirmDialog.findViewById(R.id.btnDeleteCancel);
 
-            final Dialog confirmDialog = new Dialog(ImageActivity.this);
-            confirmDialog.setTitle("Xác nhận xóa ảnh");
-            confirmDialog.setContentView(R.layout.delete_dialog);
-            confirmDialog.show();
-            Button btnOK = confirmDialog.findViewById(R.id.btnDeleteOk);
-            Button btnCancel = confirmDialog.findViewById(R.id.btnDeleteCancel);
+          btnCancel.setOnClickListener(v1 -> confirmDialog.dismiss());
 
-            btnCancel.setOnClickListener(
-                new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                    confirmDialog.dismiss();
-                  }
-                });
-
-            btnOK.setOnClickListener(
-                new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                    deleteImage();
-                    confirmDialog.dismiss();
-                  }
-                });
-          }
+          btnOK.setOnClickListener(
+              v12 -> {
+                deleteImage();
+                confirmDialog.dismiss();
+              });
         });
     final Intent editIntent = new Intent(getApplicationContext(), EditImageActivity.class);
 
     btnEdit.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            currentImage = AnhFragment.mangHinh.get(viewPager.getCurrentItem());
-            startActivity(editIntent);
-          }
+        v -> {
+          currentImage = AnhFragment.mangHinh.get(viewPager.getCurrentItem());
+          startActivity(editIntent);
         });
   }
 
@@ -186,10 +151,12 @@ public class ImageActivity extends AppCompatActivity {
       AlertDialog dialog = builder.create();
       dialog.show();
     } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
-  private void editBitmap(Bitmap bitmap, String filePath) {
+  @SuppressLint({"SetWorldReadable", "SetWorldWritable"})
+  private void editBitmap(String filePath) {
     try {
       File file = new File(filePath);
       file.setReadable(true, false);
@@ -201,6 +168,7 @@ public class ImageActivity extends AppCompatActivity {
     }
   }
 
+  @SuppressLint({"SetWorldReadable", "SetWorldWritable"})
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -208,9 +176,10 @@ public class ImageActivity extends AppCompatActivity {
       if (resultCode == RESULT_OK) {
         Uri resultUri = result.getUri();
         Bitmap bm = null;
-        InputStream is = null;
+        InputStream is;
         String url = resultUri.toString();
-        BufferedInputStream bis = null;
+        BufferedInputStream bis;
+
         try {
           URLConnection conn = new URL(url).openConnection();
           conn.connect();
@@ -226,7 +195,9 @@ public class ImageActivity extends AppCompatActivity {
           FileOutputStream out = new FileOutputStream(file);
           file.setReadable(true, false);
           file.setWritable(true, false);
-          bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+          if (bm != null) {
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+          }
           out.flush();
           out.close();
           MediaStore.Images.Media.insertImage(
@@ -235,9 +206,9 @@ public class ImageActivity extends AppCompatActivity {
         } catch (Exception e) {
           e.printStackTrace();
         }
-
       } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
         Exception error = result.getError();
+        error.printStackTrace();
       }
     }
   }
@@ -246,8 +217,11 @@ public class ImageActivity extends AppCompatActivity {
   public void onBackPressed() {
     for (int i = 0; i < AnhFragment.mangHinhDate.size(); i++) {
       for (int j = 0; j < AnhFragment.mangHinhDate.get(i).size(); j++) {
-        if (AnhFragment.mangHinhDate.get(i).get(j).duongdan
-            == AnhFragment.mangHinh.get(viewPager.getCurrentItem()).getDuongdan()) {
+        if (AnhFragment.mangHinhDate
+            .get(i)
+            .get(j)
+            .duongdan
+            .equals(AnhFragment.mangHinh.get(viewPager.getCurrentItem()).getDuongdan())) {
           position = i;
           break;
         }
@@ -268,17 +242,11 @@ public class ImageActivity extends AppCompatActivity {
     // Tạo nút back trên toolbar
     toolbar.inflateMenu(R.menu.menu_image);
     toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-    toolbar.setNavigationOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            onBackPressed();
-          }
-        });
+    toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
     viewPager = findViewById(R.id.viewpagerofimgactivity);
 
-    if (loai == false) {
+    if (!loai) {
       // ********************************************
       // *Xử lí trường hợp: Xuất ảnh của Anhfragment*
       // ********************************************
@@ -304,7 +272,6 @@ public class ImageActivity extends AppCompatActivity {
       ImagePagerAdapter imagePagerAdapter =
           new ImagePagerAdapter(MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum), this);
       viewPager.setAdapter(imagePagerAdapter);
-      Log.d("123456", "" + AlbumFragment.postionofFocusingAlbum);
     }
   }
 
@@ -336,7 +303,7 @@ public class ImageActivity extends AppCompatActivity {
       // ***Tạo luồng ghi***//
       FileOutputStream out = new FileOutputStream(taptin);
       // *** Tạo buffer để chứa dự liệu cần ghi vào File "imgofalbum.txt" ***//
-      String buffer = new String();
+      StringBuilder buffer = new StringBuilder();
       // *** Tiến hành ghi dữ liệu vào buffer***//
 
       // **********************************************************************************************************************
@@ -356,30 +323,28 @@ public class ImageActivity extends AppCompatActivity {
           if (j == MainActivity.mang.get(i).size() - 1) {
             // Trường hợp ảnh cuối cùng của Album
             // Không có dấu (  #  ) ở cuối
-            buffer =
-                buffer
-                    + MainActivity.mang.get(i).get(j).getDuongdan().toString()
-                    + "#"
-                    + MainActivity.mang.get(i).get(j).getTenHinh().toString()
-                    + "#"
-                    + MainActivity.mang.get(i).get(j).getAddDate().toString();
+            buffer
+                .append(MainActivity.mang.get(i).get(j).getDuongdan())
+                .append("#")
+                .append(MainActivity.mang.get(i).get(j).getTenHinh())
+                .append("#")
+                .append(MainActivity.mang.get(i).get(j).getAddDate().toString());
           } else {
             // Trường hợp bình thường
             // Có dấu (  #  ) ở cuối
-            buffer =
-                buffer
-                    + MainActivity.mang.get(i).get(j).getDuongdan().toString()
-                    + "#"
-                    + MainActivity.mang.get(i).get(j).getTenHinh().toString()
-                    + "#"
-                    + MainActivity.mang.get(i).get(j).getAddDate().toString()
-                    + "#";
+            buffer
+                .append(MainActivity.mang.get(i).get(j).getDuongdan())
+                .append("#")
+                .append(MainActivity.mang.get(i).get(j).getTenHinh())
+                .append("#")
+                .append(MainActivity.mang.get(i).get(j).getAddDate().toString())
+                .append("#");
           }
         }
-        buffer += "%";
+        buffer.append("%");
       }
       // *** ghi vào bộ nhớ ***//
-      out.write(buffer.getBytes());
+      out.write(buffer.toString().getBytes());
       out.close();
     } catch (Exception e) {
       e.printStackTrace();
@@ -395,19 +360,21 @@ public class ImageActivity extends AppCompatActivity {
 
     try {
       FileOutputStream fileOutputStream = new FileOutputStream(file);
-      String buffer = new String();
+      StringBuilder buffer = new StringBuilder();
       for (int i = 0; i < MainActivity.MangTen.size(); i++) {
-        if (i != MainActivity.MangTen.size() - 1) buffer += MainActivity.MangTen.get(i) + "#";
-        else buffer += MainActivity.MangTen.get(MainActivity.MangTen.size() - 1);
+        if (i != MainActivity.MangTen.size() - 1)
+          buffer.append(MainActivity.MangTen.get(i)).append("#");
+        else buffer.append(MainActivity.MangTen.get(MainActivity.MangTen.size() - 1));
       }
       Log.d("ALBUM", "ALBUMNAME= ImageActivity" + buffer);
-      fileOutputStream.write(buffer.getBytes());
+      fileOutputStream.write(buffer.toString().getBytes());
       fileOutputStream.close();
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
+  @SuppressLint({"SetWorldReadable", "SetWorldWritable"})
   private void resizeImage() {
     int tmp = viewPager.getCurrentItem();
     final Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
@@ -423,64 +390,55 @@ public class ImageActivity extends AppCompatActivity {
     btnOK = dialog1.findViewById(R.id.btnOk);
     btnCancel = dialog1.findViewById(R.id.btnCancel);
     btnOK.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            try {
-              int width = Integer.parseInt(Width.getText().toString());
-              int height = Integer.parseInt(Height.getText().toString());
+        v -> {
+          try {
+            int width = Integer.parseInt(Width.getText().toString());
+            int height = Integer.parseInt(Height.getText().toString());
 
-              File imgFile = new File(choosenImage.duongdan);
-              Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-              Bitmap resBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, false);
-              File f =
-                  new File(
-                      Environment.getExternalStorageDirectory()
-                          + File.separator
-                          + "resize_"
-                          + UUID.randomUUID().toString()
-                          + ".jpeg");
+            File imgFile = new File(choosenImage.duongdan);
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            Bitmap resBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, false);
+            File f =
+                new File(
+                    Environment.getExternalStorageDirectory()
+                        + File.separator
+                        + "resize_"
+                        + UUID.randomUUID().toString()
+                        + ".jpeg");
 
-              f.createNewFile();
-              FileOutputStream out = new FileOutputStream(f);
-              f.setReadable(true, false);
-              f.setWritable(true, false);
+            f.createNewFile();
+            FileOutputStream out = new FileOutputStream(f);
+            f.setReadable(true, false);
+            f.setWritable(true, false);
 
-              resBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-              out.flush();
-              out.close();
+            resBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
 
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                getBaseContext().sendBroadcast(mediaScanIntent);
-              } else {
-                sendBroadcast(
-                    new Intent(
-                        Intent.ACTION_MEDIA_MOUNTED,
-                        Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-              }
-            } catch (NumberFormatException | IOException e) {
-              e.printStackTrace();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+              Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+              Uri contentUri = Uri.fromFile(f);
+              mediaScanIntent.setData(contentUri);
+              getBaseContext().sendBroadcast(mediaScanIntent);
+            } else {
+              sendBroadcast(
+                  new Intent(
+                      Intent.ACTION_MEDIA_MOUNTED,
+                      Uri.parse("file://" + Environment.getExternalStorageDirectory())));
             }
-            dialog1.dismiss();
+          } catch (NumberFormatException | IOException e) {
+            e.printStackTrace();
           }
+          dialog1.dismiss();
         });
 
-    btnCancel.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            dialog1.dismiss();
-          }
-        });
+    btnCancel.setOnClickListener(v -> dialog1.dismiss());
   }
 
   private void deleteImage() {
     // luu lai vi tri cua hinh
     int tmp = viewPager.getCurrentItem();
-    if (loai == false) {
+    if (!loai) {
       // xử lý I
 
       // Xóa collectedimgs và add đối tượng cần xóa
@@ -498,7 +456,7 @@ public class ImageActivity extends AppCompatActivity {
               getApplicationContext().deleteFile(file.getName());
             }
           } catch (IOException e) {
-
+            e.printStackTrace();
           }
         }
         getApplicationContext()
@@ -606,18 +564,19 @@ public class ImageActivity extends AppCompatActivity {
             ? MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(tmp)
             : AnhFragment.mangHinh.get(tmp);
     File imgFile = new File(choosenImage.duongdan);
-    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-    editBitmap(myBitmap, choosenImage.duongdan);
+    BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+    editBitmap(choosenImage.duongdan);
   }
 
+  @SuppressLint("SetWorldWritable")
   private void compressImage() {
     final Dialog dialog1 = new Dialog(ImageActivity.this);
     dialog1.setTitle("Nhập phần trăm muốn nén: ");
     dialog1.setContentView(R.layout.compress_dialog);
     dialog1.show();
-    final SeekBar seekBar = (SeekBar) dialog1.findViewById(R.id.seekBar);
-    final TextView textView = (TextView) dialog1.findViewById(R.id.textView_per);
-    final EditText editText = (EditText) dialog1.findViewById(R.id.editText_per);
+    final SeekBar seekBar = dialog1.findViewById(R.id.seekBar);
+    final TextView textView = dialog1.findViewById(R.id.textView_per);
+    final EditText editText = dialog1.findViewById(R.id.editText_per);
     editText.addTextChangedListener(
         new TextWatcher() {
           @Override
@@ -634,12 +593,13 @@ public class ImageActivity extends AppCompatActivity {
                 seekBar.setProgress(0);
               } else seekBar.setProgress(Integer.parseInt(s.toString()));
             } catch (Exception ex) {
-
+              ex.printStackTrace();
             }
           }
         });
     seekBar.setOnSeekBarChangeListener(
         new SeekBar.OnSeekBarChangeListener() {
+          @SuppressLint("SetTextI18n")
           @Override
           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             textView.setText("" + progress + "%");
@@ -652,124 +612,114 @@ public class ImageActivity extends AppCompatActivity {
 
           @Override
           public void onStopTrackingTouch(SeekBar seekBar) {
-            int value = seekBar.getProgress();
+            seekBar.getProgress();
           }
         });
     Button btn_OK, btn_Cancel;
     btn_OK = dialog1.findViewById(R.id.btn_OK);
     btn_OK.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            if (loai == false) {
-              int tmp = viewPager.getCurrentItem();
-              Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
-              File imgFile = new File(choosenImage.duongdan);
+        v -> {
+          if (!loai) {
+            int tmp = viewPager.getCurrentItem();
+            Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
+            File imgFile = new File(choosenImage.duongdan);
 
-              try {
-
-                int Quality = 0;
-                if (editText.getText().toString().equals("")) {
-                  Quality = 5;
-                } else {
-                  Quality = Integer.parseInt(editText.getText().toString()) / 10;
-                }
-
-                Bitmap mySample = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                Bitmap myBm =
-                    Bitmap.createScaledBitmap(
-                        mySample,
-                        mySample.getWidth() / Quality,
-                        mySample.getHeight() / Quality,
-                        true);
-                File f =
-                    new File(
-                        Environment.getExternalStorageDirectory()
-                            + File.separator
-                            + "compress_"
-                            + UUID.randomUUID().toString()
-                            + ".jpeg");
-                f.createNewFile();
-                FileOutputStream out = new FileOutputStream(f);
-                f.setReadable(true, false);
-                f.setWritable(true, false);
-                myBm.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                out.flush();
-                out.close();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                  Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                  Uri contentUri = Uri.fromFile(f);
-                  mediaScanIntent.setData(contentUri);
-                  getBaseContext().sendBroadcast(mediaScanIntent);
-                } else {
-                  sendBroadcast(
-                      new Intent(
-                          Intent.ACTION_MEDIA_MOUNTED,
-                          Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-                }
-                dialog1.dismiss();
-              } catch (IOException e) {
-                e.printStackTrace();
+            try {
+              int Quality;
+              if (editText.getText().toString().equals("")) {
+                Quality = 5;
+              } else {
+                Quality = Integer.parseInt(editText.getText().toString()) / 10;
               }
-            } else {
-              int tmp = viewPager.getCurrentItem();
-              Hinh choosenImage =
-                  MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(tmp);
-              File imgFile = new File(choosenImage.duongdan);
 
-              try {
-                int Quality = 0;
-                if (editText.getText().toString().equals("")) {
-                  Quality = 5;
-                } else {
-                  Quality = Integer.parseInt(editText.getText().toString()) / 10;
-                }
-                Bitmap mySample = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                Bitmap myBm =
-                    Bitmap.createScaledBitmap(
-                        mySample,
-                        mySample.getWidth() / Quality,
-                        mySample.getHeight() / Quality,
-                        true);
-                File f =
-                    new File(
-                        Environment.getExternalStorageDirectory()
-                            + File.separator
-                            + "compress_"
-                            + UUID.randomUUID().toString()
-                            + ".jpeg");
-                f.createNewFile();
-                FileOutputStream out = new FileOutputStream(f);
-                f.setReadable(true, false);
-                f.setWritable(true, false);
-                myBm.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                out.flush();
-                out.close();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                  Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                  Uri contentUri = Uri.fromFile(f);
-                  mediaScanIntent.setData(contentUri);
-                  getBaseContext().sendBroadcast(mediaScanIntent);
-                } else {
-                  sendBroadcast(
-                      new Intent(
-                          Intent.ACTION_MEDIA_MOUNTED,
-                          Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-                }
-                dialog1.dismiss();
-              } catch (IOException e) {
-                e.printStackTrace();
+              Bitmap mySample = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+              Bitmap myBm =
+                  Bitmap.createScaledBitmap(
+                      mySample,
+                      mySample.getWidth() / Quality,
+                      mySample.getHeight() / Quality,
+                      true);
+              File f =
+                  new File(
+                      Environment.getExternalStorageDirectory()
+                          + File.separator
+                          + "compress_"
+                          + UUID.randomUUID().toString()
+                          + ".jpeg");
+              f.createNewFile();
+              FileOutputStream out = new FileOutputStream(f);
+              f.setReadable(true, false);
+              f.setWritable(true, false);
+              myBm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+              out.flush();
+              out.close();
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                getBaseContext().sendBroadcast(mediaScanIntent);
+              } else {
+                sendBroadcast(
+                    new Intent(
+                        Intent.ACTION_MEDIA_MOUNTED,
+                        Uri.parse("file://" + Environment.getExternalStorageDirectory())));
               }
+              dialog1.dismiss();
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          } else {
+            int tmp = viewPager.getCurrentItem();
+            Hinh choosenImage =
+                MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(tmp);
+            File imgFile = new File(choosenImage.duongdan);
+
+            try {
+              int Quality;
+              if (editText.getText().toString().equals("")) {
+                Quality = 5;
+              } else {
+                Quality = Integer.parseInt(editText.getText().toString()) / 10;
+              }
+              Bitmap mySample = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+              Bitmap myBm =
+                  Bitmap.createScaledBitmap(
+                      mySample,
+                      mySample.getWidth() / Quality,
+                      mySample.getHeight() / Quality,
+                      true);
+              File f =
+                  new File(
+                      Environment.getExternalStorageDirectory()
+                          + File.separator
+                          + "compress_"
+                          + UUID.randomUUID().toString()
+                          + ".jpeg");
+              f.createNewFile();
+              FileOutputStream out = new FileOutputStream(f);
+              f.setReadable(true, false);
+              f.setWritable(true, false);
+              myBm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+              out.flush();
+              out.close();
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                getBaseContext().sendBroadcast(mediaScanIntent);
+              } else {
+                sendBroadcast(
+                    new Intent(
+                        Intent.ACTION_MEDIA_MOUNTED,
+                        Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+              }
+              dialog1.dismiss();
+            } catch (IOException e) {
+              e.printStackTrace();
             }
           }
         });
     btn_Cancel = dialog1.findViewById(R.id.btn_Cancel);
-    btn_Cancel.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            dialog1.dismiss();
-          }
-        });
+    btn_Cancel.setOnClickListener(v -> dialog1.dismiss());
   }
 }

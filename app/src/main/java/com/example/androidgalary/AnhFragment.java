@@ -29,8 +29,6 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
   static ArrayList<Hinh> mangHinh = new ArrayList<>();
 
   static ArrayList<ArrayList<Hinh>> mangHinhDate = new ArrayList<>();
-  static Map<Integer, ArrayList<Hinh>> mapImage =
-      new TreeMap<>(Collections.<Integer>reverseOrder());
 
   static LinearLayoutManager linearLayoutManager = null;
   public static RecyclerView listView;

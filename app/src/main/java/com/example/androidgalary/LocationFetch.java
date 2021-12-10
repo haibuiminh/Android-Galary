@@ -9,8 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class LocationFetch extends AsyncTask<Void, Void, String> {
-  private float lat; // name of parameter nominatim
-  private float lon; // name of parameter nominatim
+  private final float lat; // name of parameter nominatim
+  private final float lon; // name of parameter nominatim
 
   @Override
   protected String doInBackground(Void... params) {
@@ -36,7 +36,7 @@ public class LocationFetch extends AsyncTask<Void, Void, String> {
       urlConnection.connect();
 
       InputStream inputStream = urlConnection.getInputStream();
-      StringBuffer buffer = new StringBuffer();
+      StringBuilder buffer = new StringBuilder();
       if (inputStream == null) {
         return null;
       }
@@ -44,7 +44,7 @@ public class LocationFetch extends AsyncTask<Void, Void, String> {
 
       String line;
       while ((line = reader.readLine()) != null) {
-        buffer.append(line + "\n");
+        buffer.append(line).append("\n");
       }
 
       if (buffer.length() == 0) {
@@ -64,6 +64,7 @@ public class LocationFetch extends AsyncTask<Void, Void, String> {
         try {
           reader.close();
         } catch (IOException e) {
+          e.printStackTrace();
         }
       }
     }

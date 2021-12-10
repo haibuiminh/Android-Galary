@@ -195,7 +195,7 @@ public class EditImageActivity extends BaseActivity
 
   private void saveImage() {
     if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-      showLoading("Saving...");
+      showLoading();
 
       final String currentFilePath = ImageActivity.currentImage.getDuongdan();
       final int slash = currentFilePath.lastIndexOf('/');

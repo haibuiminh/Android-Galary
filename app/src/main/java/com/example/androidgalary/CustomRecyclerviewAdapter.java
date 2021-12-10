@@ -75,72 +75,61 @@ public class CustomRecyclerviewAdapter
       holder.constraintLayout.setVisibility(View.INVISIBLE);
     }
     holder.imageView.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            // Chuyen man hinh image activity
-            Intent intent = new Intent(context, ImageActivity.class);
-            intent.putExtra("vitri", data.get(position).getDuongdan());
-            intent.putExtra("loai", loai);
-            context.startActivity(intent);
-          }
+        v -> {
+          // Chuyen man hinh image activity
+          Intent intent = new Intent(context, ImageActivity.class);
+          intent.putExtra("vitri", data.get(position).getDuongdan());
+          intent.putExtra("loai", loai);
+          context.startActivity(intent);
         });
 
     holder.checkBox.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            if (holder.checkBox.isChecked()) {
-              MainActivity.collectedimgs.add(
-                  new Hinh(
-                      data.get(position).getDuongdan(),
-                      data.get(position).getTenHinh(),
-                      data.get(position).getAddDate()));
-              if (!loai) {
-                AnhFragment.mangHinhDate.get(pos).get(position).setCheck(true);
-              } else {
-                MainActivity.mang.get(pos).get(position).setCheck(true);
-              }
+        v -> {
+          if (holder.checkBox.isChecked()) {
+            MainActivity.collectedimgs.add(
+                new Hinh(
+                    data.get(position).getDuongdan(),
+                    data.get(position).getTenHinh(),
+                    data.get(position).getAddDate()));
+            if (!loai) {
+              AnhFragment.mangHinhDate.get(pos).get(position).setCheck(true);
             } else {
-              for (int i = 0; i < MainActivity.collectedimgs.size(); i++) {
-                if (MainActivity.collectedimgs
-                    .get(i)
-                    .getDuongdan()
-                    .equals(data.get(position).duongdan)) {
-                  MainActivity.collectedimgs.remove(i);
-                }
+              MainActivity.mang.get(pos).get(position).setCheck(true);
+            }
+          } else {
+            for (int i = 0; i < MainActivity.collectedimgs.size(); i++) {
+              if (MainActivity.collectedimgs
+                  .get(i)
+                  .getDuongdan()
+                  .equals(data.get(position).duongdan)) {
+                MainActivity.collectedimgs.remove(i);
               }
-              if (!loai) AnhFragment.mangHinhDate.get(pos).get(position).setCheck(false);
-              else {
-                MainActivity.mang.get(pos).get(position).setCheck(false);
-              }
+            }
+            if (!loai) AnhFragment.mangHinhDate.get(pos).get(position).setCheck(false);
+            else {
+              MainActivity.mang.get(pos).get(position).setCheck(false);
             }
           }
         });
 
     holder.imageView.setOnLongClickListener(
-        new View.OnLongClickListener() {
-          @Override
-          public boolean onLongClick(View view) {
-            if (!loai) {
-              if (((MainActivity) context).status == false) {
-                ((MainActivity) context).status = true;
-                ImageActivity.position = pos;
-                MainActivity.viewPager.setAdapter(MainActivity.pagerAdapter);
+        view -> {
+          if (!loai) {
+            if (((MainActivity) context).status == false) {
+              ((MainActivity) context).status = true;
+              ImageActivity.position = pos;
+              MainActivity.viewPager.setAdapter(MainActivity.pagerAdapter);
 
-                // ***Show những lựa chọn cần thiết sau khi Select***//
-                ((MainActivity) context).toolbar.getMenu().getItem(0).setVisible(false);
-                ((MainActivity) context).toolbar.getMenu().getItem(1).setVisible(true);
-                ((MainActivity) context).toolbar.getMenu().getItem(2).setVisible(true);
-                ((MainActivity) context).toolbar.getMenu().getItem(3).setVisible(true);
-                ((MainActivity) context).toolbar.getMenu().getItem(4).setVisible(true);
-                ((MainActivity) context).toolbar.getMenu().getItem(5).setVisible(true);
-              }
-            } else {
-
+              // ***Show những lựa chọn cần thiết sau khi Select***//
+              ((MainActivity) context).toolbar.getMenu().getItem(0).setVisible(false);
+              ((MainActivity) context).toolbar.getMenu().getItem(1).setVisible(true);
+              ((MainActivity) context).toolbar.getMenu().getItem(2).setVisible(true);
+              ((MainActivity) context).toolbar.getMenu().getItem(3).setVisible(true);
+              ((MainActivity) context).toolbar.getMenu().getItem(4).setVisible(true);
+              ((MainActivity) context).toolbar.getMenu().getItem(5).setVisible(true);
             }
-            return false;
           }
+          return false;
         });
   }
 
@@ -156,7 +145,7 @@ public class CustomRecyclerviewAdapter
 
     public MyViewHolder(View itemView) {
       super(itemView);
-      imageView = (ImageView) itemView.findViewById(R.id.imgrv);
+      imageView = itemView.findViewById(R.id.imgrv);
       constraintLayout = itemView.findViewById(R.id.LNofcardview);
       checkBox = itemView.findViewById(R.id.Check);
     }

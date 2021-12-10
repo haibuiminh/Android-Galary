@@ -1,5 +1,6 @@
 package com.example.androidgalary.ImageEditor;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.androidgalary.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import java.util.Objects;
 
 public class PropertiesBSFragment extends BottomSheetDialogFragment
     implements SeekBar.OnSeekBarChangeListener {
@@ -54,15 +56,13 @@ public class PropertiesBSFragment extends BottomSheetDialogFragment
         new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
     rvColor.setLayoutManager(layoutManager);
     rvColor.setHasFixedSize(true);
-    ColorPickerAdapter colorPickerAdapter = new ColorPickerAdapter(getActivity());
+    ColorPickerAdapter colorPickerAdapter =
+        new ColorPickerAdapter(Objects.requireNonNull(getActivity()));
     colorPickerAdapter.setOnColorPickerClickListener(
-        new ColorPickerAdapter.OnColorPickerClickListener() {
-          @Override
-          public void onColorPickerClickListener(int colorCode) {
-            if (mProperties != null) {
-              dismiss();
-              mProperties.onColorChanged(colorCode);
-            }
+        colorCode -> {
+          if (mProperties != null) {
+            dismiss();
+            mProperties.onColorChanged(colorCode);
           }
         });
     rvColor.setAdapter(colorPickerAdapter);
@@ -72,6 +72,7 @@ public class PropertiesBSFragment extends BottomSheetDialogFragment
     mProperties = properties;
   }
 
+  @SuppressLint("NonConstantResourceId")
   @Override
   public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
     switch (seekBar.getId()) {

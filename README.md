@@ -9,4 +9,3 @@ Please run below command to format and verify your written code.
 ./gradlew spotlessApply  -> to do code formatting
 ./gradlew spotlessCheck  -> to verify code formatting
 ```
-

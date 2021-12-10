@@ -15,7 +15,6 @@ public class ExifUtility {
   public List<String> getExif(ExifInterface exif) {
 
     List<String> exifList = new ArrayList<>();
-
     File f = new File(AnhFragment.mangHinh.get(viewPager.getCurrentItem()).duongdan);
 
     if (!getExifTag(exif, ExifInterface.TAG_DATETIME).isEmpty()) {
@@ -80,7 +79,6 @@ public class ExifUtility {
   }
 
   private String GetLocationExif(ExifInterface exif) {
-
     try {
       String latitudeRef, longitudeRef;
       Float latitude = 0.f;
@@ -111,7 +109,6 @@ public class ExifUtility {
       }
 
       String location = new LocationFetch(latitude, longitude).execute().get();
-
       JSONObject jsonObj = new JSONObject(location);
       return jsonObj.getString("display_name");
 

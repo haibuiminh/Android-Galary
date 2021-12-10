@@ -148,11 +148,7 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
   }
 
   public void ghivaobonhotrong() {
-
     try {
-      // bo nho trong
-      // FileOutputStream out=openFileOutput("abc.txt",MODE_PRIVATE);
-
       // bo nho trong, cache
       File duongdan = getActivity().getCacheDir();
       File taptin = new File(duongdan, "imgofalbum.txt");
@@ -184,7 +180,6 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
         buffer += "%";
       }
 
-      Log.e("mang", buffer);
       out.write(buffer.getBytes());
       out.close();
     } catch (Exception e) {

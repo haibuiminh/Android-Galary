@@ -38,16 +38,14 @@ public class BaseActivity extends AppCompatActivity {
   @Override
   public void onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    switch (requestCode) {
-      case READ_WRITE_STORAGE:
-        isPermissionGranted(grantResults[0] == PackageManager.PERMISSION_GRANTED, permissions[0]);
-        break;
+    if (requestCode == READ_WRITE_STORAGE) {
+      isPermissionGranted(grantResults[0] == PackageManager.PERMISSION_GRANTED, permissions[0]);
     }
   }
 
-  protected void showLoading(@NonNull String message) {
+  protected void showLoading() {
     mProgressDialog = new ProgressDialog(this);
-    mProgressDialog.setMessage(message);
+    mProgressDialog.setMessage("Saving...");
     mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     mProgressDialog.setCancelable(false);
     mProgressDialog.show();

@@ -21,8 +21,8 @@ import java.util.List;
 
 public class FilterViewAdapter extends RecyclerView.Adapter<FilterViewAdapter.ViewHolder> {
 
-  private FilterListener mFilterListener;
-  private List<Pair<String, PhotoFilter>> mPairList = new ArrayList<>();
+  private final FilterListener mFilterListener;
+  private final List<Pair<String, PhotoFilter>> mPairList = new ArrayList<>();
 
   public FilterViewAdapter(FilterListener filterListener) {
     mFilterListener = filterListener;
@@ -59,18 +59,13 @@ public class FilterViewAdapter extends RecyclerView.Adapter<FilterViewAdapter.Vi
       mImageFilterView = itemView.findViewById(R.id.imgFilterView);
       mTxtFilterName = itemView.findViewById(R.id.txtFilterName);
       itemView.setOnClickListener(
-          new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              mFilterListener.onFilterSelected(mPairList.get(getLayoutPosition()).second);
-            }
-          });
+          v -> mFilterListener.onFilterSelected(mPairList.get(getLayoutPosition()).second));
     }
   }
 
   private Bitmap getBitmapFromAsset(Context context, String strName) {
     AssetManager assetManager = context.getAssets();
-    InputStream istr = null;
+    InputStream istr;
     try {
       istr = assetManager.open(strName);
       return BitmapFactory.decodeStream(istr);

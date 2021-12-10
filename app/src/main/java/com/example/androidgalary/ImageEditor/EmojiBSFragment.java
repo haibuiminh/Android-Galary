@@ -15,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EmojiBSFragment extends BottomSheetDialogFragment {
 
@@ -28,7 +29,7 @@ public class EmojiBSFragment extends BottomSheetDialogFragment {
     void onEmojiClick(String emojiUnicode);
   }
 
-  private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
+  private final BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
       new BottomSheetBehavior.BottomSheetCallback() {
 
         @Override
@@ -44,7 +45,7 @@ public class EmojiBSFragment extends BottomSheetDialogFragment {
 
   @SuppressLint("RestrictedApi")
   @Override
-  public void setupDialog(Dialog dialog, int style) {
+  public void setupDialog(@NonNull Dialog dialog, int style) {
     super.setupDialog(dialog, style);
     View contentView =
         View.inflate(getContext(), R.layout.fragment_bottom_sticker_emoji_dialog, null);
@@ -53,12 +54,14 @@ public class EmojiBSFragment extends BottomSheetDialogFragment {
         (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
     CoordinatorLayout.Behavior behavior = params.getBehavior();
 
-    if (behavior != null && behavior instanceof BottomSheetBehavior) {
+    if (behavior instanceof BottomSheetBehavior) {
       ((BottomSheetBehavior) behavior).addBottomSheetCallback(mBottomSheetBehaviorCallback);
     }
     ((View) contentView.getParent())
         .setBackgroundColor(
-            getResources().getColor(android.R.color.transparent, getActivity().getTheme()));
+            getResources()
+                .getColor(
+                    android.R.color.transparent, Objects.requireNonNull(getActivity()).getTheme()));
     RecyclerView rvEmoji = contentView.findViewById(R.id.rvEmoji);
 
     GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
@@ -73,8 +76,9 @@ public class EmojiBSFragment extends BottomSheetDialogFragment {
 
   public class EmojiAdapter extends RecyclerView.Adapter<EmojiAdapter.ViewHolder> {
 
-    ArrayList<String> emojisList = PhotoEditor.getEmojis(getActivity());
+    ArrayList<String> emojisList = PhotoEditor.getEmojis(Objects.requireNonNull(getActivity()));
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       View view =
@@ -100,14 +104,11 @@ public class EmojiBSFragment extends BottomSheetDialogFragment {
         txtEmoji = itemView.findViewById(R.id.txtEmoji);
 
         itemView.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                if (mEmojiListener != null) {
-                  mEmojiListener.onEmojiClick(emojisList.get(getLayoutPosition()));
-                }
-                dismiss();
+            v -> {
+              if (mEmojiListener != null) {
+                mEmojiListener.onEmojiClick(emojisList.get(getLayoutPosition()));
               }
+              dismiss();
             });
       }
     }

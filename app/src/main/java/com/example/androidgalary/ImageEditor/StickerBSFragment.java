@@ -34,7 +34,7 @@ public class StickerBSFragment extends BottomSheetDialogFragment {
     void onStickerClick(Bitmap bitmap);
   }
 
-  private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
+  private final BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
       new BottomSheetBehavior.BottomSheetCallback() {
 
         @Override
@@ -50,7 +50,7 @@ public class StickerBSFragment extends BottomSheetDialogFragment {
 
   @SuppressLint("RestrictedApi")
   @Override
-  public void setupDialog(Dialog dialog, int style) {
+  public void setupDialog(@NonNull Dialog dialog, int style) {
     super.setupDialog(dialog, style);
     View contentView =
         View.inflate(getContext(), R.layout.fragment_bottom_sticker_emoji_dialog, null);
@@ -59,8 +59,8 @@ public class StickerBSFragment extends BottomSheetDialogFragment {
         (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
     CoordinatorLayout.Behavior behavior = params.getBehavior();
 
-    if (behavior != null && behavior instanceof BottomSheetBehavior) {
-      ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
+    if (behavior instanceof BottomSheetBehavior) {
+      ((BottomSheetBehavior) behavior).addBottomSheetCallback(mBottomSheetBehaviorCallback);
     }
     ((View) contentView.getParent())
         .setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -81,6 +81,7 @@ public class StickerBSFragment extends BottomSheetDialogFragment {
 
     int[] stickerList = new int[] {R.drawable.aa, R.drawable.bb};
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       View view =
@@ -106,23 +107,19 @@ public class StickerBSFragment extends BottomSheetDialogFragment {
         imgSticker = itemView.findViewById(R.id.imgSticker);
 
         itemView.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                if (mStickerListener != null) {
-                  mStickerListener.onStickerClick(
-                      BitmapFactory.decodeResource(
-                          getResources(), stickerList[getLayoutPosition()]));
-                }
-                dismiss();
+            v -> {
+              if (mStickerListener != null) {
+                mStickerListener.onStickerClick(
+                    BitmapFactory.decodeResource(getResources(), stickerList[getLayoutPosition()]));
               }
+              dismiss();
             });
       }
     }
   }
 
   private String convertEmoji(String emoji) {
-    String returnedEmoji = "";
+    String returnedEmoji;
     try {
       int convertEmojiToInt = Integer.parseInt(emoji.substring(2), 16);
       returnedEmoji = getEmojiByUnicode(convertEmojiToInt);
