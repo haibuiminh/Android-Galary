@@ -2,23 +2,17 @@ package com.example.androidgalary;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 
-
 //// Custom list view trong AnhFragment
-////***Show Ảnh theo thời gian***//
-//public class CustomListviewImageAdapter extends ArrayAdapter<ArrayList<Hinh>> {
+//// ***Show Ảnh theo thời gian***//
+// public class CustomListviewImageAdapter extends ArrayAdapter<ArrayList<Hinh>> {
 //    Context context;
 //
 //    //***Mảng lưu số lượng ảnh trong 1 ngày nào đó***//
@@ -27,7 +21,8 @@ import java.util.ArrayList;
 //    //***Layout muốn dán***//
 //    int layoutResource;
 //
-//    public CustomListviewImageAdapter(Context context, ArrayList<ArrayList<Hinh>> mang, int layoutResource) {
+//    public CustomListviewImageAdapter(Context context, ArrayList<ArrayList<Hinh>> mang, int
+// layoutResource) {
 //        super(context, layoutResource, mang);
 //        this.context = context;
 //        this.mang = mang;
@@ -48,7 +43,8 @@ import java.util.ArrayList;
 //
 //    @NonNull
 //    @Override
-//    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+//    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent)
+// {
 //        long start = System.currentTimeMillis();
 //
 //        LayoutInflater inf = ((MainActivity) context).getLayoutInflater();
@@ -64,70 +60,79 @@ import java.util.ArrayList;
 //        }
 //
 //        String date = mang.get(position).get(0).getAddDate().toString();
-//        viewHolder.textView.setText(String.format("%s-%s-%s", date.substring(0, 4), date.substring(4, 6), date.substring(6, 8)));
-//        CustomRecyclerviewAdapter customRecyclerviewAdapter = new CustomRecyclerviewAdapter(context, mang.get(position), false, position);
+//        viewHolder.textView.setText(String.format("%s-%s-%s", date.substring(0, 4),
+// date.substring(4, 6), date.substring(6, 8)));
+//        CustomRecyclerviewAdapter customRecyclerviewAdapter = new
+// CustomRecyclerviewAdapter(context, mang.get(position), false, position);
 //        viewHolder.recyclerView.setAdapter(customRecyclerviewAdapter);
 //        viewHolder.recyclerView.setHasFixedSize(true);
 //        GridLayoutManager mGridLayoutManager = new GridLayoutManager(context, 4);
 //
 //        viewHolder.recyclerView.setLayoutManager(mGridLayoutManager);
 //
-//        MainActivity.funcExecuteTime.put("getView CustomListviewImageAdapter", System.currentTimeMillis() - start);
+//        MainActivity.funcExecuteTime.put("getView CustomListviewImageAdapter",
+// System.currentTimeMillis() - start);
 //
 //        return convertView;
 //    }
-//}
+// }
 
-public class CustomListviewImageAdapter extends RecyclerView.Adapter<CustomListviewImageAdapter.MyViewHolder>{
+public class CustomListviewImageAdapter
+    extends RecyclerView.Adapter<CustomListviewImageAdapter.MyViewHolder> {
 
-    Context context;
+  Context context;
 
-    //***Mảng lưu số lượng ảnh trong 1 ngày nào đó***//
-    ArrayList<ArrayList<Hinh>> mang;
-    //***Layout muốn dán***//
-    int layoutResource;
+  // ***Mảng lưu số lượng ảnh trong 1 ngày nào đó***//
+  ArrayList<ArrayList<Hinh>> mang;
+  // ***Layout muốn dán***//
+  int layoutResource;
 
-    public CustomListviewImageAdapter(Context context, ArrayList<ArrayList<Hinh>> mang, int layoutResource) {
-        this.context = context;
-        this.mang = mang;
-        this.layoutResource = layoutResource;
+  public CustomListviewImageAdapter(
+      Context context, ArrayList<ArrayList<Hinh>> mang, int layoutResource) {
+    this.context = context;
+    this.mang = mang;
+    this.layoutResource = layoutResource;
+  }
+
+  @Override
+  public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    View view = ((Activity) context).getLayoutInflater().inflate(layoutResource, parent, false);
+    MyViewHolder holder = new MyViewHolder(view);
+    return holder;
+  }
+
+  @Override
+  public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    long start = System.currentTimeMillis();
+    String date = mang.get(position).get(0).getAddDate().toString();
+    holder.textView.setText(
+        String.format(
+            "%s-%s-%s", date.substring(0, 4), date.substring(4, 6), date.substring(6, 8)));
+    CustomRecyclerviewAdapter customRecyclerviewAdapter =
+        new CustomRecyclerviewAdapter(context, mang.get(position), false, position);
+    holder.recyclerView.setAdapter(customRecyclerviewAdapter);
+    holder.recyclerView.setHasFixedSize(true);
+    GridLayoutManager mGridLayoutManager = new GridLayoutManager(context, 4);
+
+    holder.recyclerView.setLayoutManager(mGridLayoutManager);
+
+    MainActivity.funcExecuteTime.put(
+        "getView CustomListviewImageAdapter", System.currentTimeMillis() - start);
+  }
+
+  @Override
+  public int getItemCount() {
+    return mang.size();
+  }
+
+  class MyViewHolder extends RecyclerView.ViewHolder {
+    TextView textView;
+    RecyclerView recyclerView;
+
+    public MyViewHolder(View itemView) {
+      super(itemView);
+      textView = (TextView) itemView.findViewById(R.id.tvdate);
+      recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
     }
-
-
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = ((Activity)context).getLayoutInflater().inflate(layoutResource, parent, false);
-        MyViewHolder holder = new MyViewHolder(view);
-        return holder;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        long start = System.currentTimeMillis();
-        String date = mang.get(position).get(0).getAddDate().toString();
-        holder.textView.setText(String.format("%s-%s-%s", date.substring(0, 4), date.substring(4, 6), date.substring(6, 8)));
-        CustomRecyclerviewAdapter customRecyclerviewAdapter = new CustomRecyclerviewAdapter(context, mang.get(position), false, position);
-        holder.recyclerView.setAdapter(customRecyclerviewAdapter);
-        holder.recyclerView.setHasFixedSize(true);
-        GridLayoutManager mGridLayoutManager = new GridLayoutManager(context, 4);
-
-        holder.recyclerView.setLayoutManager(mGridLayoutManager);
-
-        MainActivity.funcExecuteTime.put("getView CustomListviewImageAdapter", System.currentTimeMillis() - start);
-    }
-
-    @Override
-    public int getItemCount() {
-        return mang.size();
-    }
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
-        RecyclerView recyclerView;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.tvdate);
-            recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
-        }
-    }
+  }
 }
