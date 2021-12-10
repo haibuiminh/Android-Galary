@@ -192,8 +192,8 @@ public class ImageActivity extends AppCompatActivity {
             file.setReadable(true, false);
             file.setWritable(true, false);
 
-            CropImage.activity(Uri.fromFile(file))
-                    .start(this);
+
+            CropImage.activity(Uri.fromFile(file)).start(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
