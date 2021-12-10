@@ -98,8 +98,8 @@ public class ImageActivity extends AppCompatActivity {
                 try {
                     File photoFile = new File(choosenImage.duongdan);
                     Uri imageUri = FileProvider.getUriForFile(ImageActivity.this,
-                            BuildConfig.APPLICATION_ID + ".provider",
-                            photoFile);
+                        BuildConfig.APPLICATION_ID + ".fileprovider",
+                        photoFile);
                     final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                     intent.setType("image/*");
                     intent.putExtra(Intent.EXTRA_STREAM, imageUri);
