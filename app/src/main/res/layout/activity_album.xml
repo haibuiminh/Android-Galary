@@ -10,9 +10,9 @@
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#efebe9"
+        android:background="#004080"
         app:title="Album"
-        app:titleTextColor="#424242"
+        app:titleTextColor="#ffffff"
         android:id="@+id/toolbaralbum" />
 
     <androidx.recyclerview.widget.RecyclerView

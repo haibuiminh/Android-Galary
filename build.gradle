@@ -8,9 +8,40 @@ buildscript {
         classpath "com.android.tools.build:gradle:7.0.3"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:3.27.0"
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+apply plugin: "com.diffplug.gradle.spotless"
+
+spotless {
+    java {
+        target '**/*.java'
+        googleJavaFormat()
+    }
+
+    format 'misc', {
+        target '**/*.gradle', '**/*.md', '**/.gitignore'
+        indentWithSpaces()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    format 'xml', {
+        target '**/*.xml'
+        indentWithSpaces()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+task createSpotlessPreCommitHook() {
+    def gitHooksDirectory = new File("$project.rootDir/.git/hooks/")
+    if (!gitHooksDirectory.exists()) gitHooksDirectory.mkdirs()
+    new File("$project.rootDir/.git/hooks", "pre-commit").text = """
+    #!/bin/bash
+    echo "Running spotless check"
+    ./gradlew spotlessApply
+"""
+    "chmod +x .git/hooks/pre-commit".execute()
 }

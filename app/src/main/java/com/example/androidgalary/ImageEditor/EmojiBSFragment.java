@@ -1,119 +1,116 @@
 package com.example.androidgalary.ImageEditor;
 
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidgalary.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-import java.util.ArrayList;
-
 import ja.burhanrashid52.photoeditor.PhotoEditor;
-
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class EmojiBSFragment extends BottomSheetDialogFragment {
 
-    public EmojiBSFragment() {
-        // Required empty public constructor
-    }
+  public EmojiBSFragment() {
+    // Required empty public constructor
+  }
 
-    private EmojiListener mEmojiListener;
+  private EmojiListener mEmojiListener;
 
-    public interface EmojiListener {
-        void onEmojiClick(String emojiUnicode);
-    }
+  public interface EmojiListener {
+    void onEmojiClick(String emojiUnicode);
+  }
 
-    private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
+  private final BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
+      new BottomSheetBehavior.BottomSheetCallback() {
 
         @Override
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                dismiss();
-            }
-
+          if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+            dismiss();
+          }
         }
 
         @Override
-        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-        }
-    };
+        public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
+      };
 
-    @SuppressLint("RestrictedApi")
+  @SuppressLint("RestrictedApi")
+  @Override
+  public void setupDialog(@NonNull Dialog dialog, int style) {
+    super.setupDialog(dialog, style);
+    View contentView =
+        View.inflate(getContext(), R.layout.fragment_bottom_sticker_emoji_dialog, null);
+    dialog.setContentView(contentView);
+    CoordinatorLayout.LayoutParams params =
+        (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
+    CoordinatorLayout.Behavior behavior = params.getBehavior();
+
+    if (behavior instanceof BottomSheetBehavior) {
+      ((BottomSheetBehavior) behavior).addBottomSheetCallback(mBottomSheetBehaviorCallback);
+    }
+    ((View) contentView.getParent())
+        .setBackgroundColor(
+            getResources()
+                .getColor(
+                    android.R.color.transparent, Objects.requireNonNull(getActivity()).getTheme()));
+    RecyclerView rvEmoji = contentView.findViewById(R.id.rvEmoji);
+
+    GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
+    rvEmoji.setLayoutManager(gridLayoutManager);
+    EmojiAdapter emojiAdapter = new EmojiAdapter();
+    rvEmoji.setAdapter(emojiAdapter);
+  }
+
+  public void setEmojiListener(EmojiListener emojiListener) {
+    mEmojiListener = emojiListener;
+  }
+
+  public class EmojiAdapter extends RecyclerView.Adapter<EmojiAdapter.ViewHolder> {
+
+    ArrayList<String> emojisList = PhotoEditor.getEmojis(Objects.requireNonNull(getActivity()));
+
+    @NonNull
     @Override
-    public void setupDialog(Dialog dialog, int style) {
-        super.setupDialog(dialog, style);
-        View contentView = View.inflate(getContext(), R.layout.fragment_bottom_sticker_emoji_dialog, null);
-        dialog.setContentView(contentView);
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
-        CoordinatorLayout.Behavior behavior = params.getBehavior();
-
-        if (behavior != null && behavior instanceof BottomSheetBehavior) {
-            ((BottomSheetBehavior) behavior).addBottomSheetCallback(mBottomSheetBehaviorCallback);
-        }
-        ((View) contentView.getParent()).setBackgroundColor(getResources().getColor(android.R.color.transparent, getActivity().getTheme()));
-        RecyclerView rvEmoji = contentView.findViewById(R.id.rvEmoji);
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
-        rvEmoji.setLayoutManager(gridLayoutManager);
-        EmojiAdapter emojiAdapter = new EmojiAdapter();
-        rvEmoji.setAdapter(emojiAdapter);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+      View view =
+          LayoutInflater.from(parent.getContext()).inflate(R.layout.row_emoji, parent, false);
+      return new ViewHolder(view);
     }
 
-    public void setEmojiListener(EmojiListener emojiListener) {
-        mEmojiListener = emojiListener;
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+      holder.txtEmoji.setText(emojisList.get(position));
     }
 
-
-    public class EmojiAdapter extends RecyclerView.Adapter<EmojiAdapter.ViewHolder> {
-
-        ArrayList<String> emojisList = PhotoEditor.getEmojis(getActivity());
-
-                
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_emoji, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.txtEmoji.setText(emojisList.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return emojisList.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            TextView txtEmoji;
-
-            ViewHolder(View itemView) {
-                super(itemView);
-                txtEmoji = itemView.findViewById(R.id.txtEmoji);
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mEmojiListener != null) {
-                            mEmojiListener.onEmojiClick(emojisList.get(getLayoutPosition()));
-                        }
-                        dismiss();
-                    }
-                });
-            }
-        }
+    @Override
+    public int getItemCount() {
+      return emojisList.size();
     }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+      TextView txtEmoji;
+
+      ViewHolder(View itemView) {
+        super(itemView);
+        txtEmoji = itemView.findViewById(R.id.txtEmoji);
+
+        itemView.setOnClickListener(
+            v -> {
+              if (mEmojiListener != null) {
+                mEmojiListener.onEmojiClick(emojisList.get(getLayoutPosition()));
+              }
+              dismiss();
+            });
+      }
+    }
+  }
 }
