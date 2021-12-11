@@ -3,6 +3,10 @@ package com.example.androidgalary;
 import static com.example.androidgalary.MainActivity.viewPager;
 
 import androidx.exifinterface.media.ExifInterface;
+
+import com.example.androidgalary.image.GallaryImageFragment;
+import com.example.androidgalary.utils.LocationFetch;
+
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,7 +19,7 @@ public class ExifUtility {
   public List<String> getExif(ExifInterface exif) {
 
     List<String> exifList = new ArrayList<>();
-    File f = new File(AnhFragment.mangHinh.get(viewPager.getCurrentItem()).duongdan);
+    File f = new File(GallaryImageFragment.mangHinh.get(viewPager.getCurrentItem()).getPath());
 
     if (!getExifTag(exif, ExifInterface.TAG_DATETIME).isEmpty()) {
       exifList.add("Date: " + getExifTag(exif, ExifInterface.TAG_DATETIME));

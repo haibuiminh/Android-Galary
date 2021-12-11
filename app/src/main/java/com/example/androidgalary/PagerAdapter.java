@@ -2,8 +2,13 @@ package com.example.androidgalary;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+//import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import com.example.androidgalary.album.AlbumFragment;
+import com.example.androidgalary.image.GallaryImageFragment;
+
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
   public PagerAdapter(@NonNull FragmentManager fm) {
@@ -15,8 +20,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
   public Fragment getItem(int position) {
     switch (position) {
       case 0:
-        AnhFragment anhFragment = new AnhFragment();
-        return anhFragment;
+        GallaryImageFragment gallaryImageFragment = new GallaryImageFragment();
+        return gallaryImageFragment;
       case 1:
         AlbumFragment albumFragment = new AlbumFragment();
         return albumFragment;
