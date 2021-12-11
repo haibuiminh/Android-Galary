@@ -33,19 +33,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ImageEditor.EditImageActivity" />
+        <activity android:name=".editImage.EditImageActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".Image_Slideshow"
+            android:name=".slideShow.GallaryImageSlideShowActivity"
             android:exported="false" />
         <activity
-            android:name=".AlbumActivity"
+            android:name=".album.GallaryAlbumActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ImageActivity"
+            android:name=".image.GallaryImageActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 

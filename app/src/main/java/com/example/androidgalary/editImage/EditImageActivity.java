@@ -1,4 +1,4 @@
-package com.example.androidgalary.ImageEditor;
+package com.example.androidgalary.editImage;
 
 import static androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_180;
 import static androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_270;
@@ -26,7 +26,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.androidgalary.ImageActivity;
+
+import com.example.androidgalary.image.GallaryImageActivity;
 import com.example.androidgalary.R;
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.OnSaveBitmap;
@@ -98,13 +99,13 @@ public class EditImageActivity extends BaseActivity
     int orientation = 0;
     ExifInterface exif = null;
     try {
-      exif = new ExifInterface(ImageActivity.currentImage.getDuongdan());
+      exif = new ExifInterface(GallaryImageActivity.currentImage.getPath());
       orientation =
           exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
     } catch (IOException e) {
       e.printStackTrace();
     }
-    mPhotoEditorView.getSource().setImageURI(Uri.parse(ImageActivity.currentImage.getDuongdan()));
+    mPhotoEditorView.getSource().setImageURI(Uri.parse(GallaryImageActivity.currentImage.getPath()));
 
     switch (orientation) {
       case ORIENTATION_ROTATE_90:
@@ -197,7 +198,7 @@ public class EditImageActivity extends BaseActivity
     if (requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
       showLoading();
 
-      final String currentFilePath = ImageActivity.currentImage.getDuongdan();
+      final String currentFilePath = GallaryImageActivity.currentImage.getPath();
       final int slash = currentFilePath.lastIndexOf('/');
       // int index = currentFilePath.lastIndexOf('.');
       // String newFilePath = currentFilePath.substring(0, index) + System.currentTimeMillis()
@@ -222,7 +223,7 @@ public class EditImageActivity extends BaseActivity
               int orientation = 0;
               ExifInterface exif = null;
               try {
-                exif = new ExifInterface(ImageActivity.currentImage.getDuongdan());
+                exif = new ExifInterface(GallaryImageActivity.currentImage.getPath());
                 orientation =
                     exif.getAttributeInt(
                         ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);

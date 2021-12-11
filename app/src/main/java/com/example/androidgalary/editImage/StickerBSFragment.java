@@ -1,4 +1,4 @@
-package com.example.androidgalary.ImageEditor;
+package com.example.androidgalary.editImage;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;

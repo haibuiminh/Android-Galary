@@ -1,4 +1,4 @@
-package com.example.androidgalary;
+package com.example.androidgalary.image;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -14,6 +14,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.androidgalary.adapters.customListImageView.CustomListviewImageAdapter;
+import com.example.androidgalary.FragmentCallbacks;
+import com.example.androidgalary.R;
+import com.example.androidgalary.models.GallaryImage;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,17 +29,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 // Fragment dùng để show tất cả ảnh trong điện thoại theo ngày chụp
-public class AnhFragment extends Fragment implements FragmentCallbacks {
+public class GallaryImageFragment extends Fragment implements FragmentCallbacks {
   Context context = null;
-  static final Uri Image_URI = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-  static ArrayList<Hinh> mangHinh = new ArrayList<>();
-
-  static ArrayList<ArrayList<Hinh>> mangHinhDate = new ArrayList<>();
-
-  static LinearLayoutManager linearLayoutManager = null;
+  public static final Uri Image_URI = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+  public static ArrayList<GallaryImage> mangHinh = new ArrayList<>();
+  public static ArrayList<ArrayList<GallaryImage>> mangHinhDate = new ArrayList<>();
+  public static LinearLayoutManager linearLayoutManager = null;
   public static RecyclerView listView;
   CustomListviewImageAdapter customListviewImageAdapter;
-
   View view;
 
   public View onCreateView(
@@ -52,7 +55,7 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
     super.onResume();
 
     // ***Khởi tạo các mảng***//
-    Map<Integer, ArrayList<Hinh>> mapImage = new TreeMap<>(Collections.<Integer>reverseOrder());
+    Map<Integer, ArrayList<GallaryImage>> mapImage = new TreeMap<>(Collections.<Integer>reverseOrder());
     mangHinh = new ArrayList<>();
     ContentResolver contentResolver = getActivity().getContentResolver();
 
@@ -71,14 +74,14 @@ public class AnhFragment extends Fragment implements FragmentCallbacks {
       SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
       Integer dateText = Integer.valueOf(df2.format(lastModDate));
       if (TempFiles.exists()) {
-        Hinh currentImage = new Hinh(duongdanhinhanh, tenhinh, dateText);
+        GallaryImage currentImage = new GallaryImage(duongdanhinhanh, tenhinh, dateText);
         mangHinh.add(currentImage);
         if (mapImage.containsKey(dateText)) {
           {
             mapImage.get(dateText).add(currentImage);
           }
         } else {
-          ArrayList<Hinh> temp = new ArrayList<>();
+          ArrayList<GallaryImage> temp = new ArrayList<>();
           temp.add(currentImage);
           mapImage.put(dateText, temp);
         }

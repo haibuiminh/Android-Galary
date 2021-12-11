@@ -1,6 +1,7 @@
-package com.example.androidgalary;
+package com.example.androidgalary.image;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,10 +21,17 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
-import com.example.androidgalary.ImageEditor.EditImageActivity;
+
+import com.example.androidgalary.BuildConfig;
+import com.example.androidgalary.ExifUtility;
+import com.example.androidgalary.MainActivity;
+import com.example.androidgalary.R;
+import com.example.androidgalary.ViewPagerFixer;
+import com.example.androidgalary.editImage.EditImageActivity;
+import com.example.androidgalary.album.AlbumFragment;
+import com.example.androidgalary.models.GallaryImage;
 import com.theartofdev.edmodo.cropper.CropImage;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -35,7 +43,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class ImageActivity extends AppCompatActivity {
+public class GallaryImageActivity extends Activity {
   Toolbar toolbar;
   ViewPagerFixer viewPager;
   Button btnDelete;
@@ -48,7 +56,7 @@ public class ImageActivity extends AppCompatActivity {
   String diachi;
   boolean loai;
   public static boolean co = false;
-  public static Hinh currentImage = null;
+  public static GallaryImage currentImage = null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +90,12 @@ public class ImageActivity extends AppCompatActivity {
     btnShare.setOnClickListener(
         v -> {
           int tmp = viewPager.getCurrentItem();
-          Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
+          GallaryImage choosenImage = GallaryImageFragment.mangHinh.get(tmp);
           try {
-            File photoFile = new File(choosenImage.duongdan);
+            File photoFile = new File(choosenImage.getPath());
             Uri imageUri =
                 FileProvider.getUriForFile(
-                    ImageActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", photoFile);
+                    GallaryImageActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", photoFile);
             final Intent intent1 = new Intent(Intent.ACTION_SEND);
             intent1.setType("image/*");
             intent1.putExtra(Intent.EXTRA_STREAM, imageUri);
@@ -107,7 +115,7 @@ public class ImageActivity extends AppCompatActivity {
     // *************************************************
     btnDelete.setOnClickListener(
         v -> {
-          final Dialog confirmDialog = new Dialog(ImageActivity.this);
+          final Dialog confirmDialog = new Dialog(GallaryImageActivity.this);
           confirmDialog.setTitle("Xác nhận xóa ảnh");
           confirmDialog.setContentView(R.layout.delete_dialog);
           confirmDialog.show();
@@ -126,24 +134,24 @@ public class ImageActivity extends AppCompatActivity {
 
     btnEdit.setOnClickListener(
         v -> {
-          currentImage = AnhFragment.mangHinh.get(viewPager.getCurrentItem());
+          currentImage = GallaryImageFragment.mangHinh.get(viewPager.getCurrentItem());
           startActivity(editIntent);
         });
   }
 
   private void showMetadata() {
     try {
-      currentImage = AnhFragment.mangHinh.get(viewPager.getCurrentItem());
+      currentImage = GallaryImageFragment.mangHinh.get(viewPager.getCurrentItem());
       ListView listView = new ListView(this);
 
       ExifUtility exif = new ExifUtility();
-      String[] items = exif.getExif(currentImage.exif).toArray(new String[0]);
+      String[] items = exif.getExif(currentImage.getExif()).toArray(new String[0]);
 
       ArrayAdapter<String> adapter =
           new ArrayAdapter<>(this, R.layout.listview_metadata, R.id.txtitem, items);
       listView.setAdapter(adapter);
 
-      AlertDialog.Builder builder = new AlertDialog.Builder(ImageActivity.this);
+      AlertDialog.Builder builder = new AlertDialog.Builder(GallaryImageActivity.this);
       builder.setCancelable(true);
       builder.setPositiveButton("OK", null);
       builder.setView(listView);
@@ -215,13 +223,13 @@ public class ImageActivity extends AppCompatActivity {
 
   @Override
   public void onBackPressed() {
-    for (int i = 0; i < AnhFragment.mangHinhDate.size(); i++) {
-      for (int j = 0; j < AnhFragment.mangHinhDate.get(i).size(); j++) {
-        if (AnhFragment.mangHinhDate
+    for (int i = 0; i < GallaryImageFragment.mangHinhDate.size(); i++) {
+      for (int j = 0; j < GallaryImageFragment.mangHinhDate.get(i).size(); j++) {
+        if (GallaryImageFragment.mangHinhDate
             .get(i)
             .get(j)
-            .duongdan
-            .equals(AnhFragment.mangHinh.get(viewPager.getCurrentItem()).getDuongdan())) {
+            .getPath()
+            .equals(GallaryImageFragment.mangHinh.get(viewPager.getCurrentItem()).getPath())) {
           position = i;
           break;
         }
@@ -250,13 +258,13 @@ public class ImageActivity extends AppCompatActivity {
       // ********************************************
       // *Xử lí trường hợp: Xuất ảnh của Anhfragment*
       // ********************************************
-      for (int i = 0; i < AnhFragment.mangHinh.size(); i++) {
-        if (diachi.equals(AnhFragment.mangHinh.get(i).getDuongdan())) {
+      for (int i = 0; i < GallaryImageFragment.mangHinh.size(); i++) {
+        if (diachi.equals(GallaryImageFragment.mangHinh.get(i).getPath())) {
           position = i;
           break;
         }
       }
-      ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(AnhFragment.mangHinh, this);
+      ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(GallaryImageFragment.mangHinh, this);
       viewPager.setAdapter(imagePagerAdapter);
     } else {
       // ****************************************
@@ -264,7 +272,7 @@ public class ImageActivity extends AppCompatActivity {
       // ****************************************
       for (int i = 0; i < MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size(); i++) {
         if (diachi.equals(
-            MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(i).getDuongdan())) {
+            MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(i).getPath())) {
           position = i;
           break;
         }
@@ -276,7 +284,7 @@ public class ImageActivity extends AppCompatActivity {
   }
 
   // *** Hàm dùng để cập nhật mảng chứa các album sau khi xóa và ghi lại vào bộ nhớ***//
-  public void refreshfAlbum(ArrayList<Hinh> collectedimgs) {
+  public void refreshfAlbum(ArrayList<GallaryImage> collectedimgs) {
     // ***Các ảnh cần xóa nằm trong collectedimgs***//                                         *
     for (int i = 0; i < collectedimgs.size(); i++) {
       for (int j = 0; j < MainActivity.mang.size(); j++) {
@@ -284,8 +292,8 @@ public class ImageActivity extends AppCompatActivity {
           if (MainActivity.mang
               .get(j)
               .get(j1)
-              .getDuongdan()
-              .equals(collectedimgs.get(i).getDuongdan())) {
+              .getPath()
+              .equals(collectedimgs.get(i).getPath())) {
             MainActivity.mang.get(j).remove(j1);
           }
         }
@@ -324,7 +332,7 @@ public class ImageActivity extends AppCompatActivity {
             // Trường hợp ảnh cuối cùng của Album
             // Không có dấu (  #  ) ở cuối
             buffer
-                .append(MainActivity.mang.get(i).get(j).getDuongdan())
+                .append(MainActivity.mang.get(i).get(j).getPath())
                 .append("#")
                 .append(MainActivity.mang.get(i).get(j).getTenHinh())
                 .append("#")
@@ -333,7 +341,7 @@ public class ImageActivity extends AppCompatActivity {
             // Trường hợp bình thường
             // Có dấu (  #  ) ở cuối
             buffer
-                .append(MainActivity.mang.get(i).get(j).getDuongdan())
+                .append(MainActivity.mang.get(i).get(j).getPath())
                 .append("#")
                 .append(MainActivity.mang.get(i).get(j).getTenHinh())
                 .append("#")
@@ -366,7 +374,7 @@ public class ImageActivity extends AppCompatActivity {
           buffer.append(MainActivity.MangTen.get(i)).append("#");
         else buffer.append(MainActivity.MangTen.get(MainActivity.MangTen.size() - 1));
       }
-      Log.d("ALBUM", "ALBUMNAME= ImageActivity" + buffer);
+      Log.d("ALBUM", "ALBUMNAME= GallaryImageActivity" + buffer);
       fileOutputStream.write(buffer.toString().getBytes());
       fileOutputStream.close();
     } catch (Exception e) {
@@ -377,9 +385,9 @@ public class ImageActivity extends AppCompatActivity {
   @SuppressLint({"SetWorldReadable", "SetWorldWritable"})
   private void resizeImage() {
     int tmp = viewPager.getCurrentItem();
-    final Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
+    final GallaryImage choosenImage = GallaryImageFragment.mangHinh.get(tmp);
     final Dialog dialog1;
-    dialog1 = new Dialog(ImageActivity.this);
+    dialog1 = new Dialog(GallaryImageActivity.this);
     dialog1.setTitle("Nhập kích thước: ");
     dialog1.setContentView(R.layout.resize_dialog);
     dialog1.show();
@@ -395,7 +403,7 @@ public class ImageActivity extends AppCompatActivity {
             int width = Integer.parseInt(Width.getText().toString());
             int height = Integer.parseInt(Height.getText().toString());
 
-            File imgFile = new File(choosenImage.duongdan);
+            File imgFile = new File(choosenImage.getPath());
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             Bitmap resBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, false);
             File f =
@@ -443,11 +451,11 @@ public class ImageActivity extends AppCompatActivity {
 
       // Xóa collectedimgs và add đối tượng cần xóa
       MainActivity.collectedimgs.clear();
-      MainActivity.collectedimgs.add(AnhFragment.mangHinh.get(tmp));
+      MainActivity.collectedimgs.add(GallaryImageFragment.mangHinh.get(tmp));
 
       // Tìm và xóa ảnh
       for (int j = 0; j < MainActivity.collectedimgs.size(); j++) {
-        File file = new File(MainActivity.collectedimgs.get(j).getDuongdan());
+        File file = new File(MainActivity.collectedimgs.get(j).getPath());
         file.delete();
         if (file.exists()) {
           try {
@@ -473,12 +481,12 @@ public class ImageActivity extends AppCompatActivity {
         }
       }
       for (int i1 = 0; i1 < MainActivity.collectedimgs.size(); i1++) {
-        for (int j = 0; j < AnhFragment.mangHinh.size(); j++) {
-          if (AnhFragment.mangHinh
+        for (int j = 0; j < GallaryImageFragment.mangHinh.size(); j++) {
+          if (GallaryImageFragment.mangHinh
               .get(j)
-              .getDuongdan()
-              .equals(MainActivity.collectedimgs.get(i1).duongdan)) {
-            AnhFragment.mangHinh.remove(j);
+              .getPath()
+              .equals(MainActivity.collectedimgs.get(i1).getPath())) {
+            GallaryImageFragment.mangHinh.remove(j);
           }
         }
       }
@@ -487,11 +495,11 @@ public class ImageActivity extends AppCompatActivity {
       // su ly sau khi xoa
 
       ImagePagerAdapter imagePagerAdapter =
-          new ImagePagerAdapter(AnhFragment.mangHinh, ImageActivity.this);
+          new ImagePagerAdapter(GallaryImageFragment.mangHinh, GallaryImageActivity.this);
       viewPager.setAdapter(imagePagerAdapter);
 
       // *** Tìm vị trị thích hợp để setCurrent cho ViewPager***//
-      if (tmp == AnhFragment.mangHinh.size()) viewPager.setCurrentItem(tmp - 1);
+      if (tmp == GallaryImageFragment.mangHinh.size()) viewPager.setCurrentItem(tmp - 1);
       else viewPager.setCurrentItem(tmp);
 
     } else {
@@ -514,8 +522,8 @@ public class ImageActivity extends AppCompatActivity {
             if (MainActivity.mang
                 .get(AlbumFragment.postionofFocusingAlbum)
                 .get(j1)
-                .getDuongdan()
-                .equals(MainActivity.collectedimgs.get(i).getDuongdan())) {
+                .getPath()
+                .equals(MainActivity.collectedimgs.get(i).getPath())) {
               MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).remove(j1);
             }
           }
@@ -547,7 +555,7 @@ public class ImageActivity extends AppCompatActivity {
         ghivaobonhotrong();
         ImagePagerAdapter imagePagerAdapter =
             new ImagePagerAdapter(
-                MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum), ImageActivity.this);
+                MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum), GallaryImageActivity.this);
         viewPager.setAdapter(imagePagerAdapter);
         // *** Tìm vị trị thích hợp để setCurrent cho ViewPager***//
         if (tmp == MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size() - 1)
@@ -559,18 +567,18 @@ public class ImageActivity extends AppCompatActivity {
 
   private void cropImage() {
     int tmp = viewPager.getCurrentItem();
-    Hinh choosenImage =
+    GallaryImage choosenImage =
         (loai)
             ? MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(tmp)
-            : AnhFragment.mangHinh.get(tmp);
-    File imgFile = new File(choosenImage.duongdan);
+            : GallaryImageFragment.mangHinh.get(tmp);
+    File imgFile = new File(choosenImage.getPath());
     BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-    editBitmap(choosenImage.duongdan);
+    editBitmap(choosenImage.getPath());
   }
 
   @SuppressLint("SetWorldWritable")
   private void compressImage() {
-    final Dialog dialog1 = new Dialog(ImageActivity.this);
+    final Dialog dialog1 = new Dialog(GallaryImageActivity.this);
     dialog1.setTitle("Nhập phần trăm muốn nén: ");
     dialog1.setContentView(R.layout.compress_dialog);
     dialog1.show();
@@ -621,8 +629,8 @@ public class ImageActivity extends AppCompatActivity {
         v -> {
           if (!loai) {
             int tmp = viewPager.getCurrentItem();
-            Hinh choosenImage = AnhFragment.mangHinh.get(tmp);
-            File imgFile = new File(choosenImage.duongdan);
+            GallaryImage choosenImage = GallaryImageFragment.mangHinh.get(tmp);
+            File imgFile = new File(choosenImage.getPath());
 
             try {
               int Quality;
@@ -670,9 +678,9 @@ public class ImageActivity extends AppCompatActivity {
             }
           } else {
             int tmp = viewPager.getCurrentItem();
-            Hinh choosenImage =
+            GallaryImage choosenImage =
                 MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).get(tmp);
-            File imgFile = new File(choosenImage.duongdan);
+            File imgFile = new File(choosenImage.getPath());
 
             try {
               int Quality;

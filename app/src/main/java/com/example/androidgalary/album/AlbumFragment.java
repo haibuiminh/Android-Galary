@@ -1,4 +1,4 @@
-package com.example.androidgalary;
+package com.example.androidgalary.album;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,14 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.example.androidgalary.adapters.customListView.CustomListviewAdapter;
+import com.example.androidgalary.FragmentCallbacks;
+import com.example.androidgalary.MainActivity;
+import com.example.androidgalary.R;
+import com.example.androidgalary.models.GallaryAlbumDetail;
+import com.example.androidgalary.models.GallaryImage;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -21,7 +29,7 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
   public static CustomListviewAdapter gvadapter;
 
   // ***Mang chứa class thông tin của album***//
-  public static ArrayList<ThongtinAlbum> Mang;
+  public static ArrayList<GallaryAlbumDetail> Mang;
   // ***Vị trí của mảng đang được focus***//
   public static int postionofFocusingAlbum = 0;
 
@@ -30,23 +38,23 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
     super.onResume();
     Log.e("TAG 1", "Onresume");
     // ***Khởi tạo Mang***//
-    Mang = new ArrayList<ThongtinAlbum>();
+    Mang = new ArrayList<GallaryAlbumDetail>();
 
     // ***Cập nhật Mang thông qua MainActivity.Mang và MainActivity.MangTen***//
     for (int i = 0; i < MainActivity.mang.size(); i++) {
       // ***Nếu ten album là "$" tức là chưa có tên thì lấy tên hình đầu tiên làm tên***//
       if (MainActivity.MangTen.get(i).equals("$")) {
         Mang.add(
-            new ThongtinAlbum(
+            new GallaryAlbumDetail(
                 MainActivity.mang.get(i).get(0).getTenHinh(),
-                MainActivity.mang.get(i).get(0).getDuongdan(),
+                MainActivity.mang.get(i).get(0).getPath(),
                 MainActivity.mang.get(i).size()));
       } else {
 
         Mang.add(
-            new ThongtinAlbum(
+            new GallaryAlbumDetail(
                 MainActivity.MangTen.get(i),
-                MainActivity.mang.get(i).get(0).getDuongdan(),
+                MainActivity.mang.get(i).get(0).getPath(),
                 MainActivity.mang.get(i).size()));
       }
     }
@@ -57,21 +65,21 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
     gvadapter = new CustomListviewAdapter(getActivity(), Mang, R.layout.custom_item_listview_album);
     gridView.setAdapter(gvadapter);
 
-    // ***Bắt sự kiện click item của list view để xuất Album đó trong AlbumActivity***//
+    // ***Bắt sự kiện click item của list view để xuất Album đó trong GallaryAlbumActivity***//
     gridView.setOnItemClickListener(
         new AdapterView.OnItemClickListener() {
           @Override
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (MainActivity.SeleteAlbum == false) {
+            if (MainActivity.SelectedAlbum == false) {
               // ***Lấy vị trí album được focus***//
               postionofFocusingAlbum = MainActivity.mang.size() - 1 - position;
               // Toast.makeText(getActivity(), "" + postionofFocusingAlbum,
               // //Toast.LENGTH_SHORT).show();
 
-              // ***Gọi Intent sang AlbumActivity***//
-              Intent intent = new Intent(getContext(), AlbumActivity.class);
+              // ***Gọi Intent sang GallaryAlbumActivity***//
+              Intent intent = new Intent(getContext(), GallaryAlbumActivity.class);
               intent.putExtra("thutu", postionofFocusingAlbum);
-              intent.putExtra("ten", Mang.get(position).getTen());
+              intent.putExtra("ten", Mang.get(position).getName());
               getContext().startActivity(intent);
             } else {
               for (int i = 0; i < MainActivity.collectedimgs.size(); i++) {
@@ -82,8 +90,8 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
                   if (MainActivity.mang
                       .get(MainActivity.mang.size() - 1 - position)
                       .get(j)
-                      .getDuongdan()
-                      .equals(MainActivity.collectedimgs.get(i).getDuongdan())) {
+                      .getPath()
+                      .equals(MainActivity.collectedimgs.get(i).getPath())) {
                     flag = true;
                     break;
                   }
@@ -97,7 +105,7 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
               MainActivity.collectedimgs.clear();
               // Toast.makeText(getContext(), "Thành Công!",
               // //Toast.LENGTH_SHORT).show();
-              MainActivity.SeleteAlbum = false;
+              MainActivity.SelectedAlbum = false;
               ghivaobonhotrong();
               MainActivity.viewPager.setAdapter(MainActivity.pagerAdapter);
               MainActivity.viewPager.setCurrentItem(1);
@@ -125,15 +133,15 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
   public void onMsgFromMainToFragment(String strValue) {}
 
   // ***Hàm cập nhật album trong mang, MangTen và bộ nhớ***//
-  public void refreshfAlbum(ArrayList<Hinh> collectedimgs) {
+  public void refreshfAlbum(ArrayList<GallaryImage> collectedimgs) {
     for (int i = 0; i < collectedimgs.size(); i++) {
       for (int j = 0; j < MainActivity.mang.size(); j++)
         for (int j1 = 0; j1 < MainActivity.mang.get(j).size(); j1++) {
           if (MainActivity.mang
               .get(j)
               .get(j1)
-              .getDuongdan()
-              .equals(collectedimgs.get(i).getDuongdan())) {
+              .getPath()
+              .equals(collectedimgs.get(i).getPath())) {
             MainActivity.mang.get(j).remove(j1);
           }
         }
@@ -161,7 +169,7 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
           if (j == MainActivity.mang.get(i).size() - 1) {
             buffer =
                 buffer
-                    + MainActivity.mang.get(i).get(j).getDuongdan().toString()
+                    + MainActivity.mang.get(i).get(j).getPath().toString()
                     + "#"
                     + MainActivity.mang.get(i).get(j).getTenHinh().toString()
                     + "#"
@@ -169,7 +177,7 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
           } else {
             buffer =
                 buffer
-                    + MainActivity.mang.get(i).get(j).getDuongdan().toString()
+                    + MainActivity.mang.get(i).get(j).getPath().toString()
                     + "#"
                     + MainActivity.mang.get(i).get(j).getTenHinh().toString()
                     + "#"

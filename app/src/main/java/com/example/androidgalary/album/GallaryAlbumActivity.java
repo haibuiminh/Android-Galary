@@ -1,19 +1,28 @@
-package com.example.androidgalary;
+package com.example.androidgalary.album;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import com.example.androidgalary.adapters.customRecyclerView.CustomRecyclerviewAdapter;
+import com.example.androidgalary.image.GallaryImageActivity;
+import com.example.androidgalary.slideShow.GallaryImageSlideShowActivity;
+import com.example.androidgalary.MainActivity;
+import com.example.androidgalary.R;
+import com.example.androidgalary.models.GallaryImage;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
-public class AlbumActivity extends AppCompatActivity {
+public class GallaryAlbumActivity extends Activity {
   Toolbar toolbar;
   int pos; // *** lưu thứ tự album sẽ được show trong Mainactivity.mang***//
   String ten;
@@ -26,23 +35,23 @@ public class AlbumActivity extends AppCompatActivity {
     super.onPostResume();
     Log.d("TAG", "onPostResume: ");
     // *****************************************************************************************************//
-    // * Xét trạng thái của ImageActivity.co:
+    // * Xét trạng thái của GallaryImageActivity.co:
     //           *//
     // *  + False: MainActivity.mang(pos) còn tồn tại => show album
     //           *//
-    // *  + True: MainActivity.mang(pos) đã bị xóa => đóng AlbumActivity vì không cần show ảnh
+    // *  + True: MainActivity.mang(pos) đã bị xóa => đóng GallaryAlbumActivity vì không cần show ảnh
     // của Album đó*//
     // *****************************************************************************************************//
-    if (!ImageActivity.co) {
+    if (!GallaryImageActivity.co) {
       StaggeredGridLayoutManager mStaggeredVerticalLayoutManager =
           new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
       customRecyclerviewAdapter =
-          new CustomRecyclerviewAdapter(AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+          new CustomRecyclerviewAdapter(GallaryAlbumActivity.this, MainActivity.mang.get(pos), true, pos);
       recyclerView.setAdapter(customRecyclerviewAdapter);
       recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager);
     } else {
       finish();
-      ImageActivity.co = false;
+      GallaryImageActivity.co = false;
     }
   }
 
@@ -59,7 +68,7 @@ public class AlbumActivity extends AppCompatActivity {
         MainActivity.mang.get(pos).get(i).setCheck(false);
       }
       customRecyclerviewAdapter =
-          new CustomRecyclerviewAdapter(AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+          new CustomRecyclerviewAdapter(GallaryAlbumActivity.this, MainActivity.mang.get(pos), true, pos);
       recyclerView.setAdapter(customRecyclerviewAdapter);
       recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager);
       toolbar.getMenu().getItem(0).setVisible(true);
@@ -101,7 +110,7 @@ public class AlbumActivity extends AppCompatActivity {
         new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
     if (MainActivity.mang.get(pos) != null) {
       customRecyclerviewAdapter =
-          new CustomRecyclerviewAdapter(AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+          new CustomRecyclerviewAdapter(GallaryAlbumActivity.this, MainActivity.mang.get(pos), true, pos);
       recyclerView.setAdapter(customRecyclerviewAdapter);
       recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager);
     } else {
@@ -128,7 +137,7 @@ public class AlbumActivity extends AppCompatActivity {
                 new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
             customRecyclerviewAdapter =
                 new CustomRecyclerviewAdapter(
-                    AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+                    GallaryAlbumActivity.this, MainActivity.mang.get(pos), true, pos);
             recyclerView.setAdapter(customRecyclerviewAdapter);
             recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager1);
 
@@ -142,7 +151,7 @@ public class AlbumActivity extends AppCompatActivity {
           }
           // ***Sự kiện delete các ảnh đã chọn***//
           else if (i == R.id.deleteAlbum) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(AlbumActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(GallaryAlbumActivity.this);
             builder.setTitle("Thông báo");
             builder.setMessage("Bạn có muốn xóa không?");
             builder.setCancelable(false);
@@ -197,7 +206,7 @@ public class AlbumActivity extends AppCompatActivity {
                           new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
                       customRecyclerviewAdapter =
                           new CustomRecyclerviewAdapter(
-                              AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+                              GallaryAlbumActivity.this, MainActivity.mang.get(pos), true, pos);
                       recyclerView.setAdapter(customRecyclerviewAdapter);
                       recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager1);
 
@@ -226,7 +235,7 @@ public class AlbumActivity extends AppCompatActivity {
             }
             customRecyclerviewAdapter =
                 new CustomRecyclerviewAdapter(
-                    AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+                    GallaryAlbumActivity.this, MainActivity.mang.get(pos), true, pos);
             recyclerView.setAdapter(customRecyclerviewAdapter);
             recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager1);
             toolbar.getMenu().getItem(0).setVisible(true);
@@ -235,18 +244,18 @@ public class AlbumActivity extends AppCompatActivity {
             toolbar.getMenu().getItem(3).setVisible(false);
 
           } else if (i == R.id.createSlideshowAlbum) {
-            Intent intent1 = new Intent(getBaseContext(), Image_Slideshow.class);
+            Intent intent1 = new Intent(getBaseContext(), GallaryImageSlideShowActivity.class);
             toolbar.getMenu().getItem(0).setVisible(true);
             toolbar.getMenu().getItem(1).setVisible(false);
             toolbar.getMenu().getItem(3).setVisible(false);
             ArrayList<String> data = new ArrayList<String>();
             if (MainActivity.collectedimgs.size() != 0) {
-              for (Hinh c : MainActivity.collectedimgs) {
-                data.add(c.duongdan);
+              for (GallaryImage c : MainActivity.collectedimgs) {
+                data.add(c.getPath());
               }
             } else {
-              for (Hinh c : MainActivity.mang.get(pos)) {
-                data.add(c.duongdan);
+              for (GallaryImage c : MainActivity.mang.get(pos)) {
+                data.add(c.getPath());
               }
             }
             intent1.putExtra("data", data);
@@ -258,7 +267,7 @@ public class AlbumActivity extends AppCompatActivity {
                 new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
             customRecyclerviewAdapter =
                 new CustomRecyclerviewAdapter(
-                    AlbumActivity.this, MainActivity.mang.get(pos), true, pos);
+                    GallaryAlbumActivity.this, MainActivity.mang.get(pos), true, pos);
             recyclerView.setAdapter(customRecyclerviewAdapter);
             recyclerView.setLayoutManager(mStaggeredVerticalLayoutManager1);
           }
@@ -267,7 +276,7 @@ public class AlbumActivity extends AppCompatActivity {
   }
 
   // ***Hàm cập nhật MainActivity.mang, ghi lại vào bộ nhớ,remove những Album có size=0***//
-  public boolean refreshfAlbum(ArrayList<Hinh> collectedimgs, int pos) {
+  public boolean refreshfAlbum(ArrayList<GallaryImage> collectedimgs, int pos) {
     // ***Gắn cờ để xem size của Album**********************************//
     // *  True: size=0 và bị remove=> không tồn tại trong Activity.mang*//
     // *  False: size>0            => còn tồn tại trong Activity.mang  *//
@@ -280,8 +289,8 @@ public class AlbumActivity extends AppCompatActivity {
         if (MainActivity.mang
             .get(pos)
             .get(j1)
-            .getDuongdan()
-            .equals(collectedimgs.get(i).getDuongdan())) {
+            .getPath()
+            .equals(collectedimgs.get(i).getPath())) {
           MainActivity.mang.get(pos).remove(j1);
         }
       }
@@ -315,7 +324,7 @@ public class AlbumActivity extends AppCompatActivity {
           if (j == MainActivity.mang.get(i).size() - 1) {
             buffer =
                 buffer
-                    + MainActivity.mang.get(i).get(j).getDuongdan().toString()
+                    + MainActivity.mang.get(i).get(j).getPath().toString()
                     + "#"
                     + MainActivity.mang.get(i).get(j).getTenHinh().toString()
                     + "#"
@@ -323,7 +332,7 @@ public class AlbumActivity extends AppCompatActivity {
           } else {
             buffer =
                 buffer
-                    + MainActivity.mang.get(i).get(j).getDuongdan().toString()
+                    + MainActivity.mang.get(i).get(j).getPath().toString()
                     + "#"
                     + MainActivity.mang.get(i).get(j).getTenHinh().toString()
                     + "#"

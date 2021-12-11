@@ -1,33 +1,33 @@
-package com.example.androidgalary;
+package com.example.androidgalary.models;
 
 import androidx.exifinterface.media.ExifInterface;
 import java.io.IOException;
 
-public class Hinh {
-  String duongdan;
-  String tenhinh;
+public class GallaryImage {
+  String path;
+  String name;
   Integer addDate;
   boolean check;
   ExifInterface exif;
 
-  public Hinh(String duongdan, String tenhinh, Integer addDate) {
-    this.duongdan = duongdan;
-    this.tenhinh = tenhinh;
+  public GallaryImage(String path, String name, Integer addDate) {
+    this.path = path;
+    this.name = name;
     this.addDate = addDate;
     this.check = false;
     try {
-      exif = new ExifInterface(duongdan);
+      exif = new ExifInterface(path);
     } catch (IOException e) {
       exif = null;
     }
   }
 
-  public String getDuongdan() {
-    return duongdan;
+  public String getPath() {
+    return path;
   }
 
   public String getTenHinh() {
-    return tenhinh;
+    return name;
   }
 
   public Integer getAddDate() {
@@ -45,9 +45,17 @@ public class Hinh {
 
   @Override
   public boolean equals(Object obj) {
-    Hinh target = (Hinh) obj;
-    return (this.tenhinh.equals(target.tenhinh)
-        && this.duongdan.equals(target.duongdan)
+    GallaryImage target = (GallaryImage) obj;
+    return (this.name.equals(target.name)
+        && this.path.equals(target.path)
         && this.addDate.equals(target.addDate));
+  }
+
+  public ExifInterface getExif() {
+    return exif;
+  }
+
+  public void setExif(ExifInterface exif) {
+    this.exif = exif;
   }
 }

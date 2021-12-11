@@ -1,4 +1,4 @@
-package com.example.androidgalary;
+package com.example.androidgalary.utils;
 
 import android.os.AsyncTask;
 import java.io.BufferedReader;

@@ -25,6 +25,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.viewpager.widget.ViewPager;
+
+import com.example.androidgalary.album.AlbumFragment;
+import com.example.androidgalary.image.GallaryImageFragment;
+import com.example.androidgalary.models.GallaryAlbumDetail;
+import com.example.androidgalary.models.GallaryImage;
+import com.example.androidgalary.slideShow.GallaryImageSlideShowActivity;
 import com.google.android.material.tabs.TabLayout;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -45,16 +51,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
   // ***Sử dụng khi bắt sự kiện trong Context Menu***//
   AdapterView.AdapterContextMenuInfo info;
 
-  Toolbar toolbar;
-  TabLayout tabLayout;
+  public Toolbar toolbar;
+  public TabLayout tabLayout;
 
-  static ViewPager viewPager;
-  static PagerAdapter pagerAdapter;
+  public static ViewPager viewPager;
+  public static PagerAdapter pagerAdapter;
 
-  AnhFragment anhFragment;
+  GallaryImageFragment gallaryImageFragment;
   AlbumFragment albumFragment;
 
-  static boolean SeleteAlbum = false;
+  public static boolean SelectedAlbum = false;
 
   // ***Lưu tên các Album***//
   public static ArrayList<String> MangTen;
@@ -62,16 +68,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
   // *     +True: có checkbox                     *//
   // *     +False: không checkbox                 *//
   // **********************************************//
-  static boolean status = true;
-  static boolean statusalbum = false;
+  public static boolean status = true;
+  public static boolean albumStatus = false;
 
-  static int pos = 0;
+  public static int pos = 0;
   // ***mang là mảng 2 chiều lưu các ảnh của từng album***//
-  public static ArrayList<ArrayList<Hinh>> mang;
+  public static ArrayList<ArrayList<GallaryImage>> mang;
 
   // ***Lưu các ảnh và album được check trong App***//
-  public static ArrayList<Hinh> collectedimgs;
-  public static ArrayList<ThongtinAlbum> collectedalbums;
+  public static ArrayList<GallaryImage> collectedimgs;
+  public static ArrayList<GallaryAlbumDetail> collectedalbums;
 
   @Override
   protected void onPostResume() {
@@ -132,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                 toolbar.getMenu().getItem(6).setVisible(true);
               }
             } else {
-              if (statusalbum) {
+              if (albumStatus) {
                 toolbar.getMenu().getItem(0).setVisible(false);
                 toolbar.getMenu().getItem(1).setVisible(false);
                 toolbar.getMenu().getItem(2).setVisible(true);
@@ -199,9 +205,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
       toolbar.getMenu().getItem(4).setVisible(false);
       toolbar.getMenu().getItem(5).setVisible(false);
 
-    } else if (MainActivity.statusalbum) {
+    } else if (MainActivity.albumStatus) {
       MainActivity.collectedalbums.clear();
-      MainActivity.statusalbum = false;
+      MainActivity.albumStatus = false;
       // ***Show lại ViewPager***//
       viewPager.setAdapter(pagerAdapter);
       viewPager.setCurrentItem(1);
@@ -219,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
   }
 
   // ***Hàm cập nhật album trong mang, MangTen và bộ nhớ***//
-  public void refreshfAlbum(ArrayList<Hinh> collectedimgs) {
+  public void refreshfAlbum(ArrayList<GallaryImage> collectedimgs) {
     long start = System.currentTimeMillis();
     for (int i = 0; i < collectedimgs.size(); i++) {
       for (int j = 0; j < MainActivity.mang.size(); j++)
@@ -227,16 +233,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
           if (MainActivity.mang
               .get(j)
               .get(j1)
-              .getDuongdan()
-              .equals(collectedimgs.get(i).getDuongdan())) {
+              .getPath()
+              .equals(collectedimgs.get(i).getPath())) {
             MainActivity.mang.get(j).remove(j1);
           }
         }
     }
     for (int i = 0; i < collectedimgs.size(); i++) {
-      for (int j = 0; j < AnhFragment.mangHinh.size(); j++) {
-        if (AnhFragment.mangHinh.get(j).getDuongdan().equals(collectedimgs.get(i).duongdan)) {
-          AnhFragment.mangHinh.remove(j);
+      for (int j = 0; j < GallaryImageFragment.mangHinh.size(); j++) {
+        if (GallaryImageFragment.mangHinh.get(j).getPath().equals(collectedimgs.get(i).getPath())) {
+          GallaryImageFragment.mangHinh.remove(j);
         }
       }
     }
@@ -290,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     pagerAdapter = new PagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(pagerAdapter);
 
-    anhFragment = (AnhFragment) pagerAdapter.getItem(0);
+    gallaryImageFragment = (GallaryImageFragment) pagerAdapter.getItem(0);
     albumFragment = (AlbumFragment) pagerAdapter.getItem(1);
   }
 
@@ -311,14 +317,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         for (int j = 0; j < mang.get(i).size(); j++) {
           if (j == mang.get(i).size() - 1) {
             buffer
-                .append(mang.get(i).get(j).getDuongdan())
+                .append(mang.get(i).get(j).getPath())
                 .append("#")
                 .append(mang.get(i).get(j).getTenHinh())
                 .append("#")
                 .append(mang.get(i).get(j).getAddDate().toString());
           } else {
             buffer
-                .append(mang.get(i).get(j).getDuongdan())
+                .append(mang.get(i).get(j).getPath())
                 .append("#")
                 .append(mang.get(i).get(j).getTenHinh())
                 .append("#")
@@ -380,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
           String[] splitimg = s.split("#");
           for (int j = 0; j < splitimg.length; j = j + 3) {
             mang.get(mang.size() - 1)
-                .add(new Hinh(splitimg[j], splitimg[j + 1], Integer.parseInt(splitimg[j + 2])));
+                .add(new GallaryImage(splitimg[j], splitimg[j + 1], Integer.parseInt(splitimg[j + 2])));
           }
         }
       }
@@ -529,7 +535,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
       // ***Xử lý select album***//
       else {
         // ***Cập nhật status để show album có checkbox***//
-        statusalbum = true;
+        albumStatus = true;
 
         // ***Clear collectedalbums***//
         collectedalbums.clear();
@@ -552,7 +558,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
     } else if (i == R.id.addalbum) {
       if (MainActivity.mang.size() != 0) {
-        SeleteAlbum = true;
+        SelectedAlbum = true;
         status = false;
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(1);
@@ -641,7 +647,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             toolbar.getMenu().getItem(5).setVisible(false);
           });
     } else if (i == R.id.createSlideshow) {
-      Intent intent = new Intent(getBaseContext(), Image_Slideshow.class);
+      Intent intent = new Intent(getBaseContext(), GallaryImageSlideShowActivity.class);
       toolbar.getMenu().getItem(0).setVisible(true);
       toolbar.getMenu().getItem(1).setVisible(false);
       toolbar.getMenu().getItem(2).setVisible(false);
@@ -650,8 +656,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
       toolbar.getMenu().getItem(5).setVisible(false);
       ArrayList<String> data = new ArrayList<>();
       if (MainActivity.collectedimgs.size() != 0) {
-        for (Hinh c : MainActivity.collectedimgs) {
-          data.add(c.duongdan);
+        for (GallaryImage c : MainActivity.collectedimgs) {
+          data.add(c.getPath());
         }
         intent.putExtra("data", data);
         startActivity(intent);
@@ -682,7 +688,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
       // ***Xử lí Back trong Albumfragment***//
       else {
         // ***Cập nhật Status để show Album không checkbox***//
-        statusalbum = false;
+        albumStatus = false;
 
         // ***Show lại ViewPager***//
         viewPager.setAdapter(pagerAdapter);
@@ -711,7 +717,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
       builder.setNegativeButton(
           "Ok",
           (dialogInterface, i13) -> {
-            // ***Xử lý khi click delete AnhFragment***//
+            // ***Xử lý khi click delete GallaryImageFragment***//
             if (viewPager.getCurrentItem() == 0) {
               // ***Cập nhật Status để show ảnh không
               // checkbox***//
@@ -726,7 +732,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                 // ***Xóa tận gốc các ảnh trong collectedimgs
                 // thông qua đường dẫn***//
                 for (int j = 0; j < collectedimgs.size(); j++) {
-                  File file = new File(collectedimgs.get(j).getDuongdan());
+                  File file = new File(collectedimgs.get(j).getPath());
                   //
                   // boolean flag = file.delete();
                   if (file.exists()) {
@@ -766,7 +772,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
               // ***delete Album trong MangTen va mang***//
               for (int j = 0; j < collectedalbums.size(); j++) {
                 for (int i1 = 0; i1 < MangTen.size(); i1++) {
-                  if (MangTen.get(i1).toString().equals(collectedalbums.get(j).getTen())) {
+                  if (MangTen.get(i1).toString().equals(collectedalbums.get(j).getName())) {
                     MangTen.remove(i1);
                     mang.remove(i1);
                   }
@@ -776,13 +782,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
               // i1=0;i1<collectedimgs.size();i1++)
               //                                {
               //                                    for(int
-              // j=0;j<AnhFragment.mangHinh.size();j++)
+              // j=0;j<GallaryImageFragment.mangHinh.size();j++)
               //                                    {
               //
-              // if(AnhFragment.mangHinh.get(j).getDuongdan().equals(collectedimgs.get(i1).duongdan))
+              // if(GallaryImageFragment.mangHinh.get(j).getPath().equals(collectedimgs.get(i1).duongdan))
               //                                        {
               //
-              // AnhFragment.mangHinh.remove(j);
+              // GallaryImageFragment.mangHinh.remove(j);
               //                                        }
               //                                    }
               //                                }
@@ -791,7 +797,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
               ghivaobonhotrong();
 
               // ***Show lại ViewPager***//
-              statusalbum = false;
+              albumStatus = false;
               viewPager.setAdapter(pagerAdapter);
               viewPager.setCurrentItem(1);
 

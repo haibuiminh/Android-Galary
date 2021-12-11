@@ -1,4 +1,4 @@
-package com.example.androidgalary;
+package com.example.androidgalary.image;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,16 +10,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.androidgalary.R;
+import com.example.androidgalary.models.GallaryImage;
+
 import java.io.File;
 import java.util.ArrayList;
 import uk.co.senab.photoview.PhotoView;
 
 public class ImagePagerAdapter extends PagerAdapter {
-  ArrayList<Hinh> mang;
+  ArrayList<GallaryImage> mang;
   Context context;
   LayoutInflater layoutInflater;
 
-  public ImagePagerAdapter(ArrayList<Hinh> mang, Context context) {
+  public ImagePagerAdapter(ArrayList<GallaryImage> mang, Context context) {
     this.mang = mang;
     this.context = context;
     this.layoutInflater = LayoutInflater.from(context);
@@ -41,7 +44,7 @@ public class ImagePagerAdapter extends PagerAdapter {
     View view = layoutInflater.inflate(R.layout.custom_item_viewpager, container, false);
     PhotoView img;
     img = view.findViewById(R.id.imgofimgactivity);
-    File file = new File(mang.get(position).getDuongdan());
+    File file = new File(mang.get(position).getPath());
     RequestOptions options =
         new RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).priority(Priority.HIGH);
 

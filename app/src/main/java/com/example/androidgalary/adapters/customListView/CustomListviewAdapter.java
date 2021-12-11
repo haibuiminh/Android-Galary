@@ -1,4 +1,4 @@
-package com.example.androidgalary;
+package com.example.androidgalary.adapters.customListView;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,15 +15,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.androidgalary.MainActivity;
+import com.example.androidgalary.R;
+import com.example.androidgalary.models.GallaryAlbumDetail;
+
 import java.util.ArrayList;
 
 // ***Custom List view dùng đề show danh sách album***//
-public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
+public class CustomListviewAdapter extends ArrayAdapter<GallaryAlbumDetail> {
   Context context;
-  ArrayList<ThongtinAlbum> mang;
+  ArrayList<GallaryAlbumDetail> mang;
   int layoutResource;
 
-  public CustomListviewAdapter(Context context, ArrayList<ThongtinAlbum> mang, int layoutResource) {
+  public CustomListviewAdapter(Context context, ArrayList<GallaryAlbumDetail> mang, int layoutResource) {
     super(context, layoutResource, mang);
     this.context = context;
     this.mang = mang;
@@ -35,36 +39,29 @@ public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
     return mang.size();
   }
 
-  public class ViewHolder {
-    TextView ten, soluong;
-    ImageView imageView;
-    ConstraintLayout constraintLayout;
-    CheckBox checkBox;
-  }
-
   @NonNull
   @Override
   public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
     LayoutInflater layoutInflater = ((MainActivity) context).getLayoutInflater();
 
-    final ViewHolder viewHolder;
+    final CustomListViewHolder viewHolder;
     // ***Xét điều kiện***//
     if (convertView == null) {
-      viewHolder = new ViewHolder();
+      viewHolder = new CustomListViewHolder();
       convertView = layoutInflater.inflate(layoutResource, null);
 
       viewHolder.ten = convertView.findViewById(R.id.tenalbum);
-      viewHolder.soluong = convertView.findViewById(R.id.soluong);
+      viewHolder.soluong = convertView.findViewById(R.id.imageNumbers);
       viewHolder.imageView = convertView.findViewById(R.id.imgalbum);
       viewHolder.constraintLayout = convertView.findViewById(R.id.LNofitemalbum);
       viewHolder.checkBox = convertView.findViewById(R.id.Checkalbum);
       convertView.setTag(viewHolder);
     } else {
-      viewHolder = (ViewHolder) convertView.getTag();
+      viewHolder = (CustomListViewHolder) convertView.getTag();
     }
     viewHolder.checkBox.setChecked(false);
-    viewHolder.ten.setText(mang.get(position).getTen());
-    viewHolder.soluong.setText(mang.get(position).getSoluong() + "");
+    viewHolder.ten.setText(mang.get(position).getName());
+    viewHolder.soluong.setText(mang.get(position).getImageNumbers() + "");
 
     RequestOptions options =
         new RequestOptions()
@@ -74,12 +71,12 @@ public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
             .priority(Priority.HIGH);
 
     Glide.with(context)
-        .load(mang.get(position).getDuongdan())
+        .load(mang.get(position).getPath())
         .apply(options)
         .thumbnail(0.6f)
         .into(viewHolder.imageView);
 
-    if (MainActivity.statusalbum == true) {
+    if (MainActivity.albumStatus == true) {
       viewHolder.constraintLayout.setVisibility(View.VISIBLE);
     } else {
       viewHolder.constraintLayout.setVisibility(View.INVISIBLE);
@@ -89,16 +86,16 @@ public class CustomListviewAdapter extends ArrayAdapter<ThongtinAlbum> {
         v -> {
           if (viewHolder.checkBox.isChecked() == true) {
             MainActivity.collectedalbums.add(
-                new ThongtinAlbum(
-                    mang.get(position).getTen(),
-                    mang.get(position).getDuongdan(),
-                    mang.get(position).getSoluong()));
+                new GallaryAlbumDetail(
+                    mang.get(position).getName(),
+                    mang.get(position).getPath(),
+                    mang.get(position).getImageNumbers()));
           } else {
             for (int i = 0; i < MainActivity.collectedalbums.size(); i++) {
               if (MainActivity.collectedalbums
                   .get(i)
-                  .getTen()
-                  .equals(mang.get(position).getTen())) {
+                  .getName()
+                  .equals(mang.get(position).getName())) {
                 MainActivity.collectedalbums.remove(i);
               }
             }

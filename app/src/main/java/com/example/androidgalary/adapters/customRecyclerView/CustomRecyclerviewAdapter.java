@@ -1,4 +1,4 @@
-package com.example.androidgalary;
+package com.example.androidgalary.adapters.customRecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,18 +15,24 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.androidgalary.MainActivity;
+import com.example.androidgalary.R;
+import com.example.androidgalary.image.GallaryImageActivity;
+import com.example.androidgalary.image.GallaryImageFragment;
+import com.example.androidgalary.models.GallaryImage;
+
 import java.util.ArrayList;
 
 // ***Custom các RecyclerView có trong Project***//
 public class CustomRecyclerviewAdapter
-    extends RecyclerView.Adapter<CustomRecyclerviewAdapter.MyViewHolder> {
+    extends RecyclerView.Adapter<CustomRecyclerViewHolder> {
   private Context context;
-  private ArrayList<Hinh> data;
+  private ArrayList<GallaryImage> data;
   boolean loai; // ***album=true hoac kho ảnh=false***//
   private LayoutInflater inflater; // ***Layout muốn dán***//
   private int pos;
 
-  public CustomRecyclerviewAdapter(Context context, ArrayList<Hinh> data, boolean loai, int pos) {
+  public CustomRecyclerviewAdapter(Context context, ArrayList<GallaryImage> data, boolean loai, int pos) {
     this.context = context;
     this.data = data;
     inflater = LayoutInflater.from(context);
@@ -36,15 +42,15 @@ public class CustomRecyclerviewAdapter
 
   @NonNull
   @Override
-  public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+  public CustomRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     View view = inflater.inflate(R.layout.custom_item_recyclerview, parent, false);
-    MyViewHolder holder = new MyViewHolder(view);
+    CustomRecyclerViewHolder holder = new CustomRecyclerViewHolder(view);
     return holder;
   }
 
   @Override
   public void onBindViewHolder(
-      @NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+      @NonNull CustomRecyclerViewHolder holder, @SuppressLint("RecyclerView") int position) {
     long start = System.currentTimeMillis();
     RequestOptions options =
         new RequestOptions()
@@ -55,7 +61,7 @@ public class CustomRecyclerviewAdapter
             .priority(Priority.HIGH);
 
     Glide.with(context)
-        .load(data.get(position).getDuongdan())
+        .load(data.get(position).getPath())
         .apply(options)
         .thumbnail(0.6f)
         .into(holder.imageView);
@@ -64,7 +70,7 @@ public class CustomRecyclerviewAdapter
     // ***lưu ý trang thái được click của các ảnh trong trường hợp chuyển qua imageactivity rồi
     // quay lại***//
     for (int i = 0; i < MainActivity.collectedimgs.size(); i++) {
-      if (MainActivity.collectedimgs.get(i).duongdan.equals(data.get(position).duongdan)) {
+      if (MainActivity.collectedimgs.get(i).getPath().equals(data.get(position).getPath())) {
         holder.checkBox.setChecked(true);
       }
     }
@@ -77,8 +83,8 @@ public class CustomRecyclerviewAdapter
     holder.imageView.setOnClickListener(
         v -> {
           // Chuyen man hinh image activity
-          Intent intent = new Intent(context, ImageActivity.class);
-          intent.putExtra("vitri", data.get(position).getDuongdan());
+          Intent intent = new Intent(context, GallaryImageActivity.class);
+          intent.putExtra("vitri", data.get(position).getPath());
           intent.putExtra("loai", loai);
           context.startActivity(intent);
         });
@@ -87,12 +93,12 @@ public class CustomRecyclerviewAdapter
         v -> {
           if (holder.checkBox.isChecked()) {
             MainActivity.collectedimgs.add(
-                new Hinh(
-                    data.get(position).getDuongdan(),
+                new GallaryImage(
+                    data.get(position).getPath(),
                     data.get(position).getTenHinh(),
                     data.get(position).getAddDate()));
             if (!loai) {
-              AnhFragment.mangHinhDate.get(pos).get(position).setCheck(true);
+              GallaryImageFragment.mangHinhDate.get(pos).get(position).setCheck(true);
             } else {
               MainActivity.mang.get(pos).get(position).setCheck(true);
             }
@@ -100,12 +106,12 @@ public class CustomRecyclerviewAdapter
             for (int i = 0; i < MainActivity.collectedimgs.size(); i++) {
               if (MainActivity.collectedimgs
                   .get(i)
-                  .getDuongdan()
-                  .equals(data.get(position).duongdan)) {
+                  .getPath()
+                  .equals(data.get(position).getPath())) {
                 MainActivity.collectedimgs.remove(i);
               }
             }
-            if (!loai) AnhFragment.mangHinhDate.get(pos).get(position).setCheck(false);
+            if (!loai) GallaryImageFragment.mangHinhDate.get(pos).get(position).setCheck(false);
             else {
               MainActivity.mang.get(pos).get(position).setCheck(false);
             }
@@ -117,7 +123,7 @@ public class CustomRecyclerviewAdapter
           if (!loai) {
             if (((MainActivity) context).status == false) {
               ((MainActivity) context).status = true;
-              ImageActivity.position = pos;
+              GallaryImageActivity.position = pos;
               MainActivity.viewPager.setAdapter(MainActivity.pagerAdapter);
 
               // ***Show những lựa chọn cần thiết sau khi Select***//
@@ -136,18 +142,5 @@ public class CustomRecyclerviewAdapter
   @Override
   public int getItemCount() {
     return data.size();
-  }
-
-  class MyViewHolder extends RecyclerView.ViewHolder {
-    ImageView imageView;
-    ConstraintLayout constraintLayout;
-    CheckBox checkBox;
-
-    public MyViewHolder(View itemView) {
-      super(itemView);
-      imageView = itemView.findViewById(R.id.imgrv);
-      constraintLayout = itemView.findViewById(R.id.LNofcardview);
-      checkBox = itemView.findViewById(R.id.Check);
-    }
   }
 }

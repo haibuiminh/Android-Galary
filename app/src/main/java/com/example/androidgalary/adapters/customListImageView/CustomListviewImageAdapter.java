@@ -1,4 +1,4 @@
-package com.example.androidgalary;
+package com.example.androidgalary.adapters.customListImageView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,34 +8,40 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.androidgalary.adapters.customRecyclerView.CustomRecyclerviewAdapter;
+import com.example.androidgalary.MainActivity;
+import com.example.androidgalary.R;
+import com.example.androidgalary.models.GallaryImage;
+
 import java.util.ArrayList;
 
 public class CustomListviewImageAdapter
-    extends RecyclerView.Adapter<CustomListviewImageAdapter.MyViewHolder> {
+    extends RecyclerView.Adapter<CustomListViewImageHolder> {
 
   Context context;
 
   // ***Mảng lưu số lượng ảnh trong 1 ngày nào đó***//
-  ArrayList<ArrayList<Hinh>> mang;
+  ArrayList<ArrayList<GallaryImage>> mang;
   // ***Layout muốn dán***//
   int layoutResource;
 
   public CustomListviewImageAdapter(
-      Context context, ArrayList<ArrayList<Hinh>> mang, int layoutResource) {
+      Context context, ArrayList<ArrayList<GallaryImage>> mang, int layoutResource) {
     this.context = context;
     this.mang = mang;
     this.layoutResource = layoutResource;
   }
 
   @Override
-  public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  public CustomListViewImageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = ((Activity) context).getLayoutInflater().inflate(layoutResource, parent, false);
-    MyViewHolder holder = new MyViewHolder(view);
+    CustomListViewImageHolder holder = new CustomListViewImageHolder(view);
     return holder;
   }
 
   @Override
-  public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+  public void onBindViewHolder(@NonNull CustomListViewImageHolder holder, int position) {
     long start = System.currentTimeMillis();
     String date = mang.get(position).get(0).getAddDate().toString();
     holder.textView.setText(
@@ -56,16 +62,5 @@ public class CustomListviewImageAdapter
   @Override
   public int getItemCount() {
     return mang.size();
-  }
-
-  class MyViewHolder extends RecyclerView.ViewHolder {
-    TextView textView;
-    RecyclerView recyclerView;
-
-    public MyViewHolder(View itemView) {
-      super(itemView);
-      textView = itemView.findViewById(R.id.tvdate);
-      recyclerView = itemView.findViewById(R.id.recyclerView);
-    }
   }
 }
