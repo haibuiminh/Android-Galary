@@ -23,14 +23,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
-
 import com.example.androidgalary.BuildConfig;
 import com.example.androidgalary.ExifUtility;
 import com.example.androidgalary.MainActivity;
 import com.example.androidgalary.R;
 import com.example.androidgalary.ViewPagerFixer;
-import com.example.androidgalary.editImage.EditImageActivity;
 import com.example.androidgalary.album.AlbumFragment;
+import com.example.androidgalary.editImage.EditImageActivity;
 import com.example.androidgalary.models.GallaryImage;
 import com.theartofdev.edmodo.cropper.CropImage;
 import java.io.BufferedInputStream;
@@ -95,7 +94,9 @@ public class GallaryImageActivity extends Activity {
             File photoFile = new File(choosenImage.getPath());
             Uri imageUri =
                 FileProvider.getUriForFile(
-                    GallaryImageActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", photoFile);
+                    GallaryImageActivity.this,
+                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                    photoFile);
             final Intent intent1 = new Intent(Intent.ACTION_SEND);
             intent1.setType("image/*");
             intent1.putExtra(Intent.EXTRA_STREAM, imageUri);
@@ -264,7 +265,8 @@ public class GallaryImageActivity extends Activity {
           break;
         }
       }
-      ImagePagerAdapter imagePagerAdapter = new ImagePagerAdapter(GallaryImageFragment.mangHinh, this);
+      ImagePagerAdapter imagePagerAdapter =
+          new ImagePagerAdapter(GallaryImageFragment.mangHinh, this);
       viewPager.setAdapter(imagePagerAdapter);
     } else {
       // ****************************************
@@ -289,11 +291,7 @@ public class GallaryImageActivity extends Activity {
     for (int i = 0; i < collectedimgs.size(); i++) {
       for (int j = 0; j < MainActivity.mang.size(); j++) {
         for (int j1 = 0; j1 < MainActivity.mang.get(j).size(); j1++) {
-          if (MainActivity.mang
-              .get(j)
-              .get(j1)
-              .getPath()
-              .equals(collectedimgs.get(i).getPath())) {
+          if (MainActivity.mang.get(j).get(j1).getPath().equals(collectedimgs.get(i).getPath())) {
             MainActivity.mang.get(j).remove(j1);
           }
         }
@@ -555,7 +553,8 @@ public class GallaryImageActivity extends Activity {
         ghivaobonhotrong();
         ImagePagerAdapter imagePagerAdapter =
             new ImagePagerAdapter(
-                MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum), GallaryImageActivity.this);
+                MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum),
+                GallaryImageActivity.this);
         viewPager.setAdapter(imagePagerAdapter);
         // *** Tìm vị trị thích hợp để setCurrent cho ViewPager***//
         if (tmp == MainActivity.mang.get(AlbumFragment.postionofFocusingAlbum).size() - 1)

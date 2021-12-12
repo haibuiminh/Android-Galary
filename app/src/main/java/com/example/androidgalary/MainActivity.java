@@ -25,7 +25,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.viewpager.widget.ViewPager;
-
 import com.example.androidgalary.album.AlbumFragment;
 import com.example.androidgalary.image.GallaryImageFragment;
 import com.example.androidgalary.models.GallaryAlbumDetail;
@@ -230,11 +229,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     for (int i = 0; i < collectedimgs.size(); i++) {
       for (int j = 0; j < MainActivity.mang.size(); j++)
         for (int j1 = 0; j1 < MainActivity.mang.get(j).size(); j1++) {
-          if (MainActivity.mang
-              .get(j)
-              .get(j1)
-              .getPath()
-              .equals(collectedimgs.get(i).getPath())) {
+          if (MainActivity.mang.get(j).get(j1).getPath().equals(collectedimgs.get(i).getPath())) {
             MainActivity.mang.get(j).remove(j1);
           }
         }
@@ -386,7 +381,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
           String[] splitimg = s.split("#");
           for (int j = 0; j < splitimg.length; j = j + 3) {
             mang.get(mang.size() - 1)
-                .add(new GallaryImage(splitimg[j], splitimg[j + 1], Integer.parseInt(splitimg[j + 2])));
+                .add(
+                    new GallaryImage(
+                        splitimg[j], splitimg[j + 1], Integer.parseInt(splitimg[j + 2])));
           }
         }
       }

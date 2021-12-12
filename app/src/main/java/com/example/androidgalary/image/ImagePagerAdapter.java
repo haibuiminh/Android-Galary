@@ -12,7 +12,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.androidgalary.R;
 import com.example.androidgalary.models.GallaryImage;
-
 import java.io.File;
 import java.util.ArrayList;
 import uk.co.senab.photoview.PhotoView;

@@ -4,20 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.androidgalary.adapters.customRecyclerView.CustomRecyclerviewAdapter;
 import com.example.androidgalary.MainActivity;
-import com.example.androidgalary.R;
+import com.example.androidgalary.adapters.customRecyclerView.CustomRecyclerviewAdapter;
 import com.example.androidgalary.models.GallaryImage;
-
 import java.util.ArrayList;
 
-public class CustomListviewImageAdapter
-    extends RecyclerView.Adapter<CustomListViewImageHolder> {
+public class CustomListviewImageAdapter extends RecyclerView.Adapter<CustomListViewImageHolder> {
 
   Context context;
 

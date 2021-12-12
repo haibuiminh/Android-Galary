@@ -2,8 +2,6 @@ package com.example.androidgalary.slideShow;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.androidgalary.R;
 
 public class GallaryImageSlideShowActivity extends Activity {

@@ -3,10 +3,8 @@ package com.example.androidgalary;
 import static com.example.androidgalary.MainActivity.viewPager;
 
 import androidx.exifinterface.media.ExifInterface;
-
 import com.example.androidgalary.image.GallaryImageFragment;
 import com.example.androidgalary.utils.LocationFetch;
-
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
