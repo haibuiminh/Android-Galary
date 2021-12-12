@@ -2,13 +2,10 @@ package com.example.androidgalary;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-//import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
 import com.example.androidgalary.album.AlbumFragment;
 import com.example.androidgalary.image.GallaryImageFragment;
-
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
   public PagerAdapter(@NonNull FragmentManager fm) {

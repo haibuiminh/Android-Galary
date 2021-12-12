@@ -14,12 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.androidgalary.adapters.customListImageView.CustomListviewImageAdapter;
 import com.example.androidgalary.FragmentCallbacks;
 import com.example.androidgalary.R;
+import com.example.androidgalary.adapters.customListImageView.CustomListviewImageAdapter;
 import com.example.androidgalary.models.GallaryImage;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,7 +53,8 @@ public class GallaryImageFragment extends Fragment implements FragmentCallbacks 
     super.onResume();
 
     // ***Khởi tạo các mảng***//
-    Map<Integer, ArrayList<GallaryImage>> mapImage = new TreeMap<>(Collections.<Integer>reverseOrder());
+    Map<Integer, ArrayList<GallaryImage>> mapImage =
+        new TreeMap<>(Collections.<Integer>reverseOrder());
     mangHinh = new ArrayList<>();
     ContentResolver contentResolver = getActivity().getContentResolver();
 

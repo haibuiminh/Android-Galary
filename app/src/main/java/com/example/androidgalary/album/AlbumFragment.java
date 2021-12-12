@@ -10,14 +10,12 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.example.androidgalary.adapters.customListView.CustomListviewAdapter;
 import com.example.androidgalary.FragmentCallbacks;
 import com.example.androidgalary.MainActivity;
 import com.example.androidgalary.R;
+import com.example.androidgalary.adapters.customListView.CustomListviewAdapter;
 import com.example.androidgalary.models.GallaryAlbumDetail;
 import com.example.androidgalary.models.GallaryImage;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -137,11 +135,7 @@ public class AlbumFragment extends Fragment implements FragmentCallbacks {
     for (int i = 0; i < collectedimgs.size(); i++) {
       for (int j = 0; j < MainActivity.mang.size(); j++)
         for (int j1 = 0; j1 < MainActivity.mang.get(j).size(); j1++) {
-          if (MainActivity.mang
-              .get(j)
-              .get(j1)
-              .getPath()
-              .equals(collectedimgs.get(i).getPath())) {
+          if (MainActivity.mang.get(j).get(j1).getPath().equals(collectedimgs.get(i).getPath())) {
             MainActivity.mang.get(j).remove(j1);
           }
         }

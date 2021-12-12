@@ -26,9 +26,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.exifinterface.media.ExifInterface;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.androidgalary.image.GallaryImageActivity;
 import com.example.androidgalary.R;
+import com.example.androidgalary.image.GallaryImageActivity;
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.OnSaveBitmap;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
@@ -105,7 +104,9 @@ public class EditImageActivity extends BaseActivity
     } catch (IOException e) {
       e.printStackTrace();
     }
-    mPhotoEditorView.getSource().setImageURI(Uri.parse(GallaryImageActivity.currentImage.getPath()));
+    mPhotoEditorView
+        .getSource()
+        .setImageURI(Uri.parse(GallaryImageActivity.currentImage.getPath()));
 
     switch (orientation) {
       case ORIENTATION_ROTATE_90:

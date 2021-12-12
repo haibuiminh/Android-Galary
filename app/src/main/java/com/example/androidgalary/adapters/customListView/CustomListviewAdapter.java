@@ -5,12 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -18,7 +14,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.androidgalary.MainActivity;
 import com.example.androidgalary.R;
 import com.example.androidgalary.models.GallaryAlbumDetail;
-
 import java.util.ArrayList;
 
 // ***Custom List view dùng đề show danh sách album***//
@@ -27,7 +22,8 @@ public class CustomListviewAdapter extends ArrayAdapter<GallaryAlbumDetail> {
   ArrayList<GallaryAlbumDetail> mang;
   int layoutResource;
 
-  public CustomListviewAdapter(Context context, ArrayList<GallaryAlbumDetail> mang, int layoutResource) {
+  public CustomListviewAdapter(
+      Context context, ArrayList<GallaryAlbumDetail> mang, int layoutResource) {
     super(context, layoutResource, mang);
     this.context = context;
     this.mang = mang;

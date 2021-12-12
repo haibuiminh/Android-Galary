@@ -6,10 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageView;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -20,19 +17,18 @@ import com.example.androidgalary.R;
 import com.example.androidgalary.image.GallaryImageActivity;
 import com.example.androidgalary.image.GallaryImageFragment;
 import com.example.androidgalary.models.GallaryImage;
-
 import java.util.ArrayList;
 
 // ***Custom các RecyclerView có trong Project***//
-public class CustomRecyclerviewAdapter
-    extends RecyclerView.Adapter<CustomRecyclerViewHolder> {
+public class CustomRecyclerviewAdapter extends RecyclerView.Adapter<CustomRecyclerViewHolder> {
   private Context context;
   private ArrayList<GallaryImage> data;
   boolean loai; // ***album=true hoac kho ảnh=false***//
   private LayoutInflater inflater; // ***Layout muốn dán***//
   private int pos;
 
-  public CustomRecyclerviewAdapter(Context context, ArrayList<GallaryImage> data, boolean loai, int pos) {
+  public CustomRecyclerviewAdapter(
+      Context context, ArrayList<GallaryImage> data, boolean loai, int pos) {
     this.context = context;
     this.data = data;
     inflater = LayoutInflater.from(context);
