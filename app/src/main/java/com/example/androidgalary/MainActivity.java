@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
   private void invokeCamera() {
     Uri uri =
         FileProvider.getUriForFile(
-            MainActivity.this, "com.mydomain.fileprovider", createImageFile());
+            MainActivity.this, "com.example.androidgalary.fileprovider", createImageFile());
     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
